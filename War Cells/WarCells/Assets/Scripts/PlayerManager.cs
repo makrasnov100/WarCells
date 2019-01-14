@@ -7,7 +7,7 @@ public class Player //TODO: add accessors mutators
     int id;
     bool isBot;
     int unitAmount;
-    public List<GameObject> ownedCells = new List<GameObject>();
+    public HashSet<GameObject> ownedCells = new HashSet<GameObject>();
     Color color;
 
     public Player(int id, bool isBot, GameObject spawnCell, Color color)
@@ -27,6 +27,18 @@ public class Player //TODO: add accessors mutators
     public Color GetColor()
     {
         return color;
+    }
+    public int GetId()
+    {
+        return id;
+    }
+    public void AddCell(GameObject newCell)
+    {
+        ownedCells.Add(newCell);
+    }
+    public void RemoveCell(GameObject oldCell)
+    {
+        ownedCells.Remove(oldCell);
     }
 }
 
@@ -70,13 +82,18 @@ public class PlayerManager : MonoBehaviour
 
     public void CompleteCellActions()
     {
+        string output = "";
         foreach (Player p in players)
         {
+            output += "Player " + p.GetId() + " cells - " + System.Environment.NewLine;
             foreach (GameObject g in p.ownedCells)
             {
+                output += " - " + g.name + System.Environment.NewLine;
                 g.GetComponent<CellIdentity>().CompleteTurn();
             }
+            output += "-------------------------------------" + System.Environment.NewLine;
         }
+        print(output);
     }
 
     //MUTATORS/ACCESSORS

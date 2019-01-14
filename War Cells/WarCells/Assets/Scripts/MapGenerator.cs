@@ -84,8 +84,8 @@ public class MapGenerator : MonoBehaviour
                         lr.endWidth = .2f;
                         lr.sortingOrder = -10;
 
-                        cells[y - 1][x].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), 0, curCon, true);
-                        cellId.AddConnection(cells[y - 1][x].GetComponent<CellIdentity>().GetId(), 1, curCon, false);
+                        cells[y - 1][x].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 0, curCon, true);
+                        cellId.AddConnection(cells[y - 1][x].GetComponent<CellIdentity>().GetId(), cells[y - 1][x], 1, curCon, false);
                     }
                     if (x != 0 && cells[y][x-1] != null && Random.Range(0f, 1f) <= connectionPrevalence)
                     {
@@ -101,8 +101,8 @@ public class MapGenerator : MonoBehaviour
                         lr.endWidth = .2f;
                         lr.sortingOrder = -10;
 
-                        cells[y][x - 1].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), 3, curCon, true);
-                        cellId.AddConnection(cells[y][x - 1].GetComponent<CellIdentity>().GetId(), 2, curCon, false);
+                        cells[y][x - 1].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 3, curCon, true);
+                        cellId.AddConnection(cells[y][x - 1].GetComponent<CellIdentity>().GetId(), cells[y][x - 1], 2, curCon, false);
                     }
                 }
                 else

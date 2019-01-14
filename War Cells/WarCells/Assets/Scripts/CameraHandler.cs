@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraHandler : MonoBehaviour
 {
@@ -91,9 +92,17 @@ public class CameraHandler : MonoBehaviour
         switch (Input.touchCount)
         {
             case 1: //One Finger - Panning
+
                 wasZoomingLastFrame = false;
 
                 Touch touch = Input.GetTouch(0);
+
+                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) // No panning while over UI
+                {
+                    lastPanPosition = touch.position;
+                    return;
+                }
+
                 if (touch.phase == TouchPhase.Began) //Record touch info if pan touch just began
                 {
                     lastPanPosition = touch.position;

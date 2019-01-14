@@ -876,6 +876,8 @@ MonoBehaviour:
   attackCapacity: 2
   defenceCapacity: 1
   generationCapacity: 1
+  attackUnit: {fileID: 2984420196937081325, guid: 934f0cd8cd05ea649878f17c5072d2e4,
+    type: 3}
 --- !u!58 &4292278888863003248
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -9,25 +9,29 @@ public class TurnUIController : MonoBehaviour
     //Fighting Delegate HUGE TODO: make private 
     public delegate void CompleteFighting();
     public CompleteFighting completeFighting;
+    public delegate void CompleteOwnershipAnim();
+    public CompleteOwnershipAnim completeOwnershipAnim;
 
     //References
     public PlayerManager playerManager;
     public Image nextTurnBG;
-    public TMP_InputField unitAmount;
+    public Slider unitAmount;
+    public TMP_Text unitCurrent;
     public TMP_Text unitMax;
     public GameObject nextTurnBtn;
-    public GameObject confirmAttackBtn;
 
     public void NextTurnClick()
     {
-        if (completeFighting != null)
-        {
-            completeFighting();
-        }
-        completeFighting = null;
+        //if (completeFighting != null)
+        //{
+        //    completeFighting();
+        //}
+        //completeFighting = null;
 
-        playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
-        nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
+        StartCoroutine(UnitSendingAnim());
+
+        //playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
+        //nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
     }
 
     public void ShowAttackUI(bool showAttack)
@@ -35,51 +39,56 @@ public class TurnUIController : MonoBehaviour
         //TODO: Add nice animation and graphics
         if (showAttack)
         {
+            nextTurnBG.gameObject.SetActive(false);
             nextTurnBtn.SetActive(false);
-            confirmAttackBtn.SetActive(true);
             unitAmount.gameObject.SetActive(true);
+            unitCurrent.gameObject.SetActive(true);
             unitMax.gameObject.SetActive(true);
         }
         else
         {
             nextTurnBtn.SetActive(true);
-            confirmAttackBtn.SetActive(false);
+            nextTurnBG.gameObject.SetActive(true);
             unitAmount.gameObject.SetActive(false);
+            unitCurrent.gameObject.SetActive(false);
             unitMax.gameObject.SetActive(false);
         }
     }
 
-    public void ChangeMaxUnitText(int maxUnits)
+    public void ChangeMaxUnitText(int unitsUsed, int maxUnits)
     {
+        unitCurrent.text = "" + unitsUsed;
         unitMax.text = "/" + maxUnits;
+        unitAmount.maxValue = maxUnits;
+        unitAmount.value = unitsUsed;
     }
 
     public bool UnitTransferInfo(CellIdentity origin, CellIdentity destination, out int[] outInfo, out int[] inInfo)
     {
-
-        //Find how much units can be assigned
-        int avaliableUnits = origin.GetCurUnusedUnits(destination.GetId());
-        //Find how much units is too much for destination cell
-        int maxDestinationUnits = origin.GetCapacity();
-
-        int unitInput;
-        System.Int32.TryParse(unitAmount.text, out unitInput);
-
-        if (unitInput > avaliableUnits || unitInput < 0)
-        {
-            outInfo = new int[] {-1,-1};
-            inInfo = new int[] {-1,-1};
-
-            //TODO: notify users too many units was selected
-            print("Too many (or negative) units selected for attack!");
-
-            return false;
-        }
+        int unitInput = (int)unitAmount.value;
 
         outInfo = new int[] {destination.GetId(), unitInput};
         inInfo = new int[] {origin.GetId(), unitInput, origin.GetOwner(), origin.GetAttackCapacity()};
         origin.SetSingleOpenConnectionColor(destination.GetId(), Color.blue);
         origin.SetSingleOpenConnectionColor(origin.GetId(), Color.blue);
         return true;
+    }
+
+    IEnumerator UnitSendingAnim()
+    {
+        while (completeFighting != null)
+        {
+            completeFighting();
+            yield return new WaitForSeconds(.3f);
+        }
+
+        if (completeOwnershipAnim != null)
+        {
+            completeOwnershipAnim();
+        }
+
+        playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
+        nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
+
     }
 }

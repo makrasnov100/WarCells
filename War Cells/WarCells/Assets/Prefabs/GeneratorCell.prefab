@@ -1054,6 +1054,8 @@ MonoBehaviour:
   attackCapacity: 1
   defenceCapacity: 1
   generationCapacity: 2
+  attackUnit: {fileID: 2984420196937081325, guid: 1f70fb99f428d2b49913ba98b874cc66,
+    type: 3}
 --- !u!60 &4054795240695476188
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -53,7 +53,7 @@ public class AttackController : MonoBehaviour
                 }
                 else if (destinationCell == null)
                 {
-                    if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID())
+                    if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID()) //Origin selected second time
                     {
                         originCell.GetComponent<CellIdentity>().ChangeActivationState(false, 0);
                         originCell = null;
@@ -66,7 +66,7 @@ public class AttackController : MonoBehaviour
                         destinationCell.GetComponent<CellIdentity>().ChangeActivationState(true, 2);
                         destinationCell.GetComponent<CellIdentity>().SetSingleOpenConnectionColor(originCell.GetComponent<CellIdentity>().GetId(), Color.red);
                         turnController.ShowAttackUI(true);
-                        turnController.ChangeMaxUnitText(originCell.GetComponent<CellIdentity>().GetCurUnusedUnits(destinationCell.GetComponent<CellIdentity>().GetId()));
+                        turnController.ChangeMaxUnitText(originCell.GetComponent<CellIdentity>().GetOutboundUnits(destinationCell.GetComponent<CellIdentity>().GetId()), originCell.GetComponent<CellIdentity>().GetCurUnusedUnits(destinationCell.GetComponent<CellIdentity>().GetId()));
                     }
                     else //TODO: modularize (refactor for simpler code) (some of below is repeated)
                     {
@@ -81,6 +81,7 @@ public class AttackController : MonoBehaviour
                 }
                 else //both origin and destination selected
                 {
+                    ConfirmAttack();
                     if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID())
                     {
                         destinationCell.GetComponent<CellIdentity>().ChangeActivationState(false, 0);
@@ -104,7 +105,9 @@ public class AttackController : MonoBehaviour
                         destinationCell = hit.collider.gameObject;
                         destinationCell.GetComponent<CellIdentity>().ChangeActivationState(true, 2);
                         destinationCell.GetComponent<CellIdentity>().SetSingleOpenConnectionColor(originCell.GetComponent<CellIdentity>().GetId(), Color.red);
-                        turnController.unitMax.text = "/" + originCell.GetComponent<CellIdentity>().GetCurUnusedUnits(destinationCell.GetComponent<CellIdentity>().GetId());
+                        turnController.ChangeMaxUnitText(originCell.GetComponent<CellIdentity>().GetOutboundUnits(destinationCell.GetComponent<CellIdentity>().GetId()), originCell.GetComponent<CellIdentity>().GetCurUnusedUnits(destinationCell.GetComponent<CellIdentity>().GetId()));
+
+                        //turnController.unitMax.text = "/" + originCell.GetComponent<CellIdentity>().GetCurUnusedUnits(destinationCell.GetComponent<CellIdentity>().GetId());
                     }
                     else //selected a cell thats not connected to origin and not being the origin itself
                     {
@@ -121,10 +124,16 @@ public class AttackController : MonoBehaviour
                         turnController.ShowAttackUI(false);
                     }
                 }
-                print("Hit a Cell - " + hit.collider.gameObject.name + "!");
+                
+                //print("Hit a Cell - " + hit.collider.gameObject.name + "!");
             }
             else
             {
+                if (originCell != null && destinationCell != null)
+                {
+                    ConfirmAttack();
+                }
+
                 turnController.ShowAttackUI(false);
                 if (destinationCell != null)
                 {
@@ -146,6 +155,12 @@ public class AttackController : MonoBehaviour
         //TODO: Implement
     }
 
+    public void EditUnitsSent()
+    {
+        turnController.unitCurrent.text = "" + (int)turnController.unitAmount.value;
+        originCell.GetComponent<CellIdentity>().UpdateAttackArrows((int)turnController.unitAmount.value, destinationCell.GetComponent<CellIdentity>().GetId());
+    }
+
     public void ConfirmAttack() //TODO: handle memory deletion after each turn
     {
         int[] outAttack;
@@ -163,7 +178,7 @@ public class AttackController : MonoBehaviour
 
 
         //Reset Destination Selection
-        turnController.ShowAttackUI(false);
+        /*turnController.ShowAttackUI(false);
         if (destinationCell != null)
         {
             destinationCell.GetComponent<CellIdentity>().ChangeActivationState(false, 0);
@@ -174,6 +189,6 @@ public class AttackController : MonoBehaviour
         {
             originCell.GetComponent<CellIdentity>().ChangeActivationState(false, 0);
             originCell = null;
-        }
+        }*/
     }
 }

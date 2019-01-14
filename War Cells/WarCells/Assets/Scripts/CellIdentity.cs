@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using TMPro; 
 
 public class CellIdentity : MonoBehaviour
 {
@@ -17,11 +17,13 @@ public class CellIdentity : MonoBehaviour
     public int attackCapacity;
     public int defenceCapacity;
     public int generationCapacity;
+    public GameObject attackUnit;
 
-    //General Info
+    //Instance Variables
     private int id;
     private int owner;
     private List<int> connections = new List<int>();
+    private List<GameObject> connectionCells = new List<GameObject>();
     private List<int> connectionDirections = new List<int>();
     private List<GameObject> connectionLines = new List<GameObject>();
     private List<bool> connectionStartsHere = new List<bool>();
@@ -32,6 +34,8 @@ public class CellIdentity : MonoBehaviour
     private List<int[]> outgoingAttacks = new List<int[]>();
     private List<int[]> incomingAttacks = new List<int[]>();
     private bool isAttacked;
+    private bool isCalculationComplete = false;
+    private List<int> animUnitsLeft = new List<int>();
 
     public void Awake()
     {
@@ -69,7 +73,7 @@ public class CellIdentity : MonoBehaviour
         textComp.text = curOccupancy + "/" + unitCapacity;
     }
 
-    public void AddConnection(int otherId, int direction, GameObject line, bool isStart)
+    public void AddConnection(int otherId, GameObject otherObj, int direction, GameObject line, bool isStart)
     {
         connections.Add(otherId);
         connectionDirections.Add(direction);
@@ -77,13 +81,86 @@ public class CellIdentity : MonoBehaviour
         connectionStartsHere.Add(isStart);
         outgoingAttacks.Add(new int[] {otherId, 0, -1, 0});
         incomingAttacks.Add(new int[] {otherId, 0, -1, 0});
+        connectionCells.Add(otherObj);
     }
 
     public void CompleteTurn()
     {
+        //Cancel all attacks and disable arrows //TODO: unless selected attack to be reoccuring
+        for (int i = 0; i < outgoingAttacks.Count; i++)
+        {
+            outgoingAttacks[i][1] = 0;
+            //arrows[i].SetActive(false);
+        }
+        for (int y = 0; y < arrows.Count; y++)
+        {
+            arrows[y].SetActive(false);
+            arrowText[y].text = "0";
+        }
+        SetAllOpenConnectionColor(Color.yellow);
+
         //Generate unit(s) if can
-        curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
+        if (curOccupancy > unitCapacity)
+        {
+            ////TODO: IMPLEMENT OVERPOPULATION SYSTEM and NOTIFICATION
+            return;
+        }
+
+        int curUnitCapacity = unitCapacity - GetOutboundUnits();
+        curOccupancy = Mathf.Min(curUnitCapacity, curOccupancy + generationCapacity);
         UpdateCellLabel();
+    }
+
+    public int GetOutboundUnits()
+    {
+        int outboundUnits = 0;
+        foreach (int[] attack in outgoingAttacks)
+        {
+            outboundUnits += attack[1];
+        }
+        return outboundUnits;
+    }
+
+    public int GetOutboundUnits(int otherId)
+    {
+        int outboundUnits = 0;
+        foreach (int[] attack in outgoingAttacks)
+        {
+            if (attack[0] == otherId)
+            {
+                outboundUnits += attack[1];
+                break;
+            }
+        }
+        return outboundUnits;
+    }
+
+    public void UpdateAttackArrows(int inputAmount, int destinationId)
+    {
+        for (int i = 0; i < connections.Count; i++)
+        {
+            if (connections[i] == destinationId)
+            {
+                int totalAvaliableUnits = 0;
+                int.TryParse(arrowText[connectionDirections[i]].text, out totalAvaliableUnits);
+                totalAvaliableUnits += curOccupancy;
+                arrowText[connectionDirections[i]].text = "" + inputAmount;
+
+                curOccupancy = totalAvaliableUnits - inputAmount;
+                UpdateCellLabel();
+
+                if (inputAmount == 0)
+                {
+                    arrows[connectionDirections[i]].SetActive(false);
+                }
+                else
+                {
+                    arrows[connectionDirections[i]].SetActive(true);
+                }
+
+                break;
+            }
+        }
     }
 
     public void ChangeActivationState(bool isActivated, int type)
@@ -209,7 +286,7 @@ public class CellIdentity : MonoBehaviour
                         arrows[connectionDirections[i]].SetActive(true);
 
                     arrowText[connectionDirections[i]].text = "" + attackInfo[1];
-                    curOccupancy -= attackInfo[1] - outgoingAttacks[i][1];
+                    //curOccupancy -= attackInfo[1] - outgoingAttacks[i][1];
                     outgoingAttacks[i][1] = attackInfo[1];
                     UpdateCellLabel();
                 }
@@ -252,84 +329,156 @@ public class CellIdentity : MonoBehaviour
 
     public void CompleteCellFighting()
     {
-        //TODO: find more efficint method than O(n^2)
-        //TODO: is the below list garbage collected?
-        List<int[]> ownershipChances = new List<int[]>(); // 0 - ownerID  1 - unit weight
-                                                          //incomingAttacks  // 0 - otherCellID 1 - unit amount  2 - ownerID  3 - modifier 
-        int totalUnits = 0;
-
-        //Add the cell defences
-        ownershipChances.Add(new int[] { owner, defenceCapacity * curOccupancy });
-        totalUnits = ownershipChances[0][1];
-
-        for (int i = 0; i < incomingAttacks.Count; i++)
+        if (!isCalculationComplete)
         {
-            bool isPresent = false;
-            for (int x = 0; x < ownershipChances.Count; x++)
+            //TODO: find more efficint method than O(n^2)
+            //TODO: is the below list garbage collected?
+            List<int[]> ownershipChances = new List<int[]>(); // 0 - ownerID  1 - unit weight
+                                                              //incomingAttacks  // 0 - otherCellID 1 - unit amount  2 - ownerID  3 - modifier 
+            int totalUnits = 0;
+
+            //Add the cell defences
+            ownershipChances.Add(new int[] { owner, defenceCapacity * curOccupancy });
+            totalUnits = ownershipChances[0][1];
+
+            for (int i = 0; i < incomingAttacks.Count; i++)
             {
-                if (ownershipChances[x][0] == incomingAttacks[i][2])
+                bool isPresent = false;
+                for (int x = 0; x < ownershipChances.Count; x++)
                 {
-                    ownershipChances[x][1] += incomingAttacks[i][1] * incomingAttacks[i][3];
+                    if (ownershipChances[x][0] == incomingAttacks[i][2])
+                    {
+                        ownershipChances[x][1] += incomingAttacks[i][1] * incomingAttacks[i][3];
+                        isPresent = true;
+                        break;
+                    }
+                }
+                if (isPresent)
+                    continue;
+                else
+                {
+                    ownershipChances.Add(new int[] { incomingAttacks[i][2], incomingAttacks[i][1] * incomingAttacks[i][3] });
                     totalUnits += incomingAttacks[i][1] * incomingAttacks[i][3];
-                    isPresent = true;
-                    break;
                 }
-            }
-            if (isPresent)
-                continue;
-            else
-            {
-                ownershipChances.Add(new int[] { incomingAttacks[i][2], incomingAttacks[i][1] * incomingAttacks[i][3] });
-                totalUnits += incomingAttacks[i][1] * incomingAttacks[i][3];
+
             }
 
-        }
-
-        //Find who won and with how many units
-        for (int b = 0; b < ownershipChances.Count; b++)
-        {
-            if (ownershipChances[b][1] <= 0)
+            //Debug
+            string output = gameObject.name + " - OWNERSHIP CHANCES:" + System.Environment.NewLine;
+            for (int u = 0; u < ownershipChances.Count; u++)
             {
-                ownershipChances.RemoveAt(b);
-                b--;
+                output += "Player: " + ownershipChances[u][0] + " | Units: " + ownershipChances[u][1] + System.Environment.NewLine;
             }
-        }
-        while (ownershipChances.Count != 1)
-        {
-            //Find who won the match
-            int curRandom = Random.Range(0,ownershipChances.Count);
-            for (int g = 0; g < ownershipChances.Count; g++)
+            output += "Total Units Fighting - " + totalUnits + System.Environment.NewLine;
+
+            //Find who won and with how many units
+            for (int b = 0; b < ownershipChances.Count; b++)
             {
-                if (g != curRandom)
+                if (ownershipChances[b][1] <= 0)
                 {
-                    ownershipChances[g][1]--;
+                    ownershipChances.RemoveAt(b);
+                    b--;
                 }
             }
-
-            //Remove all contendors with no troops left
-            for (int j = 0; j < ownershipChances.Count; j++)
+            while (ownershipChances.Count != 1)
             {
-                if (ownershipChances[j][1] <= 0)
+                //Find who won the match
+                int curRandom = Random.Range(0, ownershipChances.Count);
+                for (int g = 0; g < ownershipChances.Count; g++)
                 {
-                    ownershipChances.RemoveAt(j);
-                    j--;
+                    if (g != curRandom)
+                    {
+                        ownershipChances[g][1]--;
+                    }
+                }
+
+                //Remove all contendors with no troops left
+                for (int j = 0; j < ownershipChances.Count; j++)
+                {
+                    if (ownershipChances[j][1] <= 0)
+                    {
+                        ownershipChances.RemoveAt(j);
+                        j--;
+                    }
                 }
             }
+
+            //Find final unit value (without modifiers)
+            int unitsReg = 0;
+            int unitsMod = 0;
+            foreach (int[] attack in incomingAttacks)
+            {
+                if (attack[2] == ownershipChances[0][0])
+                {
+                    unitsReg += attack[1];
+                    unitsMod += attack[1] * attack[3];
+                }
+                animUnitsLeft.Add(attack[1]); //Add units regularly
+            }
+            if (owner == ownershipChances[0][0])
+            {
+                unitsReg += curOccupancy;
+                unitsMod += curOccupancy * defenceCapacity;
+            }
+            float actualUnitToModUnitRatio = (float)unitsReg / (float)unitsMod;
+            int finalUnitAmount = (int)Mathf.Round(ownershipChances[0][1] * actualUnitToModUnitRatio);
+
+            //print("CELL OWNER TRANSFER - original:" + owner + " to new:" + ownershipChances[0][0]);
+
+            if (owner != ownershipChances[0][0])
+            {
+                if (owner != -1)
+                {
+                    Player pastOwner = turnController.playerManager.GetPlayers()[owner];
+                    pastOwner.RemoveCell(this.gameObject);
+                }
+                Player curOwner = turnController.playerManager.GetPlayers()[ownershipChances[0][0]];
+                curOwner.AddCell(this.gameObject);
+                SetOwner(ownershipChances[0][0], curOwner.GetColor());
+            }
+            SetOccupancy(finalUnitAmount);
+            isCalculationComplete = true;
+            output += "Winning Player is " + ownershipChances[0][0] + " with " + finalUnitAmount + " units remaining!" + System.Environment.NewLine;
+            output += "Final units determined with ratio of " + actualUnitToModUnitRatio + " | " + ownershipChances[0][1] + " became " + finalUnitAmount;
+            print(output);
         }
 
-        if (ownershipChances[0][0] == -1)
+        bool isUnitSendingDone = true;
+        for(int h = 0; h < animUnitsLeft.Count; h++)
         {
-            SetOccupancy(ownershipChances[0][0]);
+            if (animUnitsLeft[h] > 0)
+            {
+                GameObject curAttackUnit = Instantiate(connectionCells[h].GetComponent<CellIdentity>().attackUnit, connectionCells[h].transform.position, connectionCells[h].transform.rotation, transform);
+                curAttackUnit.GetComponent<LerpAtStart>().Construct(connectionCells[h].transform.position, transform.position, 2f);
+                curAttackUnit.GetComponent<SpriteRenderer>().color = connectionCells[h].GetComponent<CellIdentity>().mainSprite.color;
+                animUnitsLeft[h]--;
+                isUnitSendingDone = false;
+            }
+            //print("Completed Fighting In Cell:" + gameObject.name);
         }
 
 
-        //HUGE TODO ADD REMOWAL OF CELL FROM PAST OWNER 
-        //DO TOMOROW!!!!!!
-        Player curPlayer = turnController.playerManager.GetPlayers()[ownershipChances[0][0]];
-        SetOwner(ownershipChances[0][0], curPlayer.GetColor());
-        //curPlayer.AddCell() COMPLETE TOMOROW
-        SetOccupancy(ownershipChances[0][1]);
-        //ALSO FIGURE OUT A WAY TO RESET ALL ARROWS AND CONNECTION COLORS AND ATTACK LISTS (EFFICIENCTLY)
+
+        if (isUnitSendingDone)
+        {
+            //Reset incoming attacks TODO: if they are not reoccuring
+            foreach (int[] attack in incomingAttacks)
+            {
+                attack[1] = 0;
+                attack[2] = -1;
+                attack[3] = 1;
+            }
+            isAttacked = false; //TODO HUGE: add cell to fighting cells if has reocurring attacks
+            isCalculationComplete = false;
+            animUnitsLeft.Clear();
+            turnController.completeFighting -= CompleteCellFighting;
+            turnController.completeOwnershipAnim += CompleteOwnershipAnim;
+        }
+
+
+
+
+ 
 
         //Figure out who won (legacy - efficient but doesnt give remaining units)
         //int winningUnit = Random.Range(1, totalUnits+1);
@@ -343,14 +492,14 @@ public class CellIdentity : MonoBehaviour
 
         //TODO: make into a black screen with squares showing chances of winning and the cells that is being fought for
 
-        string output = "OWNERSHIP CHANCES:" + System.Environment.NewLine;
-        for (int u = 0; u < ownershipChances.Count; u++)
-        {
-            output += "Player: " + ownershipChances[u][0] + " | Units: " + ownershipChances[u][1] + System.Environment.NewLine;
-        }
-        output += "Total Units Fighting - " + totalUnits + System.Environment.NewLine;
-        output += "Winning Player is " + ownershipChances[0][0] + " with " + ownershipChances[0][1] + " units remaining!";
-        print(output);
-        print("Completed Fighting In Cell:" + gameObject.name);
+
+
+    }
+
+    void CompleteOwnershipAnim()
+    {
+        //Add random delay so it looks like cells finish fighting at ifferent times
+        //Addd animation so cell ocupancy gradully changes
+        print("Ownership Anim Complete in " + gameObject.name);
     }
 }
