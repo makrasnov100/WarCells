@@ -125,7 +125,6 @@ public class AttackController : MonoBehaviour
             }
             else
             {
-                ConfirmDefence();
                 if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID()) //Origin selected second time
                 {
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
@@ -151,6 +150,7 @@ public class AttackController : MonoBehaviour
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(true, true, 1);
                     turnController.ShowDefenceUI(originCell.GetComponent<CellIdentity>());
                 }
+                ConfirmDefence();
             }
         }
         else

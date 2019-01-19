@@ -103,9 +103,11 @@ GameObject:
   - component: {fileID: 1502760566935906913}
   - component: {fileID: 8172557770190878452}
   - component: {fileID: 3281689473113783810}
+  - component: {fileID: 2771984789076589735}
+  - component: {fileID: 1102806978729084470}
   m_Layer: 0
   m_Name: AttackCellUnit
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -185,3 +187,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42da5fb469c575c4e8d1d5e330c68d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2771984789076589735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984420196937081325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d25b588c6e5f2ef41994ae4c7b5e56df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &1102806978729084470
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984420196937081325}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.6

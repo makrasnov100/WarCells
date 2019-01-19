@@ -37,13 +37,13 @@ public class CellIdentity : MonoBehaviour
     private int latestUnitSentTo = -1;
     private List<int[]> outgoingAttacks = new List<int[]>();
     private List<int[]> incomingAttacks = new List<int[]>();
-    private bool isAttacked;
-    private bool isCalculationComplete = false;
+    private bool isAttacking;
+    //private bool isCalculationComplete = false;
     private List<int> animUnitsLeft = new List<int>();
 
     public void Awake()
     {
-        isAttacked = false;
+        isAttacking = false;
         animator = GetComponent<Animator>();
     }
 
@@ -69,6 +69,12 @@ public class CellIdentity : MonoBehaviour
     public void SetOccupancy(int occupied)
     {
         curOccupancy = occupied;
+        UpdateCellLabel();
+    }
+
+    public void ChangeUnits(int delta)
+    {
+        curOccupancy += delta;
         UpdateCellLabel();
     }
 
@@ -365,6 +371,29 @@ public class CellIdentity : MonoBehaviour
                 }
             }
 
+
+            //Determine if cell is attacked
+            bool isAttackingCur = false;
+            for (int i = 0; i < connections.Count; i++)
+            {
+                if (outgoingAttacks[i][1] > 0)
+                {
+                    isAttackingCur = true;
+                    break;
+                }
+            }
+
+            //Determine if need to subscribe/unsubscribe based on given info
+            if (!isAttacking && isAttackingCur)
+            {
+                turnController.completeFighting += CompleteCellFighting;
+            }
+            else if (isAttacking && !isAttackingCur)
+            {
+                turnController.completeFighting -= CompleteCellFighting;
+            }
+            isAttacking = isAttackingCur;
+
         }
         else
         {
@@ -375,28 +404,6 @@ public class CellIdentity : MonoBehaviour
                     incomingAttacks[i] = attackInfo;
                 }
             }
-
-            //Determine if cell is attacked
-            bool isAttackedCur = false;
-            for (int i = 0; i < connections.Count; i++)
-            {
-                if (incomingAttacks[i][1] > 0)
-                {
-                    isAttackedCur = true;
-                    break;
-                }
-            }
-
-            //Determine if need to subscribe/unsubscribe based on given info
-            if (!isAttacked && isAttackedCur)
-            {
-                turnController.completeFighting += CompleteCellFighting;
-            }
-            else if (isAttacked && !isAttackedCur)
-            {
-                turnController.completeFighting -= CompleteCellFighting;
-            }
-            isAttacked = isAttackedCur;
         }
     }
 
@@ -420,8 +427,8 @@ public class CellIdentity : MonoBehaviour
         {
             for (int i = 0; i < outgoingAttacks.Count; i++)
             {
-                outgoingAttacks[i][1] = 0;
-                connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, 0, owner, attackCapacity);
+                SetOutgoingAttack(i, 0);
+                //connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, 0, owner, attackCapacity);
             }
         }
         else
@@ -447,40 +454,39 @@ public class CellIdentity : MonoBehaviour
 
             for (int i = 0; i < curAttackUnits.Count; i++)
             {
-                outgoingAttacks[i][1] = curAttackUnits[i];
-                connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, curAttackUnits[i], owner, attackCapacity);
+                SetOutgoingAttack(i, curAttackUnits[i]);
+                //connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, curAttackUnits[i], owner, attackCapacity);
             }
         }
     }
 
-    public void SetIncomingAttack(int otherId, int units, int otherOwner, int attackModifier)
+    public void SetOutgoingAttack(int otherIdx, int unitAmount)
     {
-        int incomingUnits = 0;
-        foreach (int[] attack in incomingAttacks)
+        outgoingAttacks[otherIdx][1] = unitAmount;
+
+        int outgoingUnits = 0;
+        for (int i = 0; i < connections.Count; i++)
         {
-            if (attack[0] == otherId)
-            {
-                attack[1] = units;
-                attack[2] = otherOwner;
-                attack[3] = attackModifier;
-            }
-            incomingUnits += attack[1];
+            outgoingUnits += outgoingAttacks[i][1];
+            if (outgoingUnits > 0)
+                break;
         }
 
-        if (!isAttacked && incomingUnits > 0)
+        if (!isAttacking && outgoingUnits > 0)
         {
             turnController.completeFighting += CompleteCellFighting;
-            isAttacked = true;
+            isAttacking = true;
         }
-        else if (isAttacked && incomingUnits == 0)
+        else if (isAttacking && outgoingUnits == 0)
         {
             turnController.completeFighting -= CompleteCellFighting;
-            isAttacked = false;
+            isAttacking = false; 
         }
     }
 
     public void CompleteCellFighting()
     {
+        /*
         if (!isCalculationComplete)
         {
             //TODO: find more efficint method than O(n^2)
@@ -594,16 +600,17 @@ public class CellIdentity : MonoBehaviour
             output += "Final units determined with ratio of " + actualUnitToModUnitRatio + " | " + ownershipChances[0][1] + " became " + finalUnitAmount;
             print(output);
         }
+        */
 
         bool isUnitSendingDone = true;
-        for(int h = 0; h < animUnitsLeft.Count; h++)
+        for(int h = 0; h < outgoingAttacks.Count; h++)
         {
-            if (animUnitsLeft[h] > 0)
+            if (outgoingAttacks[h][1] > 0)
             {
-                GameObject curAttackUnit = Instantiate(connectionCells[h].GetComponent<CellIdentity>().attackUnit, connectionCells[h].transform.position, connectionCells[h].transform.rotation, transform);
-                curAttackUnit.GetComponent<LerpAtStart>().Construct(connectionCells[h].transform.position, transform.position, 2f);
-                curAttackUnit.GetComponent<SpriteRenderer>().color = connectionCells[h].GetComponent<CellIdentity>().mainSprite.color;
-                animUnitsLeft[h]--;
+                GameObject curAttackUnit = Instantiate(connectionCells[h].GetComponent<CellIdentity>().attackUnit, transform.position, transform.rotation, transform);
+                curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[h].transform.position, 2f);
+                curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
+                outgoingAttacks[h][1]--;
                 isUnitSendingDone = false;
             }
             //print("Completed Fighting In Cell:" + gameObject.name);
@@ -620,8 +627,8 @@ public class CellIdentity : MonoBehaviour
                 attack[2] = -1;
                 attack[3] = 1;
             }
-            isAttacked = false; //TODO HUGE: add cell to fighting cells if has reocurring attacks
-            isCalculationComplete = false;
+            isAttacking = false; //TODO HUGE: add cell to fighting cells if has reocurring attacks
+            //isCalculationComplete = false;
             animUnitsLeft.Clear();
             turnController.completeFighting -= CompleteCellFighting;
             turnController.completeOwnershipAnim += CompleteOwnershipAnim;

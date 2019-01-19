@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 5094662991077888380}
   - component: {fileID: 7209779617500458382}
   - component: {fileID: 2889867679815497241}
+  - component: {fileID: 4481876700451382480}
+  - component: {fileID: 7738769513613999509}
   m_Layer: 0
   m_Name: DefenceCellUnit
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,6 +95,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42da5fb469c575c4e8d1d5e330c68d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4481876700451382480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740488862428620166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d25b588c6e5f2ef41994ae4c7b5e56df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &7738769513613999509
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740488862428620166}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.2, y: 1.2}
+  m_EdgeRadius: 0
 --- !u!1 &8209294303717926319
 GameObject:
   m_ObjectHideFlags: 0
