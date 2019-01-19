@@ -666,30 +666,12 @@ public class CellIdentity : MonoBehaviour
 
         if (isUnitSendingDone)
         {
-            //Reset incoming attacks TODO: if they are not reoccuring
-            foreach (int[] attack in incomingAttacks)
-            {
-                attack[1] = 0;
-                attack[2] = -1;
-                attack[3] = 1;
-            }
             isAttacking = false; //TODO HUGE: add cell to fighting cells if has reocurring attacks
             //isCalculationComplete = false;
             animUnitsLeft.Clear();
             turnController.completeFighting -= CompleteCellFighting;
-            turnController.completeOwnershipAnim += CompleteOwnershipAnim;
         }
 
         //TODO: make into a black screen with squares showing chances of winning and the cells that is being fought for
-
-
-
-    }
-
-    void CompleteOwnershipAnim()
-    {
-        //Add random delay so it looks like cells finish fighting at different times
-        //Addd animation so cell ocupancy gradully changes
-        print("Ownership Anim Complete in " + gameObject.name);
     }
 }

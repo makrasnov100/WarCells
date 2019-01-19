@@ -9,8 +9,6 @@ public class TurnUIController : MonoBehaviour
     //Fighting Delegate HUGE TODO: make private 
     public delegate void CompleteFighting();
     public CompleteFighting completeFighting;
-    public delegate void CompleteOwnershipAnim();
-    public CompleteOwnershipAnim completeOwnershipAnim;
 
     //References
     [Header("MobileUI")]
@@ -34,6 +32,7 @@ public class TurnUIController : MonoBehaviour
     public GameObject pcNextTurnBtn;
 
     public PlayerManager playerManager;
+    public AttackController attackController;
     private Canvas canvas;
     private Image nextTurnBG;
     private Slider unitAmountInput;
@@ -44,6 +43,7 @@ public class TurnUIController : MonoBehaviour
     private GameObject nextTurnBtn;
 
     public bool ignoreSliderEdits = false;
+    public bool isAnimationPlaying = false;
 
     public void Start()
     {
@@ -85,7 +85,7 @@ public class TurnUIController : MonoBehaviour
         //    completeFighting();
         //}
         //completeFighting = null;
-
+        HideUI();
         StartCoroutine(UnitSendingAnim());
 
         //playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
@@ -93,6 +93,15 @@ public class TurnUIController : MonoBehaviour
     }
 
     public void HideUI()
+    {
+        nextTurnBtn.SetActive(false);
+        nextTurnBG.gameObject.SetActive(false);
+        unitAmountInput.gameObject.SetActive(false);
+        unitCurrent.gameObject.SetActive(false);
+        unitMax.gameObject.SetActive(false);
+    }
+
+    public void ShowNextTurnUI()
     {
         nextTurnBtn.SetActive(true);
         nextTurnBG.gameObject.SetActive(true);
@@ -103,6 +112,9 @@ public class TurnUIController : MonoBehaviour
 
     public void ShowDefenceUI(CellIdentity origin)
     {
+        if (isAnimationPlaying)
+            return;
+
         ignoreSliderEdits = true;
         unitInputBG.color = new Color(0, 0, 1f, 150f / 250f);
 
@@ -130,19 +142,26 @@ public class TurnUIController : MonoBehaviour
 
     IEnumerator UnitSendingAnim()
     {
+        isAnimationPlaying = true;
         while (completeFighting != null)
         {
             completeFighting();
             yield return new WaitForSeconds(.3f);
         }
-
-        if (completeOwnershipAnim != null)
-        {
-            completeOwnershipAnim();
-        }
+        yield return new WaitForSeconds(2f);//waits for all cells to finish reaching destination
 
         playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
         nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
+
+        isAnimationPlaying = false;
+
+        //Show the correct UI
+        if (attackController.GetOriginCell() != null)
+            ShowDefenceUI(attackController.GetOriginCell().GetComponent<CellIdentity>());
+        else
+            ShowNextTurnUI();
+
+
 
     }
 

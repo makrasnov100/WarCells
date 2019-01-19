@@ -459,8 +459,12 @@ MonoBehaviour:
       e32: 0
       e33: 1
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 0}
-  m_BreadCrumbs: []
+  m_AnimatorController: {fileID: 9100000, guid: 5f233278c4c21824683066d589c93ba8,
+    type: 2}
+  m_BreadCrumbs:
+  - m_Target: {fileID: 1107392066759300396, guid: 5f233278c4c21824683066d589c93ba8,
+      type: 2}
+    m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
   stateMachineGraphGUI: {fileID: 0}
   blendTreeGraph: {fileID: 0}
@@ -553,18 +557,18 @@ MonoBehaviour:
     m_ExpandedIDs: ffffffff00000000502600005a260000a22600001a280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: GeneratorCellUnit
+      m_OriginalName: GeneratorCellUnit
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 12564
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 4}
     m_SearchString: 
@@ -727,9 +731,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.8001369, y: 0, z: 0}
+    m_Target: {x: 1264.1301, y: 725.9799, z: 41.561424}
     speed: 2
-    m_Value: {x: -1.8001369, y: 0, z: 0}
+    m_Value: {x: 1264.1301, y: 725.9799, z: 41.561424}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -761,9 +765,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 13.308898
+    m_Target: 1012.8694
     speed: 2
-    m_Value: 13.308898
+    m_Value: 1012.8694
   m_Ortho:
     m_Target: 1
     speed: 2
