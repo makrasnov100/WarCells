@@ -15,9 +15,9 @@ public class CameraHandler : MonoBehaviour
     Vector2[] lastZoomPositions;
 
     //Movement Sensitivity
-    float panSpeed = 6f;
+    float panSpeed = 10f;
     float zoomSpeedTouch = 0.1f;
-    float zoomSpeedMouse = 0.5f;
+    float zoomSpeedMouse = 100f;
 
     float[] boundsX = new float[] { -100f, 100f };
     float[] boundsY = new float[] { -100f, 100f };
@@ -44,6 +44,11 @@ public class CameraHandler : MonoBehaviour
 
     void HandleMouse()
     {
+
+        //Ignore touch if (TODO:scrolling) or menu click
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         if (Input.GetMouseButtonDown(0)) //Record mouse position on initial click
         {
             lastPanPosition = Input.mousePosition;

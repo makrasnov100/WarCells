@@ -13,17 +13,70 @@ public class TurnUIController : MonoBehaviour
     public CompleteOwnershipAnim completeOwnershipAnim;
 
     //References
-    public PlayerManager playerManager;
-    public Image nextTurnBG;
-    public Slider unitAmountInput;
-    public RectTransform unitAmountRect;
-    public Image unitInputBG;
-    public TMP_Text unitCurrent;
-    public TMP_Text unitMax;
-    public GameObject nextTurnBtn;
+    [Header("MobileUI")]
+    public Canvas mobileCanvas;
+    public Image mobileNextTurnBG;
+    public Slider mobileUnitAmountInput;
+    public RectTransform mobileUnitAmountRect;
+    public Image mobileUnitInputBG;
+    public TMP_Text mobileUnitCurrent;
+    public TMP_Text mobileUnitMax;
+    public GameObject mobileNextTurnBtn;
 
+    [Header("PcUI")]
+    public Canvas pcCanvas;
+    public Image pcNextTurnBG;
+    public Slider pcUnitAmountInput;
+    public RectTransform pcUnitAmountRect;
+    public Image pcUnitInputBG;
+    public TMP_Text pcUnitCurrent;
+    public TMP_Text pcUnitMax;
+    public GameObject pcNextTurnBtn;
+
+    public PlayerManager playerManager;
+    private Canvas canvas;
+    private Image nextTurnBG;
+    private Slider unitAmountInput;
+    private RectTransform unitAmountRect;
+    private Image unitInputBG;
+    private TMP_Text unitCurrent;
+    private TMP_Text unitMax;
+    private GameObject nextTurnBtn;
 
     public bool ignoreSliderEdits = false;
+
+    public void Start()
+    {
+        //Sets UI based off the platform.
+        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
+        {
+            //Phone
+            canvas = mobileCanvas;
+            nextTurnBG = mobileNextTurnBG;
+            unitAmountInput = mobileUnitAmountInput;
+            unitAmountRect = mobileUnitAmountRect;
+            unitInputBG = mobileUnitInputBG;
+            unitCurrent = mobileUnitCurrent;
+            unitMax = mobileUnitMax;
+            nextTurnBtn = mobileNextTurnBtn;
+        }
+        else
+        {
+            //PC
+            canvas = pcCanvas;
+            nextTurnBG = pcNextTurnBG;
+            unitAmountInput = pcUnitAmountInput;
+            unitAmountRect = pcUnitAmountRect;
+            unitInputBG = pcUnitInputBG;
+            unitCurrent = pcUnitCurrent;
+            unitMax = pcUnitMax;
+            nextTurnBtn = pcNextTurnBtn;
+        }
+
+        canvas.gameObject.SetActive(true);
+
+
+}
 
     public void NextTurnClick()
     {
@@ -91,5 +144,25 @@ public class TurnUIController : MonoBehaviour
         playerManager.CompleteCellActions(); //Finds influence amount and amount of units each person can generate
         nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
 
+    }
+
+    //Getters/Setters
+    //Unit amount input
+    public Slider getUnitAmountInput()
+    {
+        return unitAmountInput;
+    }
+    public void setUnitAmountInput(Slider input)
+    {
+        this.unitAmountInput = input;
+    }
+    //unit current
+    public TMP_Text getUnitCurrent()
+    {
+        return unitCurrent;
+    }
+    public void setUnitCurrent(TMP_Text input)
+    {
+        this.unitCurrent = input;
     }
 }
