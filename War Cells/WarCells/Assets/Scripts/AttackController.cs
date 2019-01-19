@@ -58,7 +58,7 @@ public class AttackController : MonoBehaviour
                     {
                         originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
                         originCell = null;
-                        turnController.HideUI();
+                        turnController.ShowNextTurnUI();
                         return;
                     }
 
@@ -89,7 +89,7 @@ public class AttackController : MonoBehaviour
                     originCell.GetComponent<CellIdentity>().IndicateAttackConnection();
                 }
 
-                turnController.HideUI();
+                turnController.ShowNextTurnUI();
                 if (originCell != null)
                 {
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
@@ -129,7 +129,7 @@ public class AttackController : MonoBehaviour
                 {
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
                     originCell = null;
-                    turnController.HideUI();
+                    turnController.ShowNextTurnUI();
                     return;
                 }
 
@@ -161,7 +161,7 @@ public class AttackController : MonoBehaviour
                 originCell.GetComponent<CellIdentity>().IndicateAttackConnection();
             }
 
-            turnController.HideUI();
+            turnController.ShowNextTurnUI();
             if (originCell != null)
             {
                 originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
@@ -186,5 +186,11 @@ public class AttackController : MonoBehaviour
     {
         originCell.GetComponent<CellIdentity>().SetReserveUnits((int)turnController.getUnitAmountInput().value);
         originCell.GetComponent<CellIdentity>().RecalculateAttackUnits();
+    }
+
+    //Accessors/Mutators
+    public GameObject GetOriginCell()
+    {
+        return originCell;
     }
 }
