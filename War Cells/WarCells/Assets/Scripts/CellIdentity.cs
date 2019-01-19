@@ -623,21 +623,43 @@ public class CellIdentity : MonoBehaviour
         }
         */
 
-        bool isUnitSendingDone = true;
+        bool isUnitSendingDone = true;     
         for(int h = 0; h < outgoingAttacks.Count; h++)
         {
             if (outgoingAttacks[h][1] > 0) // If has units to send (SEND UNITS)
             {
-                GameObject curAttackUnit = Instantiate(attackUnit, transform.position, transform.rotation, transform);
-                curOccupancy -= 1;
-                UpdateCellLabel();
-                curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[h].transform.position, 2f);
-                curAttackUnit.GetComponent<UnitAttackIdentity>().Construct(gameObject, 1, owner, mainSprite.color);
-                curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
-                outgoingAttacks[h][1]--;
+                //Test for size of unit
+                if (outgoingAttacks[h][1] / 25 > 0) // Size of 25
+                {
+                    int unitAmount = outgoingAttacks[h][1] / 25;
+                    SendUnit(h, 25);
+                }
+                else if(outgoingAttacks[h][1] / 15 > 0)
+                {
+                    int unitAmount = outgoingAttacks[h][1] / 15;
+                    SendUnit(h, 15);
+                }
+                else if (outgoingAttacks[h][1] / 5 > 0)
+                {
+                    int unitAmount = outgoingAttacks[h][1] / 5;
+                    SendUnit(h, 5);
+                }
+                else
+                    SendUnit(h, 1);
+
                 isUnitSendingDone = false;
             }
-            //print("Completed Fighting In Cell:" + gameObject.name);
+        }
+
+        void SendUnit(int h, int unitSize)
+        {
+            curOccupancy -= unitSize;
+            GameObject curAttackUnit = Instantiate(attackUnit, transform.position, transform.rotation, transform);
+            curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[h].transform.position, 2f);
+            curAttackUnit.GetComponent<UnitAttackIdentity>().Construct(gameObject, unitSize, owner, mainSprite.color); 
+            curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
+            outgoingAttacks[h][1] -= unitSize;
+            UpdateCellLabel();
         }
 
 

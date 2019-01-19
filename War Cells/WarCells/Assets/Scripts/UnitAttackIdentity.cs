@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UnitAttackIdentity : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class UnitAttackIdentity : MonoBehaviour
     private int unitsRemaining;
     private int unitOwner;
     private Color unitColor;
+    public TMP_Text unitSizeText;
     private int unitType; //(TODO: Defender/Invaders)
 
 
@@ -17,6 +19,7 @@ public class UnitAttackIdentity : MonoBehaviour
         this.unitsRemaining = unitRemaining;
         this.unitOwner = unitOwner;
         this.unitColor = unitColor;
+        unitSizeText.text = unitsRemaining.ToString();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -60,6 +63,7 @@ public class UnitAttackIdentity : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        unitSizeText.text = unitsRemaining.ToString();
     }
 
     //Accessor(s)/Modifier(s)
