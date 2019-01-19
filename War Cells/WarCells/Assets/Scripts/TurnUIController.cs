@@ -15,10 +15,15 @@ public class TurnUIController : MonoBehaviour
     //References
     public PlayerManager playerManager;
     public Image nextTurnBG;
-    public Slider unitAmount;
+    public Slider unitAmountInput;
+    public RectTransform unitAmountRect;
+    public Image unitInputBG;
     public TMP_Text unitCurrent;
     public TMP_Text unitMax;
     public GameObject nextTurnBtn;
+
+
+    public bool ignoreSliderEdits = false;
 
     public void NextTurnClick()
     {
@@ -34,44 +39,40 @@ public class TurnUIController : MonoBehaviour
         //nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
     }
 
-    public void ShowAttackUI(bool showAttack)
+    public void HideUI()
     {
-        //TODO: Add nice animation and graphics
-        if (showAttack)
-        {
-            nextTurnBG.gameObject.SetActive(false);
-            nextTurnBtn.SetActive(false);
-            unitAmount.gameObject.SetActive(true);
-            unitCurrent.gameObject.SetActive(true);
-            unitMax.gameObject.SetActive(true);
-        }
-        else
-        {
-            nextTurnBtn.SetActive(true);
-            nextTurnBG.gameObject.SetActive(true);
-            unitAmount.gameObject.SetActive(false);
-            unitCurrent.gameObject.SetActive(false);
-            unitMax.gameObject.SetActive(false);
-        }
+        nextTurnBtn.SetActive(true);
+        nextTurnBG.gameObject.SetActive(true);
+        unitAmountInput.gameObject.SetActive(false);
+        unitCurrent.gameObject.SetActive(false);
+        unitMax.gameObject.SetActive(false);
+    }
+
+    public void ShowDefenceUI(CellIdentity origin)
+    {
+        ignoreSliderEdits = true;
+        unitInputBG.color = new Color(0, 0, 1f, 150f / 250f);
+
+        unitCurrent.text = "" + origin.GetReserveUnits();
+        unitMax.text = "/" + origin.GetCapacity();
+        unitAmountInput.value = (float)origin.GetReserveUnits();
+        unitAmountInput.maxValue = origin.GetCapacity();
+        unitAmountRect.offsetMax = new Vector2(0, unitAmountRect.offsetMax.y);
+
+        nextTurnBG.gameObject.SetActive(false);
+        nextTurnBtn.SetActive(false);
+        unitAmountInput.gameObject.SetActive(true);
+        unitCurrent.gameObject.SetActive(true);
+        unitMax.gameObject.SetActive(true);
+        ignoreSliderEdits = false;
     }
 
     public void ChangeMaxUnitText(int unitsUsed, int maxUnits)
     {
         unitCurrent.text = "" + unitsUsed;
         unitMax.text = "/" + maxUnits;
-        unitAmount.maxValue = maxUnits;
-        unitAmount.value = unitsUsed;
-    }
-
-    public bool UnitTransferInfo(CellIdentity origin, CellIdentity destination, out int[] outInfo, out int[] inInfo)
-    {
-        int unitInput = (int)unitAmount.value;
-
-        outInfo = new int[] {destination.GetId(), unitInput};
-        inInfo = new int[] {origin.GetId(), unitInput, origin.GetOwner(), origin.GetAttackCapacity()};
-        origin.SetSingleOpenConnectionColor(destination.GetId(), Color.blue);
-        origin.SetSingleOpenConnectionColor(origin.GetId(), Color.blue);
-        return true;
+        unitAmountInput.maxValue = maxUnits;
+        unitAmountInput.value = unitsUsed;
     }
 
     IEnumerator UnitSendingAnim()

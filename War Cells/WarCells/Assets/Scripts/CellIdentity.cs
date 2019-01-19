@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro; 
+using TMPro;
 
 public class CellIdentity : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class CellIdentity : MonoBehaviour
     public List<GameObject> arrows = new List<GameObject>(); //0 - up, 1 - down, 2 - left, 3 - right
     public List<SpriteRenderer> arrowSprites = new List<SpriteRenderer>();
     public List<TMP_Text> arrowText = new List<TMP_Text>();
+    public TMP_Text reserveIndicator;
 
     //Predifined Info
     public int attackCapacity;
@@ -29,8 +30,11 @@ public class CellIdentity : MonoBehaviour
     private List<bool> connectionStartsHere = new List<bool>();
     private int curOccupancy;
     private int unitCapacity;
+    private int reserveUnits;
     private TMP_Text textComp;
 
+    private List<bool> isAttackingConnection = new List<bool>();
+    private int latestUnitSentTo = -1;
     private List<int[]> outgoingAttacks = new List<int[]>();
     private List<int[]> incomingAttacks = new List<int[]>();
     private bool isAttacked;
@@ -72,6 +76,16 @@ public class CellIdentity : MonoBehaviour
     {
         textComp.text = curOccupancy + "/" + unitCapacity;
     }
+    public void UpdateReserveIndicator(int reserveUnits)
+    {
+        if (reserveUnits == 0)
+            reserveIndicator.gameObject.SetActive(false);
+        else
+        {
+            reserveIndicator.gameObject.SetActive(true);
+            reserveIndicator.text = "" + reserveUnits;
+        }
+    }
 
     public void AddConnection(int otherId, GameObject otherObj, int direction, GameObject line, bool isStart)
     {
@@ -79,15 +93,16 @@ public class CellIdentity : MonoBehaviour
         connectionDirections.Add(direction);
         connectionLines.Add(line);
         connectionStartsHere.Add(isStart);
-        outgoingAttacks.Add(new int[] {otherId, 0, -1, 0});
-        incomingAttacks.Add(new int[] {otherId, 0, -1, 0});
+        outgoingAttacks.Add(new int[] { otherId, 0, -1, 0 });
+        incomingAttacks.Add(new int[] { otherId, 0, -1, 0 });
         connectionCells.Add(otherObj);
+        isAttackingConnection.Add(false);
     }
 
     public void CompleteTurn()
     {
         //Cancel all attacks and disable arrows //TODO: unless selected attack to be reoccuring
-        for (int i = 0; i < outgoingAttacks.Count; i++)
+        /*for (int i = 0; i < outgoingAttacks.Count; i++)
         {
             outgoingAttacks[i][1] = 0;
             //arrows[i].SetActive(false);
@@ -98,6 +113,7 @@ public class CellIdentity : MonoBehaviour
             arrowText[y].text = "0";
         }
         SetAllOpenConnectionColor(Color.yellow);
+        */
 
         //Generate unit(s) if can
         if (curOccupancy > unitCapacity)
@@ -106,9 +122,10 @@ public class CellIdentity : MonoBehaviour
             return;
         }
 
-        int curUnitCapacity = unitCapacity - GetOutboundUnits();
-        curOccupancy = Mathf.Min(curUnitCapacity, curOccupancy + generationCapacity);
+        curOccupancy -= GetOutboundUnits();
+        curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
         UpdateCellLabel();
+        RecalculateAttackUnits();
     }
 
     public int GetOutboundUnits()
@@ -141,13 +158,9 @@ public class CellIdentity : MonoBehaviour
         {
             if (connections[i] == destinationId)
             {
-                int totalAvaliableUnits = 0;
-                int.TryParse(arrowText[connectionDirections[i]].text, out totalAvaliableUnits);
-                totalAvaliableUnits += curOccupancy;
-                arrowText[connectionDirections[i]].text = "" + inputAmount;
-
-                curOccupancy = totalAvaliableUnits - inputAmount;
-                UpdateCellLabel();
+                arrowText[connectionDirections[i]].text = inputAmount + "%";
+                float newScale = 1f + ((float)inputAmount / 150f);
+                arrows[connectionDirections[i]].transform.localScale = new Vector3(newScale, newScale, 1);
 
                 if (inputAmount == 0)
                 {
@@ -163,58 +176,109 @@ public class CellIdentity : MonoBehaviour
         }
     }
 
-    public void ChangeActivationState(bool isActivated, int type)
+    public void ChangeActivationState(bool isActivated, bool isOrigin, int type)
     {
         animator.SetBool("isActivated", isActivated);
-        animator.SetInteger("type", type);
 
-        if (type == 1)
+        if (isActivated)
+            animator.SetInteger("type", type);
+        else
+            animator.SetInteger("type", 0);
+
+        if (isOrigin)
         {
-            SetAllOpenConnectionColor(Color.green);
+            if (type == 0)
+                SetAllOpenConnectionColor(Color.yellow);
+            else if (type == 1)
+                SetAllOpenConnectionColor(Color.green);
+
+            for(int i = 0; i < connectionCells.Count; i++)
+            {
+                if (isAttackingConnection[i])
+                {
+                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 1);
+                    connectionCells[i].GetComponent<CellIdentity>().SetConnectionColor(id, Color.green);
+                }
+                else
+                {
+                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
+                    connectionCells[i].GetComponent<CellIdentity>().SetConnectionColor(id, Color.red);
+                }
+            }
+
+            
         }
-        else if (type == 0)
+    }
+
+    public void SwitchActivationColor(int otherId)
+    {
+        int otherIdx = GetOtherIdIndex(otherId);
+        if(otherIdx != -1)
         {
-            SetAllOpenConnectionColor(Color.yellow);
+            int type = animator.GetInteger("type");
+            Color nextColor;
+            if (type == 1)
+            {
+                nextColor = Color.red;
+                animator.SetInteger("type", 2);
+            }
+            else
+            {
+                nextColor = Color.green;
+                animator.SetInteger("type", 1);
+            }
+
+            if (connectionStartsHere[otherIdx])
+                connectionLines[otherIdx].GetComponent<LineRenderer>().startColor = nextColor;
+            else
+                connectionLines[otherIdx].GetComponent<LineRenderer>().startColor = nextColor;
+        }
+    }
+
+    public void IndicateAttackConnection()
+    {
+        for (int i = 0; i < isAttackingConnection.Count; i++)
+        {
+            if (isAttackingConnection[i])
+            {
+                if (connectionStartsHere[i])
+                    connectionLines[i].GetComponent<LineRenderer>().startColor = Color.blue;
+                else
+                    connectionLines[i].GetComponent<LineRenderer>().endColor = Color.blue;
+            }
+        }
+    }
+
+    private int GetOtherIdIndex(int otherId)
+    {
+        for (int i = 0; i < connections.Count; i++)
+            if (otherId == connections[i])
+                return i;
+        return -1;
+    }
+
+    private void SetConnectionColor(int otherId, Color color)
+    {
+        int otherIdx = GetOtherIdIndex(otherId);
+        if (otherIdx != -1)
+        {
+            if (connectionStartsHere[otherIdx])
+                connectionLines[otherIdx].GetComponent<LineRenderer>().startColor = color;
+            else
+                connectionLines[otherIdx].GetComponent<LineRenderer>().endColor = color;
         }
     }
 
     public void SetAllOpenConnectionColor(Color color)
     {
-        for (int i = 0; i < connections.Count; i++)
+        for (int i = 0; i < isAttackingConnection.Count; i++)
         {
-            if (outgoingAttacks[i][1] > 0)
+            if (isAttackingConnection[i])
                 continue;
             if (connectionStartsHere[i])
                 connectionLines[i].GetComponent<LineRenderer>().startColor = color;
             else
                 connectionLines[i].GetComponent<LineRenderer>().endColor = color;
-        }
-    }
-
-    public void SetSingleOpenConnectionColor(int otherCellId, Color color)
-    {
-        int conIdx = -1;
-        for (int i = 0; i < connections.Count; i++)
-        {
-            if (otherCellId == connections[i])
-            {
-                if (outgoingAttacks[i][1] > 0)
-                    break;
-                conIdx = i;
-                break;
-            }
-        }
-
-        if (conIdx == -1) //Origin not found
-            return;
-
-        if (connectionStartsHere[conIdx])
-        {
-            connectionLines[conIdx].GetComponent<LineRenderer>().startColor = color;
-        }
-        else
-        {
-            connectionLines[conIdx].GetComponent<LineRenderer>().endColor = color;
         }
     }
 
@@ -257,6 +321,15 @@ public class CellIdentity : MonoBehaviour
     public int GetAttackCapacity()
     {
         return attackCapacity;
+    }
+    public int GetReserveUnits()
+    {
+        return reserveUnits;
+    }
+
+    public void SetReserveUnits(int reserveUnits)
+    {
+        this.reserveUnits = reserveUnits;
     }
 
     public List<int> GetConnections()
@@ -324,6 +397,85 @@ public class CellIdentity : MonoBehaviour
                 turnController.completeFighting -= CompleteCellFighting;
             }
             isAttacked = isAttackedCur;
+        }
+    }
+
+    public void SwitchAttackOption(int otherId)
+    {
+        int otherIdx = GetOtherIdIndex(otherId);
+        if (otherIdx != -1)
+            isAttackingConnection[otherIdx] = !isAttackingConnection[otherIdx];
+    }
+
+    public void RecalculateAttackUnits()
+    {
+        int attackUnitsAvaliable = curOccupancy - reserveUnits;
+        //Find how much attack directions there are
+        int directions = 0;
+        foreach (bool enabled in isAttackingConnection)
+            if (enabled)
+                directions++;
+
+        if (attackUnitsAvaliable <= 0 || directions == 0)
+        {
+            for (int i = 0; i < outgoingAttacks.Count; i++)
+            {
+                outgoingAttacks[i][1] = 0;
+                connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, 0, owner, attackCapacity);
+            }
+        }
+        else
+        {
+            List<int> curAttackUnits = new List<int>();
+
+            int attackUnitsPerDirection = attackUnitsAvaliable / directions;
+
+            foreach (bool enabled in isAttackingConnection)
+            {
+                if (enabled)
+                    curAttackUnits.Add(attackUnitsPerDirection);
+                else
+                    curAttackUnits.Add(0);
+            }
+
+            string output = "ATTACK UNITS FOR CELL - " + gameObject.name + System.Environment.NewLine;
+            for (int h = 0; h < curAttackUnits.Count; h++)
+            {
+                output += "Attack to " + outgoingAttacks[h][0] + " with " + curAttackUnits[h] + " units" + System.Environment.NewLine;
+            }
+            print(output);
+
+            for (int i = 0; i < curAttackUnits.Count; i++)
+            {
+                outgoingAttacks[i][1] = curAttackUnits[i];
+                connectionCells[i].GetComponent<CellIdentity>().SetIncomingAttack(id, curAttackUnits[i], owner, attackCapacity);
+            }
+        }
+    }
+
+    public void SetIncomingAttack(int otherId, int units, int otherOwner, int attackModifier)
+    {
+        int incomingUnits = 0;
+        foreach (int[] attack in incomingAttacks)
+        {
+            if (attack[0] == otherId)
+            {
+                attack[1] = units;
+                attack[2] = otherOwner;
+                attack[3] = attackModifier;
+            }
+            incomingUnits += attack[1];
+        }
+
+        if (!isAttacked && incomingUnits > 0)
+        {
+            turnController.completeFighting += CompleteCellFighting;
+            isAttacked = true;
+        }
+        else if (isAttacked && incomingUnits == 0)
+        {
+            turnController.completeFighting -= CompleteCellFighting;
+            isAttacked = false;
         }
     }
 
@@ -498,7 +650,7 @@ public class CellIdentity : MonoBehaviour
 
     void CompleteOwnershipAnim()
     {
-        //Add random delay so it looks like cells finish fighting at ifferent times
+        //Add random delay so it looks like cells finish fighting at different times
         //Addd animation so cell ocupancy gradully changes
         print("Ownership Anim Complete in " + gameObject.name);
     }
