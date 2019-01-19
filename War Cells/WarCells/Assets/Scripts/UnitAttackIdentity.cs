@@ -7,14 +7,16 @@ public class UnitAttackIdentity : MonoBehaviour
     private GameObject baseCell;
     private int unitsRemaining;
     private int unitOwner;
+    private Color unitColor;
     private int unitType; //(TODO: Defender/Invaders)
 
 
-    public void Construct(GameObject baseCell, int unitRemaining, int unitOwner)
+    public void Construct(GameObject baseCell, int unitRemaining, int unitOwner, Color unitColor)
     {
         this.baseCell = baseCell;
         this.unitsRemaining = unitRemaining;
         this.unitOwner = unitOwner;
+        this.unitColor = unitColor;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -28,12 +30,12 @@ public class UnitAttackIdentity : MonoBehaviour
             int cellOwner = ci.GetOwner();
             if (cellOwner == unitOwner) // if cell is same team, add it to the cells total.
             {
-                ci.ChangeUnits(unitsRemaining);
+                ci.ChangeUnits(unitsRemaining , unitOwner, unitColor);
                 Destroy(gameObject);
             }
             else // else, attack a cell with units remaining
             {
-                ci.ChangeUnits(-unitsRemaining);
+                ci.ChangeUnits(-unitsRemaining, unitOwner, unitColor);
                 Destroy(gameObject);
             }
         }
@@ -44,8 +46,9 @@ public class UnitAttackIdentity : MonoBehaviour
                 return;
             else
             {
-                UnitFight(uai.GetUnitsRemaining());
-                uai.UnitFight(unitsRemaining);
+                //TODO Reintroduce larger armies
+                Destroy(uai.gameObject);
+                Destroy(gameObject);
             }
         }
     }

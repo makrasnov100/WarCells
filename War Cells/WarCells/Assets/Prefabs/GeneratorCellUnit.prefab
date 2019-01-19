@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3281689473113783810}
   - component: {fileID: 221007058498125122}
   - component: {fileID: 5467527698067183651}
+  - component: {fileID: 2872368590875774952}
   m_Layer: 0
   m_Name: GeneratorCellUnit
   m_TagString: Unit
@@ -135,6 +136,27 @@ PolygonCollider2D:
     - - {x: 0, y: 0.6}
       - {x: -0.51, y: -0.3}
       - {x: 0.51, y: -0.3}
+--- !u!50 &2872368590875774952
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984420196937081325}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &4638554540189569807
 GameObject:
   m_ObjectHideFlags: 0

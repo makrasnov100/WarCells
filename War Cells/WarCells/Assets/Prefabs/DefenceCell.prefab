@@ -716,6 +716,7 @@ GameObject:
   - component: {fileID: 5434520259321942373}
   - component: {fileID: 2924945597239604558}
   - component: {fileID: 4663377998159458818}
+  - component: {fileID: 3813142330300726162}
   m_Layer: 0
   m_Name: DefenceCell
   m_TagString: Cell
@@ -996,6 +997,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!50 &3813142330300726162
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3565135676002520769}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
 --- !u!1 &3973495516219131176
 GameObject:
   m_ObjectHideFlags: 0

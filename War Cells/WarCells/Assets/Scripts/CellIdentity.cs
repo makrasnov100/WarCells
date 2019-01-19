@@ -8,6 +8,7 @@ public class CellIdentity : MonoBehaviour
     //Built References
     Animator animator;
     TurnUIController turnController;
+    public PlayerManager playerManager;
     public SpriteRenderer mainSprite;
     public List<GameObject> arrows = new List<GameObject>(); //0 - up, 1 - down, 2 - left, 3 - right
     public List<SpriteRenderer> arrowSprites = new List<SpriteRenderer>();
@@ -45,6 +46,7 @@ public class CellIdentity : MonoBehaviour
     {
         isAttacking = false;
         animator = GetComponent<Animator>();
+        playerManager = GameObject.FindGameObjectWithTag("playerManager").GetComponent<PlayerManager>();
     }
 
     public void Construct(int id, TurnUIController turnController)
@@ -72,9 +74,14 @@ public class CellIdentity : MonoBehaviour
         UpdateCellLabel();
     }
 
-    public void ChangeUnits(int delta)
+    public void ChangeUnits(int delta, int owner, Color color)
     {
         curOccupancy += delta;
+        if(curOccupancy < 0)
+        {
+            SetOwner(owner, color);
+            curOccupancy = -curOccupancy;
+        }
         UpdateCellLabel();
     }
 
@@ -294,6 +301,20 @@ public class CellIdentity : MonoBehaviour
     }
     public void SetOwner(int id, Color color)
     {
+        List<Player> players = playerManager.GetPlayers();
+
+        foreach (Player p in players)
+        {
+            if (p.GetId() == owner)
+            {
+                p.RemoveCell(gameObject);
+            }
+            else if (p.GetId() == id)
+            {
+                p.AddCell(gameObject);
+            }
+        }
+
         owner = id;
         mainSprite.color = color;
         foreach (SpriteRenderer sr in arrowSprites)
@@ -605,10 +626,13 @@ public class CellIdentity : MonoBehaviour
         bool isUnitSendingDone = true;
         for(int h = 0; h < outgoingAttacks.Count; h++)
         {
-            if (outgoingAttacks[h][1] > 0)
+            if (outgoingAttacks[h][1] > 0) // If has units to send (SEND UNITS)
             {
-                GameObject curAttackUnit = Instantiate(connectionCells[h].GetComponent<CellIdentity>().attackUnit, transform.position, transform.rotation, transform);
+                GameObject curAttackUnit = Instantiate(attackUnit, transform.position, transform.rotation, transform);
+                curOccupancy -= 1;
+                UpdateCellLabel();
                 curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[h].transform.position, 2f);
+                curAttackUnit.GetComponent<UnitAttackIdentity>().Construct(gameObject, 1, owner, mainSprite.color);
                 curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
                 outgoingAttacks[h][1]--;
                 isUnitSendingDone = false;
@@ -633,21 +657,6 @@ public class CellIdentity : MonoBehaviour
             turnController.completeFighting -= CompleteCellFighting;
             turnController.completeOwnershipAnim += CompleteOwnershipAnim;
         }
-
-
-
-
- 
-
-        //Figure out who won (legacy - efficient but doesnt give remaining units)
-        //int winningUnit = Random.Range(1, totalUnits+1);
-        //int playerCount = 0;
-        //while ((winningUnit - ownershipChances[playerCount][1]) >= 0)
-        //{
-        //    winningUnit -= ownershipChances[playerCount][1];
-        //    playerCount++;
-        //}
-        //int winningPlayer = ownershipChances[playerCount][0];
 
         //TODO: make into a black screen with squares showing chances of winning and the cells that is being fought for
 
