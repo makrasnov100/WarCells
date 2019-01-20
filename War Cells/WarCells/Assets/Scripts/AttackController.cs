@@ -12,6 +12,7 @@ public class AttackController : MonoBehaviour
     //Instance Variables
     public GameObject originCell;
 
+    ///[UNITY DEFAULT]
     private void Update()
     {
         //Call Apropriate function based on platform type
@@ -80,7 +81,7 @@ public class AttackController : MonoBehaviour
                     originCell = null;
                     turnController.ShowNextTurnUI();
                 }
-                //Touched cell thats connected to a selected origin          
+                //Touched cell thats connected to the current origin cell       
                 else if (originCell.GetComponent<CellIdentity>().IsConnectedTo(hit.collider.gameObject.GetComponent<CellIdentity>().GetId()))
                 {
                     GameObject destinationCell = hit.collider.gameObject;
@@ -124,12 +125,13 @@ public class AttackController : MonoBehaviour
             return;
 
         //Set the correct text value of slider position
-        turnController.getUnitCurrent().text = "" + (int)turnController.getUnitAmountInput().value;
+        turnController.GetUnitCurrent().text = "" + (int)turnController.GetUnitAmountInput().value;
 
         //Set the correct origin cell reserve text
         if (originCell != null)
-            originCell.GetComponent<CellIdentity>().UpdateReserveIndicator((int)turnController.getUnitAmountInput().value);
+            originCell.GetComponent<CellIdentity>().UpdateReserveIndicator((int)turnController.GetUnitAmountInput().value);
     }
+
 
     ///[BACKEND UPDATES]
     //ConfirmDefence: called to finalize a reserve unit amount for the origin cell
@@ -137,12 +139,12 @@ public class AttackController : MonoBehaviour
     {
         if (originCell != null)
         {
-            originCell.GetComponent<CellIdentity>().SetReserveUnits((int)turnController.getUnitAmountInput().value);
+            originCell.GetComponent<CellIdentity>().SetReserveUnits((int)turnController.GetUnitAmountInput().value);
             originCell.GetComponent<CellIdentity>().RecalculateAttackUnits();
         }
     }
 
 
-    ///ACCESORS/MUTATORS
+    ///[ACCESORS/MUTATORS]
     public GameObject GetOriginCell() { return originCell; }
 }
