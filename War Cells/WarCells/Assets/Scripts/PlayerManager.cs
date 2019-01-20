@@ -39,11 +39,13 @@ public class PlayerManager : MonoBehaviour
     List<List<GameObject>> cells;               // - cells
     List<Player> players = new List<Player>();  // - players
 
+
     ///[CONSTRUCTOR*]
     public void Construct(List<List<GameObject>> cells)
     {
         this.cells = cells;
     }
+
 
     ///[PLAYER CONTROL]
     //Adds a preset amount of player to the map
@@ -72,6 +74,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+
     ///[CELL FUNCTIONS]
     //Perform end turn procedure for each cell thats owned by a player or bot
     public void CompleteCellActions()
@@ -80,6 +83,7 @@ public class PlayerManager : MonoBehaviour
             foreach (GameObject g in p.ownedCells)
                 g.GetComponent<CellIdentity>().CompleteTurn();
     }
+
 
     ///[ACCESSOR(S)/MUTATOR(S)]
     public List<Player> GetPlayers() { return players; }
