@@ -64,6 +64,7 @@ public class PlayerManager : MonoBehaviour
             Color curColor = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);   //SET color for currently created player
             curCell.GetComponent<CellIdentity>().SetOccupancy(5);               //SET initial player unit amount
             curCell.GetComponent<CellIdentity>().SetOwner(p, curColor);         //SET player as owner of found starting cell
+            curCell.GetComponent<CellIdentity>().SetOriginalOwner(p);
 
             bool isBot = true;                                                  //SET player bot status
             if (p < humanPlayers)

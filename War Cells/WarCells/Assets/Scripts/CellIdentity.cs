@@ -29,6 +29,7 @@ public class CellIdentity : MonoBehaviour
     // - general
     private int id;
     private int owner = -1;
+    private int originalOwner = -1;
     // - unit info
     private int curOccupancy = -1;
     private int unitCapacity = 0;
@@ -113,85 +114,24 @@ public class CellIdentity : MonoBehaviour
         }
     }
 
-    ///[CELL UI UPDATORS]
-    //UpdateCellLabel: Updates the main cell text
-    void UpdateCellLabel()
+    //ResetAllOutConnectionColor: Resets the color of outgoing connection ends
+    private void ResetAllOutConnectionColor()
     {
-        textComp.text = curOccupancy + "/" + unitCapacity;
-    }
-
-    //UpdateReserveIndicator: Updates the reserve cell text
-    public void UpdateReserveIndicator(int reserveUnits)
-    {
-        if (reserveUnits == 0)
-            reserveIndicator.gameObject.SetActive(false);
-        else
+        for (int i = 0; i < isAttackingConnection.Count; i++)
         {
-            reserveIndicator.gameObject.SetActive(true);
-            reserveIndicator.text = "" + reserveUnits;
-
-        }
-    }
-
-    ///[ANIMATIONS]
-    //ChangeActivationState: Updates state of cell animations
-    public void ChangeActivationState(bool isActivated, bool isOrigin, int type)
-    {
-        animator.SetBool("isActivated", isActivated);
-        animator.SetBool("isOrigin", isOrigin);
-
-        if (isActivated)
-            animator.SetInteger("type", type);
-        else
-            animator.SetInteger("type", 0);
-
-        if (isOrigin)
-        {
-            for (int i = 0; i < connectionCells.Count; i++)
+            if (isAttackingConnection[i])
             {
-                if (isAttackingConnection[i])
-                {
-                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 1);
-                }
+                if (connectionStartsHere[i])
+                    connectionLines[i].startColor = Color.blue;
                 else
-                {
-                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
-                }
-            }
-
-            SetBulkConnectionColor(isActivated);
-        }
-    }
-
-    //SwitchActivationColor: Switches cell background type red/green
-    public void SwitchActivationColor(int otherId)
-    {
-        int otherIdx = GetOtherIdIndex(otherId);
-        if (otherIdx != -1)
-        {
-            //Find the correct color to change to based on wether the attack direction is enabled
-            int type = animator.GetInteger("type");
-            Color nextColor;
-            if (type == 1)
-            {
-                nextColor = Color.red;
-                animator.SetInteger("type", 2);
+                    connectionLines[i].endColor = Color.blue;
             }
             else
             {
-                nextColor = Color.green;
-                animator.SetInteger("type", 1);
-            }
-
-            if (connectionStartsHere[otherIdx])
-            {
-                connectionLines[otherIdx].startColor = nextColor;
-                connectionLines[otherIdx].endColor = nextColor;
-            }
-            else
-            {
-                connectionLines[otherIdx].startColor = nextColor;
-                connectionLines[otherIdx].endColor = nextColor;
+                if (connectionStartsHere[i])
+                    connectionLines[i].startColor = Color.yellow;
+                else
+                    connectionLines[i].endColor = Color.yellow;
             }
         }
     }
@@ -239,31 +179,114 @@ public class CellIdentity : MonoBehaviour
         }
 
         //Set end color (sides farthest from origin)
-        for (int i = 0; i < isAttackingConnection.Count; i++)
+        for (int g = 0; g < isAttackingConnection.Count; g++)
         {
             if (isOriginActivated)
             {
-                if (connectionStartsHere[i])
+                if (connectionStartsHere[g])
                 {
-                    if (isAttackingConnection[i])
-                        connectionLines[i].endColor = Color.green;
+                    if (isAttackingConnection[g])
+                        connectionLines[g].endColor = Color.green;
                     else
-                        connectionLines[i].endColor = Color.red;
+                        connectionLines[g].endColor = Color.red;
                 }
                 else
                 {
-                    if (isAttackingConnection[i])
-                        connectionLines[i].startColor = Color.green;
+                    if (isAttackingConnection[g])
+                        connectionLines[g].startColor = Color.green;
                     else
-                        connectionLines[i].startColor = Color.red;
+                        connectionLines[g].startColor = Color.red;
                 }
             }
             else
             {
-                if (connectionStartsHere[i])
-                    connectionLines[i].endColor = Color.yellow;
+                Color otherSideColor = Color.yellow;
+                if (connectionCells[g].GetComponent<CellIdentity>().IsAttacking(id))
+                    otherSideColor = Color.blue;
+
+                if (connectionStartsHere[g])
+                    connectionLines[g].endColor = otherSideColor;
                 else
-                    connectionLines[i].startColor = Color.yellow;
+                    connectionLines[g].startColor = otherSideColor;
+            }
+        }
+    }
+
+
+    ///[CELL UI UPDATORS]
+    //UpdateCellLabel: Updates the main cell text
+    void UpdateCellLabel()
+    {
+        textComp.text = curOccupancy + "/" + unitCapacity;
+    }
+
+    //UpdateReserveIndicator: Updates the reserve cell text
+    public void UpdateReserveIndicator(int reserveUnits)
+    {
+        if (reserveUnits == 0)
+            reserveIndicator.gameObject.SetActive(false);
+        else
+        {
+            reserveIndicator.gameObject.SetActive(true);
+            reserveIndicator.text = "" + reserveUnits;
+        }
+    }
+
+    ///[ANIMATIONS]
+    //ChangeActivationState: Updates state of cell animations
+    public void ChangeActivationState(bool isActivated, bool isOrigin, int type)
+    {
+        animator.SetBool("isActivated", isActivated);
+        animator.SetBool("isOrigin", isOrigin);
+
+        if (isActivated)
+            animator.SetInteger("type", type);
+        else
+            animator.SetInteger("type", 0);
+
+        if (isOrigin)
+        {
+            for (int i = 0; i < connectionCells.Count; i++)
+            {
+                if (isAttackingConnection[i])
+                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 1);
+                else
+                    connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
+            }
+
+            SetBulkConnectionColor(isActivated);
+        }
+    }
+
+    //SwitchActivationColor: Switches cell background type red/green
+    public void SwitchActivationColor(int otherId)
+    {
+        int otherIdx = GetOtherIdIndex(otherId);
+        if (otherIdx != -1)
+        {
+            //Find the correct color to change to based on wether the attack direction is enabled
+            int type = animator.GetInteger("type");
+            Color nextColor;
+            if (type == 1)
+            {
+                nextColor = Color.red;
+                animator.SetInteger("type", 2);
+            }
+            else
+            {
+                nextColor = Color.green;
+                animator.SetInteger("type", 1);
+            }
+
+            if (connectionStartsHere[otherIdx])
+            {
+                connectionLines[otherIdx].startColor = nextColor;
+                connectionLines[otherIdx].endColor = nextColor;
+            }
+            else
+            {
+                connectionLines[otherIdx].startColor = nextColor;
+                connectionLines[otherIdx].endColor = nextColor;
             }
         }
     }
@@ -325,11 +348,19 @@ public class CellIdentity : MonoBehaviour
     //CompleteTurn: performs over population and unit generation calculations at the end of each turn
     public void CompleteTurn()
     {
+        if (owner != originalOwner)
+        {
+            turnController.postTurnRecalculation -= PostTurnRecalculation;
+            isAttacking = false;
+            for (int i = 0; i < isAttackingConnection.Count; i++)
+                isAttackingConnection[i] = false;
+            ResetAllOutConnectionColor();
+        }
+        originalOwner = owner;
+
         //(TODO: IMPLEMENT OVERPOPULATION SYSTEM and NOTIFICATION)
         if (curOccupancy > unitCapacity)
-        {
             return;
-        }
 
         //Generate unit(s) if can
         curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
@@ -411,6 +442,25 @@ public class CellIdentity : MonoBehaviour
         return false;
     }
 
+    //IsAttacking: returns TRUE if current cell is attacking the other cell with given id
+    public bool IsAttacking(int otherId)
+    {
+        for (int i = 0; i < connections.Count; i++)
+        {
+            if (outgoingAttacks[i][0] == otherId)
+            {
+                if (outgoingAttacks[i][1] > 0)
+                    return true;
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
     ///[ACCESSORS/MUTATORS]
     public int GetId() { return id; }
@@ -418,25 +468,27 @@ public class CellIdentity : MonoBehaviour
     public int GetCapacity() { return unitCapacity; }
     public int GetReserveUnits() { return reserveUnits; }
 
-    public void SetOwner(int id, Color color)
+    public void SetOwner(int playerId, Color color)
     {
+        if (owner == playerId && mainSprite.color == color)
+            return;
+
         List<Player> players = playerManager.GetPlayers();
 
         foreach (Player p in players)
         {
             if (p.GetId() == owner)
                 p.RemoveCell(gameObject);
-            else if (p.GetId() == id)
+            else if (p.GetId() == playerId)
                 p.AddCell(gameObject);
         }
 
-        owner = id;
+        owner = playerId;
         mainSprite.color = color;
         foreach (SpriteRenderer sr in arrowSprites)
-        {
             sr.color = color;
-        }
     }
+    public void SetOriginalOwner(int originalOwner) { this.originalOwner = originalOwner; }
     public void SetReserveUnits(int reserveUnits) { this.reserveUnits = reserveUnits; }
     public void SetOutgoingAttack(int otherIdx, int unitAmount)
     {
