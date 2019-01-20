@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    //References TODO: Make Private
+    //References (TODO: Make Private)
     public PlayerManager playerManager;
     public TurnUIController turnController;
 
@@ -34,9 +34,7 @@ public class MapGenerator : MonoBehaviour
     void Start()
     {
         if (!CreateMap())
-        {
-            print("Failed to Create Map!"); //TODO: Create user msg system (GUI)
-        }
+            print("Failed to Create Map!");
     }
 
     bool CreateMap()
@@ -77,7 +75,7 @@ public class MapGenerator : MonoBehaviour
                         LineRenderer lr = curCon.AddComponent<LineRenderer>();
                         lr.SetPosition(0, cells[y-1][x].transform.position);
                         lr.SetPosition(1, curPos);
-                        lr.material = new Material(Shader.Find("Sprites/Default")); //TODO: Remember to delete this material when deleteing connetions
+                        lr.material = new Material(Shader.Find("Sprites/Default"));
                         lr.startColor = Color.yellow;
                         lr.endColor = Color.yellow;
                         lr.startWidth = .2f;
@@ -94,7 +92,7 @@ public class MapGenerator : MonoBehaviour
                         LineRenderer lr = curCon.AddComponent<LineRenderer>();
                         lr.SetPosition(0, cells[y][x-1].transform.position);
                         lr.SetPosition(1, curPos);
-                        lr.material = new Material(Shader.Find("Sprites/Default")); //TODO: Remember to delete this material when deleteing connetions
+                        lr.material = new Material(Shader.Find("Sprites/Default"));
                         lr.startColor = Color.yellow;
                         lr.endColor = Color.yellow;
                         lr.startWidth = .2f;
@@ -112,6 +110,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+        //Add needed amounts of players to the map (both bots and real)
         playerManager.Construct(cells);
         playerManager.SpawnPlayers();
 

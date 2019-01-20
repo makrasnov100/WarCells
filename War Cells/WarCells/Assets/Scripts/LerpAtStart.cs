@@ -9,6 +9,7 @@ public class LerpAtStart : MonoBehaviour
     float startTime = 0;
     float duration = 0;
 
+    //Starts the animation by setting start and end locations
     public void Construct(Vector3 start, Vector3 end, float duration)
     {
         this.start = start;
@@ -17,9 +18,10 @@ public class LerpAtStart : MonoBehaviour
         this.duration = duration;
     }
 
+    //Performs movement of game object (animation) each frame
     void Update()
     {
-        if (duration == 0)
+        if (duration == 0) //component not constructed yet -> ignore update
             return;
 
         float timeTraveled = Time.time - startTime;
