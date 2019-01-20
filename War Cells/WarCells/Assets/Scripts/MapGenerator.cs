@@ -61,8 +61,7 @@ public class MapGenerator : MonoBehaviour
                     curCell.name = curCell.name + " " + x + ", " + y;
                     //Generate Cell Properties
                     CellIdentity cellId = curCell.GetComponent<CellIdentity>();
-                    cellId.Construct((y*mapSize) + x, turnController);
-                    cellId.SetUnitCapacity(Random.Range(minCellSize, maxCellSize + 1));
+                    cellId.Construct((y*mapSize) + x, Random.Range(minCellSize, maxCellSize + 1));
 
                     //Store Cell
                     cells[y].Add(curCell);
@@ -82,8 +81,8 @@ public class MapGenerator : MonoBehaviour
                         lr.endWidth = .2f;
                         lr.sortingOrder = -10;
 
-                        cells[y - 1][x].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 0, curCon, true);
-                        cellId.AddConnection(cells[y - 1][x].GetComponent<CellIdentity>().GetId(), cells[y - 1][x], 1, curCon, false);
+                        cells[y - 1][x].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 0, lr, true);
+                        cellId.AddConnection(cells[y - 1][x].GetComponent<CellIdentity>().GetId(), cells[y - 1][x], 1, lr, false);
                     }
                     if (x != 0 && cells[y][x-1] != null && Random.Range(0f, 1f) <= connectionPrevalence)
                     {
@@ -99,8 +98,8 @@ public class MapGenerator : MonoBehaviour
                         lr.endWidth = .2f;
                         lr.sortingOrder = -10;
 
-                        cells[y][x - 1].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 3, curCon, true);
-                        cellId.AddConnection(cells[y][x - 1].GetComponent<CellIdentity>().GetId(), cells[y][x - 1], 2, curCon, false);
+                        cells[y][x - 1].GetComponent<CellIdentity>().AddConnection(cellId.GetId(), curCell, 3, lr, true);
+                        cellId.AddConnection(cells[y][x - 1].GetComponent<CellIdentity>().GetId(), cells[y][x - 1], 2, lr, false);
                     }
                 }
                 else

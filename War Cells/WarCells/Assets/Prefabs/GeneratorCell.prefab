@@ -1244,28 +1244,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e49a631a4f5e2142897b45efd5444f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainSprite: {fileID: 8917981031585258733}
-  arrows:
-  - {fileID: 3651585341697238712}
-  - {fileID: 906462420127070164}
-  - {fileID: 2291950699866106981}
-  - {fileID: 3511713320642762694}
-  arrowSprites:
-  - {fileID: 4257030134197161439}
-  - {fileID: 4976379979262630055}
-  - {fileID: 5427969104292660200}
-  - {fileID: 1584893218528274419}
-  arrowText:
-  - {fileID: 5970351711800789053}
-  - {fileID: 3725363817441657223}
-  - {fileID: 625960482428891662}
-  - {fileID: 1218566440133692306}
-  reserveIndicator: {fileID: 3966899779106442164}
   attackCapacity: 1
   defenceCapacity: 1
   generationCapacity: 2
   attackUnit: {fileID: 2984420196937081325, guid: 1f70fb99f428d2b49913ba98b874cc66,
     type: 3}
+  animator: {fileID: 5817619418785909830}
+  mainSprite: {fileID: 8917981031585258733}
+  arrowSprites:
+  - {fileID: 4257030134197161439}
+  - {fileID: 4976379979262630055}
+  - {fileID: 5427969104292660200}
+  - {fileID: 1584893218528274419}
+  reserveIndicator: {fileID: 3966899779106442164}
+  arrows:
+  - {fileID: 3651585341697238712}
+  - {fileID: 906462420127070164}
+  - {fileID: 2291950699866106981}
+  - {fileID: 3511713320642762694}
 --- !u!60 &4054795240695476188
 PolygonCollider2D:
   m_ObjectHideFlags: 0

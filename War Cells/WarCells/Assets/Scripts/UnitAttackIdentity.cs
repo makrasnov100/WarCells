@@ -37,12 +37,12 @@ public class UnitAttackIdentity : MonoBehaviour
             CellIdentity ci = collision.gameObject.GetComponent<CellIdentity>();
             int cellOwner = ci.GetOwner();
 
-            if (cellOwner == unitOwner) //Cell owner thesame
+            if (cellOwner == unitOwner)         // - Cell owner thesame
             {
                 ci.ChangeUnits(unitsRemaining , unitOwner, unitColor);
                 Destroy(gameObject);
             }
-            else                        //Cell owner different
+            else                                // - Cell owner different
             {
                 ci.ChangeUnits(-unitsRemaining, unitOwner, unitColor);
                 Destroy(gameObject);
@@ -52,11 +52,11 @@ public class UnitAttackIdentity : MonoBehaviour
         {
             UnitAttackIdentity uai = collision.gameObject.GetComponent<UnitAttackIdentity>();
 
-            if (uai.GetUnitOwner() == unitOwner) //Ignore other unit if thesame owner
+            if (uai.GetUnitOwner() == unitOwner)    // - Ignore other unit if thesame owner
             {
                 return;
             }
-            else                                 //Fight the other if differnt owner
+            else                                    // - Fight the other if differnt owner
             {
                 //(TODO: Reintroduce larger armies)
                 Destroy(uai.gameObject);

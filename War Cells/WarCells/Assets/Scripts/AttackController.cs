@@ -108,7 +108,6 @@ public class AttackController : MonoBehaviour
             if (originCell != null)
             {
                 ConfirmDefence();
-                originCell.GetComponent<CellIdentity>().IndicateAttackConnection();
                 originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
                 originCell = null;
             }

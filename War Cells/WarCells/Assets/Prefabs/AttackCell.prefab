@@ -859,29 +859,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e49a631a4f5e2142897b45efd5444f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerManager: {fileID: 0}
-  mainSprite: {fileID: 6123376328126709302}
-  arrows:
-  - {fileID: 3900621050149171691}
-  - {fileID: 3676557474272381450}
-  - {fileID: 8158643481369015648}
-  - {fileID: 8348891676118434940}
-  arrowSprites:
-  - {fileID: 3637507938371933264}
-  - {fileID: 2291984433072718657}
-  - {fileID: 2315968319603735736}
-  - {fileID: 8025995655830873896}
-  arrowText:
-  - {fileID: 1017240244426170463}
-  - {fileID: 8044750813102012921}
-  - {fileID: 639077149281462947}
-  - {fileID: 128651427448150931}
-  reserveIndicator: {fileID: 3631260457745017515}
   attackCapacity: 2
   defenceCapacity: 1
   generationCapacity: 1
   attackUnit: {fileID: 2984420196937081325, guid: 934f0cd8cd05ea649878f17c5072d2e4,
     type: 3}
+  animator: {fileID: 1068074661}
+  mainSprite: {fileID: 6123376328126709302}
+  arrowSprites:
+  - {fileID: 3637507938371933264}
+  - {fileID: 2291984433072718657}
+  - {fileID: 2315968319603735736}
+  - {fileID: 8025995655830873896}
+  reserveIndicator: {fileID: 3631260457745017515}
+  arrows:
+  - {fileID: 3900621050149171691}
+  - {fileID: 3676557474272381450}
+  - {fileID: 8158643481369015648}
+  - {fileID: 8348891676118434940}
 --- !u!58 &4292278888863003248
 CircleCollider2D:
   m_ObjectHideFlags: 0

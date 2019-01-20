@@ -930,28 +930,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e49a631a4f5e2142897b45efd5444f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainSprite: {fileID: 3565135675807366665}
-  arrows:
-  - {fileID: 1809755359083246702}
-  - {fileID: 5701378779981426448}
-  - {fileID: 2756098242978777084}
-  - {fileID: 7515344466976514274}
-  arrowSprites:
-  - {fileID: 5614541381751071428}
-  - {fileID: 2298238031383675887}
-  - {fileID: 3587750773924991135}
-  - {fileID: 3741008617726822612}
-  arrowText:
-  - {fileID: 4726888032692893831}
-  - {fileID: 6460465435092213754}
-  - {fileID: 5215892631201866652}
-  - {fileID: 3744335277533815194}
-  reserveIndicator: {fileID: 4955266894816404306}
   attackCapacity: 1
   defenceCapacity: 2
   generationCapacity: 1
   attackUnit: {fileID: 4740488862428620166, guid: 93c20a77afd10d544b0f19db10d5fa69,
     type: 3}
+  animator: {fileID: 4663377998159458818}
+  mainSprite: {fileID: 3565135675807366665}
+  arrowSprites:
+  - {fileID: 5614541381751071428}
+  - {fileID: 2298238031383675887}
+  - {fileID: 3587750773924991135}
+  - {fileID: 3741008617726822612}
+  reserveIndicator: {fileID: 4955266894816404306}
+  arrows:
+  - {fileID: 1809755359083246702}
+  - {fileID: 5701378779981426448}
+  - {fileID: 2756098242978777084}
+  - {fileID: 7515344466976514274}
 --- !u!61 &2924945597239604558
 BoxCollider2D:
   m_ObjectHideFlags: 0
