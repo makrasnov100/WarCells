@@ -103,6 +103,9 @@ public class TurnUIController : MonoBehaviour
 
     public void ShowNextTurnUI()
     {
+        if (isAnimationPlaying)
+            return;
+
         nextTurnBtn.SetActive(true);
         nextTurnBG.gameObject.SetActive(true);
         unitAmountInput.gameObject.SetActive(false);

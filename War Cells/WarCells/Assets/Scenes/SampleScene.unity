@@ -2508,7 +2508,9 @@ MonoBehaviour:
   pcUnitMax: {fileID: 1902207919}
   pcNextTurnBtn: {fileID: 2088739268}
   playerManager: {fileID: 761302364}
+  attackController: {fileID: 2057796710}
   ignoreSliderEdits: 0
+  isAnimationPlaying: 0
 --- !u!114 &2057796710
 MonoBehaviour:
   m_ObjectHideFlags: 0
