@@ -38,6 +38,7 @@ public class AttackController : MonoBehaviour
                 return;
         }
     }
+
     //HandleMouse: called on a mosue based platform every frame - performs attack input
     void HandleMouse()
     {
@@ -53,6 +54,7 @@ public class AttackController : MonoBehaviour
 
         HandleInput(hit);
     }
+
     //Carries out the cell attack commands for all platforms based on hit information
     void HandleInput(RaycastHit2D hit)
     {

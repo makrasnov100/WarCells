@@ -87,6 +87,7 @@ public class TurnUIController : MonoBehaviour
         unitCurrent.gameObject.SetActive(false);
         unitMax.gameObject.SetActive(false);
     }
+
     //Shows only the UI components that are needed to initiate the next turn / hand over to new user
     public void ShowNextTurnUI()
     {
@@ -100,6 +101,7 @@ public class TurnUIController : MonoBehaviour
         unitCurrent.gameObject.SetActive(false);
         unitMax.gameObject.SetActive(false);
     }
+
     //Shows only the UI neccessary to set reserve units and sets correct slider values
     public void ShowDefenceUI(CellIdentity origin)
     {
