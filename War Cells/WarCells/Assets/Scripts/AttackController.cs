@@ -73,9 +73,6 @@ public class AttackController : MonoBehaviour
             }
             else ///Origin cell has already been selected
             {
-                //Save any changes before new UI is shown or hidden
-                ConfirmDefence(); 
-
                 //Touched orign cell second time
                 if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID())
                 {
@@ -101,6 +98,9 @@ public class AttackController : MonoBehaviour
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(true, true, 1);
                     turnController.ShowDefenceUI(originCell.GetComponent<CellIdentity>());
                 }
+
+                //Save any changes before new UI is shown or hidden
+                ConfirmDefence();
             }
         }
         else //Touched an empty space (resets all)

@@ -43,7 +43,6 @@ public class CellIdentity : MonoBehaviour
     private int latestUnitSentTo = -1;
     private List<int[]> outgoingAttacks = new List<int[]>();
     private List<int[]> incomingAttacks = new List<int[]>();
-    private List<int> animUnitsLeft = new List<int>();
     // - cell condition
     private bool isAttacking = false;
 
@@ -223,9 +222,8 @@ public class CellIdentity : MonoBehaviour
 
         if (isUnitSendingDone)
         {
-            isAttacking = false;
-            animUnitsLeft.Clear();
             turnController.completeFighting -= CompleteCellFighting;
+            turnController.postTurnRecalculation += PostTurnRecalculation;
         }
     }
 
@@ -255,10 +253,19 @@ public class CellIdentity : MonoBehaviour
         //Generate unit(s) if can
         curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
         UpdateCellLabel();
+    }
+
+    //PostTurnRecalculation: performs unit recalculation for those cells that had attacks in the last turn
+    public void PostTurnRecalculation()
+    {
         RecalculateAttackUnits();
+
+        turnController.completeFighting += CompleteCellFighting;
+        isAttacking = true;
     }
 
     //RecalculateAttackUnits: Resets the amount of units to send to connections based on current cell settings
+    //@return - TRUE if attacking something, FALSE if not attacking anything
     public void RecalculateAttackUnits()
     {
         //Find avaliable attack units
@@ -286,7 +293,7 @@ public class CellIdentity : MonoBehaviour
             //Add attack units to the enabled attack connections
             for (int i = 0; i < outgoingAttacks.Count; i++)
             {
-                if (enabled)
+                if (isAttackingConnection[i])
                     outgoingAttacks[i][1] = attackUnitsPerDirection;
                 else
                     outgoingAttacks[i][1] = 0;

@@ -9,7 +9,8 @@ public class TurnUIController : MonoBehaviour
     //Fighting Delegate (HUGE TODO: make private )
     public delegate void CompleteFighting();
     public CompleteFighting completeFighting;
-
+    public delegate void PostTurnRecalculation();
+    public CompleteFighting postTurnRecalculation;
     //Script References
     public PlayerManager playerManager;
     public AttackController attackController;
@@ -152,9 +153,14 @@ public class TurnUIController : MonoBehaviour
         //Wait for all cells to finish reaching destination
         yield return new WaitForSeconds(2f);
 
-        //Generate units for all cells with owners and recalculate next attack units
+        //Generate units for all cells with owners
         playerManager.CompleteCellActions();
         nextTurnBG.color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, .4f, .4f);
+
+        //Recalculate next attack units
+        if(postTurnRecalculation != null)
+            postTurnRecalculation();
+        postTurnRecalculation = null;
 
         isAnimationPlaying = false; // > END animation playing flag
 
