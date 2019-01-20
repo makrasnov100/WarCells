@@ -28,7 +28,7 @@ public class CellIdentity : MonoBehaviour
     //Instance Variables
     // - general
     private int id;
-    private int owner;
+    private int owner = -1;
     // - unit info
     private int curOccupancy = -1;
     private int unitCapacity = 0;
@@ -87,7 +87,31 @@ public class CellIdentity : MonoBehaviour
     {
         int otherIdx = GetOtherIdIndex(otherId);
         if (otherIdx != -1)
+        {
+            // Set attack direction as enabled/disabled
             isAttackingConnection[otherIdx] = !isAttackingConnection[otherIdx];
+
+            // Determine if current cell is attacking anything
+            bool curIsAttacking = false;
+            foreach (bool enabled in isAttackingConnection)
+            {
+                if (enabled)
+                {
+                    curIsAttacking = true;
+                    break;
+                }
+            }
+
+            // Subscribe/unsubsribe according to new state
+            if (!isAttacking && curIsAttacking)
+                turnController.completeFighting += CompleteCellFighting;
+            else if(isAttacking && !curIsAttacking)
+                turnController.completeFighting -= CompleteCellFighting;
+
+            //Update logic flag
+            isAttacking = curIsAttacking;
+
+        }
     }
 
     ///[CELL UI UPDATORS]
@@ -115,6 +139,7 @@ public class CellIdentity : MonoBehaviour
     public void ChangeActivationState(bool isActivated, bool isOrigin, int type)
     {
         animator.SetBool("isActivated", isActivated);
+        animator.SetBool("isOrigin", isOrigin);
 
         if (isActivated)
             animator.SetInteger("type", type);
@@ -134,8 +159,6 @@ public class CellIdentity : MonoBehaviour
                     connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
                 }
             }
-
-
         }
     }
 
