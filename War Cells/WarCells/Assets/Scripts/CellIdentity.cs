@@ -158,6 +158,8 @@ public class CellIdentity : MonoBehaviour
                     connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
                 }
             }
+
+            SetBulkConnectionColor(isActivated);
         }
     }
 
@@ -167,6 +169,7 @@ public class CellIdentity : MonoBehaviour
         int otherIdx = GetOtherIdIndex(otherId);
         if (otherIdx != -1)
         {
+            //Find the correct color to change to based on wether the attack direction is enabled
             int type = animator.GetInteger("type");
             Color nextColor;
             if (type == 1)
@@ -181,9 +184,87 @@ public class CellIdentity : MonoBehaviour
             }
 
             if (connectionStartsHere[otherIdx])
+            {
                 connectionLines[otherIdx].startColor = nextColor;
+                connectionLines[otherIdx].endColor = nextColor;
+            }
             else
+            {
                 connectionLines[otherIdx].startColor = nextColor;
+                connectionLines[otherIdx].endColor = nextColor;
+            }
+        }
+    }
+
+    //SetBulkConnectionColor: Sets the initial and final connection line colors (when an origin is selected and when deselected)
+    private void SetBulkConnectionColor(bool isOriginActivated)
+    {
+        //Set start color (sides closest to origin)
+        for (int i = 0; i < isAttackingConnection.Count; i++)
+        {
+            if (connectionStartsHere[i])
+            {
+                if (isAttackingConnection[i])
+                {
+                    if (isOriginActivated)
+                        connectionLines[i].startColor = Color.green;
+                    else
+                        connectionLines[i].startColor = Color.blue;
+                }
+                else
+                {
+                    if (isOriginActivated)
+                        connectionLines[i].startColor = Color.red;
+                    else
+                        connectionLines[i].startColor = Color.yellow;
+                }
+            }
+            else
+            {
+                if (isAttackingConnection[i])
+                {
+                    if (isOriginActivated)
+                        connectionLines[i].endColor = Color.green;
+                    else
+                        connectionLines[i].endColor = Color.blue;
+                }
+                else
+                {
+                    if (isOriginActivated)
+                        connectionLines[i].endColor = Color.red;
+                    else
+                        connectionLines[i].endColor = Color.yellow;
+                }
+            }
+        }
+
+        //Set end color (sides farthest from origin)
+        for (int i = 0; i < isAttackingConnection.Count; i++)
+        {
+            if (isOriginActivated)
+            {
+                if (connectionStartsHere[i])
+                {
+                    if (isAttackingConnection[i])
+                        connectionLines[i].endColor = Color.green;
+                    else
+                        connectionLines[i].endColor = Color.red;
+                }
+                else
+                {
+                    if (isAttackingConnection[i])
+                        connectionLines[i].startColor = Color.green;
+                    else
+                        connectionLines[i].startColor = Color.red;
+                }
+            }
+            else
+            {
+                if (connectionStartsHere[i])
+                    connectionLines[i].endColor = Color.yellow;
+                else
+                    connectionLines[i].startColor = Color.yellow;
+            }
         }
     }
 
