@@ -6,6 +6,7 @@ public class Player
 {
     int id;
     bool isBot;
+    bool isDead;
     int unitAmount;
     public HashSet<GameObject> ownedCells = new HashSet<GameObject>();
     Color color;
@@ -15,14 +16,20 @@ public class Player
     {
         this.id = id;
         this.isBot = isBot;
+        this.isDead = false;
         this.color = color;
         unitAmount = 1;
         ownedCells.Add(spawnCell);
     }
+    public Player() { }
 
     ///[ACCESSOR(S)/MUTATOR(S)]
     public int GetId() { return id; }
     public bool GetIsBot() { return isBot; }
+    public bool GetIsDead() { return isDead; }
+    public void SetIsDead(bool newDead) { isDead = newDead; }
+    public Color GetPlayerColor() { return color; }
+    public HashSet<GameObject> GetOwnedCells() { return ownedCells; }
 
     public void AddCell(GameObject newCell) { ownedCells.Add(newCell); }
     public void RemoveCell(GameObject oldCell) { ownedCells.Remove(oldCell); }
@@ -88,4 +95,52 @@ public class PlayerManager : MonoBehaviour
 
     ///[ACCESSOR(S)/MUTATOR(S)]
     public List<Player> GetPlayers() { return players; }
+    public Player GetPlayer(int searchId)
+    {
+        foreach(Player p in players)
+        {
+            if (p.GetId() == searchId)
+                return p;
+        }
+        return null;
+    }
+    public Player GetNextAlivePlayer(Player p)
+    {
+        int indx = players.IndexOf(p);
+        //Find next player in list
+        if (indx == players.Count - 1)
+            indx = 0;
+        else
+            indx++;
+        //Find out if that player is dead, continue until finds alive player.
+        while (players[indx].GetIsDead())
+        {
+            if (indx == players.Count - 1)
+                indx = 0;
+            else
+                indx++;
+        }
+            
+        return players[indx];
+    }
+    public int GetTotalAlive()
+    {
+        int totalAlive = 0;
+        //Find next player in list
+        foreach(Player p in players)
+        {
+            if (!p.GetIsDead())
+                totalAlive++;
+        }
+        return totalAlive;
+    }
+    public Player GetLastAlivePlayer()
+    {
+        int indx = players.Count - 1;
+        //Find next player in list
+        while(players[indx].GetIsDead())
+            indx--;
+        return players[indx];
+    }
+
 }
