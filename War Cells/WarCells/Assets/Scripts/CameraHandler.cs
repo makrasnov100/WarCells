@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class CameraHandler : MonoBehaviour
 {
-    //References
+    //Component References
     Camera cam;
 
     //Instance Variables
@@ -14,17 +14,17 @@ public class CameraHandler : MonoBehaviour
     bool wasZoomingLastFrame;
     Vector2[] lastZoomPositions;
 
-    //Movement Sensitivity
-    float panSpeed = 6f;
+    //Camera Movement Parameters
+    // - sensitivity
+    float panSpeed = 10f;
     float zoomSpeedTouch = 0.1f;
-    float zoomSpeedMouse = 0.5f;
-
+    float zoomSpeedMouse = 100f;
+    // - bounds
     float[] boundsX = new float[] { -100f, 100f };
     float[] boundsY = new float[] { -100f, 100f };
     float[] zoomBounds = new float[] { 20f, 140f };
 
-
-    //Get Reference(s)
+    ///[UNITY DEFAULT]
     void Awake()
     {
         cam = GetComponent<Camera>();
@@ -32,61 +32,32 @@ public class CameraHandler : MonoBehaviour
 
     void Update()
     {
+        //Call Apropriate function based on platform type
         if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
-        {
             HandleTouch();
-        }
         else
-        {
             HandleMouse();
-        }
     }
 
+    ///[INPUT HANDLERS]
+    //HandleMouse: moves camera based on mouse input
     void HandleMouse()
     {
+        //Ignore mouse if over UI
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
         if (Input.GetMouseButtonDown(0)) //Record mouse position on initial click
-        {
             lastPanPosition = Input.mousePosition;
-        }
         else if (Input.GetMouseButton(0)) //Proccess pan if still holding mouse
-        {
             PanCamera(Input.mousePosition);
-        }
 
         //Check for any zoom action
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         ZoomCamera(scroll, zoomSpeedMouse);
     }
 
-
-    //Action Function (these contain code that move the camera)
-    void PanCamera(Vector3 newPanPosition)
-    {
-        //Determine how much to move the camera
-        Vector3 offset = cam.ScreenToViewportPoint(lastPanPosition - newPanPosition);
-        Vector3 move = new Vector3(offset.x * panSpeed, offset.y * panSpeed, 0);
-
-        //Perform the camera movement
-        transform.Translate(move, Space.World);
-
-        //Ensure the camera remains within bounds
-        Vector3 pos = transform.position;
-        pos.x = Mathf.Clamp(transform.position.x, boundsX[0], boundsX[1]);
-        pos.y = Mathf.Clamp(transform.position.y, boundsY[0], boundsY[1]);
-        transform.position = pos;
-
-        //Cache last touch/mosue position (TODO: may be buggy if on bound - check)
-        lastPanPosition = newPanPosition;
-    }
-
-    void ZoomCamera(float offset, float speed)
-    {
-        if (offset == 0)
-            return;
-
-        cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - (offset * speed), zoomBounds[0], zoomBounds[1]);
-    }
-
+    //HandleMouse: moves camera based on touch input
     void HandleTouch()
     {
         switch (Input.touchCount)
@@ -97,7 +68,8 @@ public class CameraHandler : MonoBehaviour
 
                 Touch touch = Input.GetTouch(0);
 
-                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) // No panning while over UI
+                //Ignore touch if over UI
+                if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 {
                     lastPanPosition = touch.position;
                     return;
@@ -108,7 +80,7 @@ public class CameraHandler : MonoBehaviour
                     lastPanPosition = touch.position;
                     panFingerId = touch.fingerId;
                 }
-                else if(touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved)
+                else if (touch.fingerId == panFingerId && touch.phase == TouchPhase.Moved)
                 {
                     PanCamera(touch.position);
                 }
@@ -137,5 +109,36 @@ public class CameraHandler : MonoBehaviour
                 wasZoomingLastFrame = false;
                 break;
         }
+    }
+
+
+    ///[CAMERA MOVEMENT]
+    //PanCamera: traverses camera on a plane parallel to game world based on pan position change
+    void PanCamera(Vector3 newPanPosition)
+    {
+        //Determine how much to move the camera
+        Vector3 offset = cam.ScreenToViewportPoint(lastPanPosition - newPanPosition);
+        Vector3 move = new Vector3(offset.x * panSpeed, offset.y * panSpeed, 0);
+
+        //Perform the camera movement
+        transform.Translate(move, Space.World);
+
+        //Ensure the camera remains within bounds
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(transform.position.x, boundsX[0], boundsX[1]);
+        pos.y = Mathf.Clamp(transform.position.y, boundsY[0], boundsY[1]);
+        transform.position = pos;
+
+        //Cache last touch/mosue position (TODO: may be buggy if on bound - check)
+        lastPanPosition = newPanPosition;
+    }
+
+    //ZoomCamera: creates illusion of sooming in/out by changing the depth of feild
+    void ZoomCamera(float offset, float speed)
+    {
+        if (offset == 0)
+            return;
+
+        cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - (offset * speed), zoomBounds[0], zoomBounds[1]);
     }
 }

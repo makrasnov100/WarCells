@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Cell
   - Menu
+  - Unit
+  - playerManager
+  - turnController
   layers:
   - Default
   - TransparentFX
