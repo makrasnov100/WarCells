@@ -61,8 +61,7 @@ public class CellIdentity : MonoBehaviour
         curOccupancy = Random.Range(0, (int)(unitCapacity / 2));                    // SET occupancy of cell
 
         Vector3 curScale = new Vector3(1 + (unitCapacity * .05f), 1 + (unitCapacity * .05f), 1);
-        transform.Find("Sprite").localScale = curScale;                             // SET size of sprite
-        transform.Find("ActivationBG").Find("Sprite").localScale = curScale;        // SET size of activation sprite
+        transform.localScale = curScale;                             // SET size of sprite
 
         UpdateCellLabel();
     }
