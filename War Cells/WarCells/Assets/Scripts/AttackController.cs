@@ -11,6 +11,7 @@ public class AttackController : MonoBehaviour
 
     //Instance Variables
     public GameObject originCell;
+    private Player curPlayer;
 
     ///[UNITY DEFAULT]
     private void Update()
@@ -64,7 +65,8 @@ public class AttackController : MonoBehaviour
             {
                 //Ignore touch if cell is not owned by a current player
                 if (hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() == -1 ||
-                    playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot())
+                    playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot() ||
+                    hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != curPlayer.GetId())
                     return;
 
                 originCell = hit.collider.gameObject;
@@ -90,7 +92,8 @@ public class AttackController : MonoBehaviour
                 else
                 {
                     if (hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() == -1 ||
-                        playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot())
+                        playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot() ||
+                        hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != curPlayer.GetId())
                         return;
 
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
@@ -148,4 +151,5 @@ public class AttackController : MonoBehaviour
 
     ///[ACCESORS/MUTATORS]
     public GameObject GetOriginCell() { return originCell; }
+    public void SetCurPlayer(Player newPlayer) { this.curPlayer = newPlayer;  }
 }

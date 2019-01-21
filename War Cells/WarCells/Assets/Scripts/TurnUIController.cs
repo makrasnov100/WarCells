@@ -24,6 +24,7 @@ public class TurnUIController : MonoBehaviour
     public TMP_Text mobileUnitCurrent;
     public TMP_Text mobileUnitMax;
     public GameObject mobileNextTurnBtn;
+    public GameObject mobileNextPlayerBtn;
 
     [Header("PC UI")]
     public Canvas pcCanvas;
@@ -33,6 +34,7 @@ public class TurnUIController : MonoBehaviour
     public TMP_Text pcUnitCurrent;
     public TMP_Text pcUnitMax;
     public GameObject pcNextTurnBtn;
+    public GameObject pcNextPlayerBtn;
 
     private Canvas canvas;
     private Image nextTurnBG;
@@ -41,10 +43,13 @@ public class TurnUIController : MonoBehaviour
     private TMP_Text unitCurrent;
     private TMP_Text unitMax;
     private GameObject nextTurnBtn;
+    private GameObject nextPlayerBtn;
+    private Player curPlayer;
 
     //Instance variables (used for correct logic)
     public bool ignoreSliderEdits = false;  //TRUE - when setting slider value by script | FALSE - otherwise
     public bool isAnimationPlaying = false; //TRUE - while unit sending animation is playing | FALSE - when the animation is fully complete
+    public bool lastPlayer = false;
 
 
     ///[UNITY DEFAULT]
@@ -61,6 +66,7 @@ public class TurnUIController : MonoBehaviour
             unitCurrent = mobileUnitCurrent;
             unitMax = mobileUnitMax;
             nextTurnBtn = mobileNextTurnBtn;
+            nextPlayerBtn = mobileNextPlayerBtn;
         }
         else
         {
@@ -72,9 +78,19 @@ public class TurnUIController : MonoBehaviour
             unitCurrent = pcUnitCurrent;
             unitMax = pcUnitMax;
             nextTurnBtn = pcNextTurnBtn;
+            nextPlayerBtn = pcNextPlayerBtn;
         }
 
         canvas.gameObject.SetActive(true);
+        List<Player> players = playerManager.GetPlayers();
+        curPlayer = players[0];
+        //TODO: If first player is bot, check for player.
+
+        //AFTER PREGAME SETUP DONE - BEGIN GAME
+        attackController.SetCurPlayer(curPlayer);
+        ShowNextTurnUI();
+
+
     }
 
     ///[UI UPDATES]
@@ -83,6 +99,7 @@ public class TurnUIController : MonoBehaviour
     {
         //Enable/Disable correct UI components
         nextTurnBtn.SetActive(false);
+        nextPlayerBtn.SetActive(false);
         nextTurnBG.gameObject.SetActive(false);
         unitAmountInput.gameObject.SetActive(false);
         unitCurrent.gameObject.SetActive(false);
@@ -94,14 +111,25 @@ public class TurnUIController : MonoBehaviour
     {
         if (isAnimationPlaying)
             return;
-
+        //If current player is dead (fixes if player was killed last round!
+        if(curPlayer.GetIsDead())
+        {
+            curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
+            attackController.SetCurPlayer(curPlayer);
+        }
         //Enable/Disable correct UI components
-        nextTurnBtn.SetActive(true);
+        if (playerManager.GetLastAlivePlayer().Equals(curPlayer))
+            nextTurnBtn.SetActive(true);
+        else
+            nextPlayerBtn.SetActive(true);
+
         nextTurnBG.gameObject.SetActive(true);
+        nextTurnBG.color = curPlayer.GetPlayerColor();
         unitAmountInput.gameObject.SetActive(false);
         unitCurrent.gameObject.SetActive(false);
         unitMax.gameObject.SetActive(false);
     }
+
 
     //Shows only the UI neccessary to set reserve units and sets correct slider values
     public void ShowDefenceUI(CellIdentity origin)
@@ -111,7 +139,6 @@ public class TurnUIController : MonoBehaviour
 
         ignoreSliderEdits = true;  // > START slider ignore flag
 
-        unitInputBG.color = new Color(0, 0, 1f, 150f / 250f);       //SET Defence Slider Color
         unitCurrent.text = "" + origin.GetReserveUnits();           //SET Current Units in Reserve Text
         unitMax.text = "/" + origin.GetCapacity();                  //SET Max avaliable reserve units
         unitAmountInput.maxValue = origin.GetCapacity();            //SET Max slider value
@@ -120,6 +147,7 @@ public class TurnUIController : MonoBehaviour
         //Enable/Disable correct UI components
         nextTurnBG.gameObject.SetActive(false);
         nextTurnBtn.SetActive(false);
+        nextPlayerBtn.SetActive(false);
         unitAmountInput.gameObject.SetActive(true);
         unitCurrent.gameObject.SetActive(true);
         unitMax.gameObject.SetActive(true);
@@ -133,7 +161,20 @@ public class TurnUIController : MonoBehaviour
     public void NextTurnClick()
     {
         HideUI();
+        curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
+        attackController.SetCurPlayer(curPlayer);
         StartCoroutine(CellAttackAnimation());
+
+    }
+
+    //Performs the next turn click functions
+    public void NextPlayerClick()
+    {
+        HideUI();
+        curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
+        attackController.SetCurPlayer(curPlayer);
+        ShowNextTurnUI();
+
     }
 
 
@@ -162,8 +203,18 @@ public class TurnUIController : MonoBehaviour
             postTurnRecalculation();
         postTurnRecalculation = null;
 
-        isAnimationPlaying = false; // > END animation playing flag
+        //Check to see if any players have died / If game has ended
+        foreach (Player p in playerManager.GetPlayers())
+            if (p.GetOwnedCells().Count <= 0)
+                p.SetIsDead(true);
 
+        if(playerManager.GetTotalAlive() <= 1)
+        {
+            Debug.Log("GAME OVER");
+        }
+
+        isAnimationPlaying = false; // > END animation playing flag
+      
         //Show the correct UI after turn is complete
         if (attackController.GetOriginCell() != null) //An origin cell is selected
             ShowDefenceUI(attackController.GetOriginCell().GetComponent<CellIdentity>());
@@ -175,4 +226,5 @@ public class TurnUIController : MonoBehaviour
     ///[ACCESORS/MUTATORS]
     public Slider GetUnitAmountInput() { return unitAmountInput; }
     public TMP_Text GetUnitCurrent() { return unitCurrent; }
+    public bool GetLastPlayer(){ return lastPlayer;}
 }
