@@ -220,6 +220,10 @@ public class TurnUIController : MonoBehaviour
             Debug.Log("GAME OVER");
         }
 
+        //If preselcted cur player was already destroyed choose the next avaliable
+        if (curPlayer.GetIsDead())
+            curPlayer = playerManager.GetNextAlivePlayer(curPlayer.GetId());
+
         isAnimationPlaying = false; // > END animation playing flag
         isDoneSelectingAttacks = false;
 
