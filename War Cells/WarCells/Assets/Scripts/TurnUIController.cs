@@ -44,12 +44,14 @@ public class TurnUIController : MonoBehaviour
     private TMP_Text unitMax;
     private GameObject nextTurnBtn;
     private GameObject nextPlayerBtn;
+
+    //Pass and play variables
     private Player curPlayer;
+    private bool isDoneSelectingAttacks = false;
 
     //Instance variables (used for correct logic)
     public bool ignoreSliderEdits = false;  //TRUE - when setting slider value by script | FALSE - otherwise
     public bool isAnimationPlaying = false; //TRUE - while unit sending animation is playing | FALSE - when the animation is fully complete
-    public bool lastPlayer = false;
 
 
     ///[UNITY DEFAULT]
@@ -82,15 +84,9 @@ public class TurnUIController : MonoBehaviour
         }
 
         canvas.gameObject.SetActive(true);
-        List<Player> players = playerManager.GetPlayers();
-        curPlayer = players[0];
-        //TODO: If first player is bot, check for player.
+        curPlayer = playerManager.GetNextAlivePlayer(-1);
 
-        //AFTER PREGAME SETUP DONE - BEGIN GAME
-        attackController.SetCurPlayer(curPlayer);
         ShowNextTurnUI();
-
-
     }
 
     ///[UI UPDATES]
@@ -111,20 +107,23 @@ public class TurnUIController : MonoBehaviour
     {
         if (isAnimationPlaying)
             return;
-        //If current player is dead (fixes if player was killed last round!
-        if(curPlayer.GetIsDead())
-        {
-            curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
-            attackController.SetCurPlayer(curPlayer);
-        }
-        //Enable/Disable correct UI components
-        if (playerManager.GetLastAlivePlayer().Equals(curPlayer))
-            nextTurnBtn.SetActive(true);
-        else
-            nextPlayerBtn.SetActive(true);
 
+        //Enable/Disable correct pass and play components
+        if (isDoneSelectingAttacks)
+        {
+            nextTurnBtn.SetActive(true);
+            nextPlayerBtn.SetActive(false);
+            nextTurnBG.color = Color.red;
+        }
+        else
+        {
+            nextTurnBtn.SetActive(false);
+            nextPlayerBtn.SetActive(true);
+            nextTurnBG.color = curPlayer.GetPlayerColor();
+        }
+
+        //Enable/Disable correct general UI components
         nextTurnBG.gameObject.SetActive(true);
-        nextTurnBG.color = curPlayer.GetPlayerColor();
         unitAmountInput.gameObject.SetActive(false);
         unitCurrent.gameObject.SetActive(false);
         unitMax.gameObject.SetActive(false);
@@ -160,21 +159,27 @@ public class TurnUIController : MonoBehaviour
     //Performs the next turn click functions
     public void NextTurnClick()
     {
+        attackController.ResetCellSelection();
         HideUI();
-        curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
-        attackController.SetCurPlayer(curPlayer);
-        StartCoroutine(CellAttackAnimation());
 
+        StartCoroutine(CellAttackAnimation());
     }
 
-    //Performs the next turn click functions
+    //Performs the next player click functions
     public void NextPlayerClick()
     {
-        HideUI();
-        curPlayer = playerManager.GetNextAlivePlayer(curPlayer);
-        attackController.SetCurPlayer(curPlayer);
-        ShowNextTurnUI();
+        attackController.ResetCellSelection();
 
+        //Get the next player to declare attacks
+        int curPlayerId = curPlayer.GetId();
+        curPlayer = playerManager.GetNextAlivePlayer(curPlayerId);
+        int nextPlayerId = curPlayer.GetId();
+
+        //Check if all players already declared attacks
+        if (nextPlayerId <= curPlayerId)
+            isDoneSelectingAttacks = true;
+
+        ShowNextTurnUI();
     }
 
 
@@ -203,28 +208,28 @@ public class TurnUIController : MonoBehaviour
             postTurnRecalculation();
         postTurnRecalculation = null;
 
-        //Check to see if any players have died / If game has ended
+        //Set any players without owned cells as dead
         foreach (Player p in playerManager.GetPlayers())
             if (p.GetOwnedCells().Count <= 0)
                 p.SetIsDead(true);
 
-        if(playerManager.GetTotalAlive() <= 1)
+        //Notify user about win if the only one left
+        if(playerManager.GetTotalAlivePlayers() <= 1)
         {
+            //TODO: WINNER MENU
             Debug.Log("GAME OVER");
         }
 
         isAnimationPlaying = false; // > END animation playing flag
-      
+        isDoneSelectingAttacks = false;
+
         //Show the correct UI after turn is complete
-        if (attackController.GetOriginCell() != null) //An origin cell is selected
-            ShowDefenceUI(attackController.GetOriginCell().GetComponent<CellIdentity>());
-        else                                          //No orign cell selected
-            ShowNextTurnUI();
+        ShowNextTurnUI();
     }
 
 
     ///[ACCESORS/MUTATORS]
     public Slider GetUnitAmountInput() { return unitAmountInput; }
     public TMP_Text GetUnitCurrent() { return unitCurrent; }
-    public bool GetLastPlayer(){ return lastPlayer;}
+    public int GetCurPlayerId() { return curPlayer.GetId(); }
 }

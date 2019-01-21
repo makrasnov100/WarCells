@@ -104,43 +104,30 @@ public class PlayerManager : MonoBehaviour
         }
         return null;
     }
-    public Player GetNextAlivePlayer(Player p)
+    public Player GetNextAlivePlayer(int previousPlayer)
     {
-        int indx = players.IndexOf(p);
-        //Find next player in list
-        if (indx == players.Count - 1)
-            indx = 0;
-        else
-            indx++;
-        //Find out if that player is dead, continue until finds alive player.
-        while (players[indx].GetIsDead())
+        if (previousPlayer == -1)
+            return players[0];
+
+        int nextPlayer = previousPlayer;
+        do
         {
-            if (indx == players.Count - 1)
-                indx = 0;
-            else
-                indx++;
-        }
-            
-        return players[indx];
+            nextPlayer++;
+            if (nextPlayer == players.Count)
+                nextPlayer = 0;
+
+        } while (nextPlayer != previousPlayer && (players[nextPlayer].GetIsBot() || players[nextPlayer].GetIsDead()));
+
+        return players[nextPlayer];
     }
-    public int GetTotalAlive()
+    public int GetTotalAlivePlayers()
     {
         int totalAlive = 0;
         //Find next player in list
-        foreach(Player p in players)
-        {
+        foreach (Player p in players)
             if (!p.GetIsDead())
                 totalAlive++;
-        }
-        return totalAlive;
-    }
-    public Player GetLastAlivePlayer()
-    {
-        int indx = players.Count - 1;
-        //Find next player in list
-        while(players[indx].GetIsDead())
-            indx--;
-        return players[indx];
-    }
 
+        return totalAlive;
+    }   
 }

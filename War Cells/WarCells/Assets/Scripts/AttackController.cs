@@ -11,7 +11,6 @@ public class AttackController : MonoBehaviour
 
     //Instance Variables
     public GameObject originCell;
-    private Player curPlayer;
 
     ///[UNITY DEFAULT]
     private void Update()
@@ -59,14 +58,18 @@ public class AttackController : MonoBehaviour
     //Carries out the cell attack commands for all platforms based on hit information
     void HandleInput(RaycastHit2D hit)
     {
+        //No attacks declaration allowed while attack animations are carried out
+        if (turnController.isAnimationPlaying)
+            return;
+
         if (hit.collider != null && hit.collider.gameObject.tag != "cell") //Hit a cell
         {
             if (originCell == null) ///No origin cell selected yet
             {
-                //Ignore touch if cell is not owned by a current player
+                //Ignore selection if cell is not owned by a current player
                 if (hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() == -1 ||
                     playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot() ||
-                    hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != curPlayer.GetId())
+                    hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != turnController.GetCurPlayerId())
                     return;
 
                 originCell = hit.collider.gameObject;
@@ -75,25 +78,25 @@ public class AttackController : MonoBehaviour
             }
             else ///Origin cell has already been selected
             {
-                //Touched orign cell second time
+                //Selected origin cell second time
                 if (originCell.GetInstanceID() == hit.collider.gameObject.GetInstanceID())
                 {
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
                     originCell = null;
                     turnController.ShowNextTurnUI();
                 }
-                //Touched cell thats connected to the current origin cell       
+                //Selected cell thats connected to the current origin cell       
                 else if (originCell.GetComponent<CellIdentity>().IsConnectedTo(hit.collider.gameObject.GetComponent<CellIdentity>().GetId()))
                 {
                     GameObject destinationCell = hit.collider.gameObject;
                     destinationCell.GetComponent<CellIdentity>().SwitchActivationColor(originCell.GetComponent<CellIdentity>().GetId());
                     originCell.GetComponent<CellIdentity>().SwitchAttackOption(destinationCell.GetComponent<CellIdentity>().GetId());
-                }//Touched new origin cell
+                }//Selected new origin cell
                 else
                 {
                     if (hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() == -1 ||
                         playerManager.GetPlayers()[hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner()].GetIsBot() ||
-                        hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != curPlayer.GetId())
+                        hit.collider.gameObject.GetComponent<CellIdentity>().GetOwner() != turnController.GetCurPlayerId())
                         return;
 
                     originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
@@ -106,7 +109,7 @@ public class AttackController : MonoBehaviour
                 ConfirmDefence();
             }
         }
-        else //Touched an empty space (resets all)
+        else //Selected an empty space (resets all)
         {
             if (originCell != null)
             {
@@ -147,9 +150,18 @@ public class AttackController : MonoBehaviour
             originCell.GetComponent<CellIdentity>().RecalculateAttackUnits();
         }
     }
+    //ResetCellSelection: called to remove selection over an origin cell if present
+    public void ResetCellSelection()
+    {
+        if (originCell != null)
+        {
+            ConfirmDefence();
+            originCell.GetComponent<CellIdentity>().ChangeActivationState(false, true, 0);
+            originCell = null;
+        }
+    }
 
 
     ///[ACCESORS/MUTATORS]
     public GameObject GetOriginCell() { return originCell; }
-    public void SetCurPlayer(Player newPlayer) { this.curPlayer = newPlayer;  }
 }
