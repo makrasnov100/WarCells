@@ -66,6 +66,14 @@ public class CellIdentity : MonoBehaviour
 
         UpdateCellLabel();
     }
+    public void Reconstruct(int id, CellIdentity cellInfo)
+    {
+        this.id = id;
+        this.curOccupancy = cellInfo.GetCurOccupancy();
+        this.unitCapacity = cellInfo.GetCapacity();
+
+        UpdateCellLabel();
+    }
 
 
     ///[CONNECTION INTERACTION]
@@ -465,6 +473,7 @@ public class CellIdentity : MonoBehaviour
     ///[ACCESSORS/MUTATORS]
     public int GetId() { return id; }
     public int GetOwner() { return owner; }
+    public int GetCurOccupancy() { return curOccupancy; }
     public int GetCapacity() { return unitCapacity; }
     public int GetReserveUnits() { return reserveUnits; }
 

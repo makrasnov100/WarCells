@@ -732,7 +732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b8c16135087264ca4c68b0d0f5f5f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  humanPlayers: 3
+  humanPlayers: 2
   botPlayers: 0
 --- !u!4 &761302365
 Transform:
@@ -2157,16 +2157,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerManager: {fileID: 761302364}
   turnController: {fileID: 2057796709}
-  connectionPrevalence: 0.95
+  connectionPrevalence: 1
   conMat: {fileID: 2100000, guid: bdde8db17acc90345ae05609e9aafd55, type: 2}
   minCellSize: 4
   maxCellSize: 12
-  cellPadding: 3.27
-  mapSize: 11
+  cellPadding: 3
+  mapSizeVertical: 2
+  mapSizeHorizontal: 2
   mapCenterPosX: 0
   mapCenterPosY: 0
-  horizontalSym: 0
-  verticalSym: 0
+  horizontalSym: 1
+  verticalSym: 1
   cellTypes:
   - {fileID: 6123376326835277822, guid: d94c4da3535ab03439575aa13aa010e2, type: 3}
   - {fileID: 3565135676002520769, guid: 3bf6f55184b78294dbe245e59949e1ea, type: 3}
