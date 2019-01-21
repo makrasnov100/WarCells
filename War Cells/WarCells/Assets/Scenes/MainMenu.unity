@@ -1111,7 +1111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f65ae82e58c9ff44a06fcf6c2fec6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inPlayers: {fileID: 0}
+  inPlayers: {fileID: 376177904}
 --- !u!114 &2011455237
 MonoBehaviour:
   m_ObjectHideFlags: 0
