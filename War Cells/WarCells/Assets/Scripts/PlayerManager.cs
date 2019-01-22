@@ -130,6 +130,7 @@ public class PlayerManager : MonoBehaviour
         }
         return null;
     }
+    public void SetHumanPlayers(int newPlayers) { humanPlayers = newPlayers;  }
     public Player GetNextAlivePlayer(int previousPlayer)
     {
         if (previousPlayer == -1)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TurnUIController : MonoBehaviour
@@ -225,6 +226,7 @@ public class TurnUIController : MonoBehaviour
         {
             //TODO: WINNER MENU
             Debug.Log("GAME OVER");
+            SceneManager.LoadScene("MainMenu");
         }
 
         //If preselcted cur player was already destroyed choose the next avaliable
