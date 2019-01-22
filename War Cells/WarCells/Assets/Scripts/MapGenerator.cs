@@ -219,6 +219,18 @@ public class MapGenerator : MonoBehaviour
     //CreateConnections: creates connections and accepts symmetry
     private void CreateConnections()
     {
+        //Sort smallest distances ()
+        List<float> distances = new List<float>();
+        List<GameObject> origin = new List<GameObject>();
+        List<GameObject> destination = new List<GameObject>();
+
+        for (int y = 0; y < cells.Count; y++)
+        {
+            for (int x = 0; x < cells[0].Count; x++)
+            {
+            }
+        }
+
         for (int y = 0; y < cells.Count; y++)
         {
             for (int x = 0; x < cells[0].Count; x++)

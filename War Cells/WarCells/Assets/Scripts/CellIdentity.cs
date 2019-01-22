@@ -145,7 +145,7 @@ public class CellIdentity : MonoBehaviour
     }
 
     //SetBulkConnectionColor: Sets the initial and final connection line colors (when an origin is selected and when deselected)
-    private void SetBulkConnectionColor(bool isOriginActivated)
+    public void SetBulkConnectionColor(bool isOriginActivated, bool isShowEnemyAttacks)
     {
         //Set start color (sides closest to origin)
         for (int i = 0; i < isAttackingConnection.Count; i++)
@@ -209,7 +209,7 @@ public class CellIdentity : MonoBehaviour
             else
             {
                 Color otherSideColor = Color.yellow;
-                if (connectionCells[g].GetComponent<CellIdentity>().IsAttacking(id))
+                if (connectionCells[g].GetComponent<CellIdentity>().IsAttacking(id) && (isShowEnemyAttacks || connectionCells[g].GetComponent<CellIdentity>().GetOwner() == owner))
                     otherSideColor = Color.blue;
 
                 if (connectionStartsHere[g])
@@ -217,6 +217,18 @@ public class CellIdentity : MonoBehaviour
                 else
                     connectionLines[g].startColor = otherSideColor;
             }
+        }
+    }
+
+    //ResetOutgoingColors: sets all outgoing connections to a certain color
+    public void ResetOutgoingColors(Color color)
+    {
+        for (int i = 0; i < connectionLines.Count; i++)
+        {
+            if (connectionStartsHere[i])
+                connectionLines[i].startColor = color;
+            else
+                connectionLines[i].endColor = color;
         }
     }
 
@@ -262,7 +274,7 @@ public class CellIdentity : MonoBehaviour
                     connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
             }
 
-            SetBulkConnectionColor(isActivated);
+            SetBulkConnectionColor(isActivated, false);
         }
     }
 
@@ -362,7 +374,7 @@ public class CellIdentity : MonoBehaviour
             isAttacking = false;
             for (int i = 0; i < isAttackingConnection.Count; i++)
                 isAttackingConnection[i] = false;
-            ResetAllOutConnectionColor();
+            //ResetAllOutConnectionColor();
         }
         originalOwner = owner;
 

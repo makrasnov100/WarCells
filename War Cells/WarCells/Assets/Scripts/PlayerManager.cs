@@ -84,12 +84,38 @@ public class PlayerManager : MonoBehaviour
 
 
     ///[CELL FUNCTIONS]
-    //Perform end turn procedure for each cell thats owned by a player or bot
+    //CompleteCellActions: Perform end turn procedure for each cell thats owned by a player or bot
     public void CompleteCellActions()
     {
         foreach (Player p in players)
             foreach (GameObject g in p.ownedCells)
                 g.GetComponent<CellIdentity>().CompleteTurn();
+    }
+
+    //ShowAllAttackDeclarations: Displayes the declared attacks of all owned cells
+    public void ShowAllAttackDeclarations()
+    {
+        foreach (Player p in players)
+            foreach (GameObject g in p.ownedCells)
+                g.GetComponent<CellIdentity>().SetBulkConnectionColor(false, true);
+    }
+
+    //ShowCurPlayerAttackDeclarations: Displays the declared attacks of all cells owned by a specific player
+    public void ShowCurPlayerAttackDeclarations(int playerId)
+    {
+        foreach (Player p in players)
+        {
+            if (p.GetId() == playerId)
+            {
+                foreach (GameObject g in p.ownedCells)
+                    g.GetComponent<CellIdentity>().SetBulkConnectionColor(false, false);
+            }
+            else
+            {
+                foreach (GameObject g in p.ownedCells)
+                    g.GetComponent<CellIdentity>().ResetOutgoingColors(Color.yellow);
+            }
+        }
     }
 
 
