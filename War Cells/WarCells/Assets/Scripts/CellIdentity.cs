@@ -43,7 +43,6 @@ public class CellIdentity : MonoBehaviour
     private List<bool> isAttackingConnection = new List<bool>();
     private int latestUnitSentTo = -1;
     private List<int[]> outgoingAttacks = new List<int[]>();
-    private List<int[]> incomingAttacks = new List<int[]>();
     // - cell condition
     private bool isAttacking = false;
 
@@ -84,7 +83,6 @@ public class CellIdentity : MonoBehaviour
         connectionLines.Add(line);
         connectionStartsHere.Add(isStart);
         outgoingAttacks.Add(new int[] { otherId, 0, -1, 0 });
-        incomingAttacks.Add(new int[] { otherId, 0, -1, 0 });
         connectionCells.Add(otherObj);
         isAttackingConnection.Add(false);
     }

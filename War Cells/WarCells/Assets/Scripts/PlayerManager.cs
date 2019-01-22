@@ -44,13 +44,15 @@ public class PlayerManager : MonoBehaviour
     
     //Game Storage
     List<List<GameObject>> cells;               // - cells
+    List<GameObject> newCells;               // - cells
     List<Player> players = new List<Player>();  // - players
 
 
     ///[CONSTRUCTOR*]
-    public void Construct(List<List<GameObject>> cells)
+    public void Construct(List<List<GameObject>> cells, List<GameObject> newCells)
     {
         this.cells = cells;
+        this.newCells = newCells;
     }
 
 
@@ -62,10 +64,10 @@ public class PlayerManager : MonoBehaviour
         for (int p = 0; p < totalPlayers; p++)
         {
             //Find an open cell for a player
-            GameObject curCell = cells[Random.Range(0, cells.Count)][Random.Range(0, cells[0].Count)];
+            GameObject curCell = newCells[Random.Range(0, newCells.Count)];
             while (curCell == null || curCell.GetComponent<CellIdentity>().GetOwner() != -1)
             {
-                curCell = cells[Random.Range(0, cells.Count)][Random.Range(0, cells[0].Count)];
+                curCell = newCells[Random.Range(0, newCells.Count)];
             }
 
             Color curColor = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);   //SET color for currently created player

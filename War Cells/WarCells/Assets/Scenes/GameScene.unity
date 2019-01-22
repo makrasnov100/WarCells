@@ -2580,6 +2580,8 @@ MonoBehaviour:
   minCellSize: 4
   maxCellSize: 12
   cellPadding: 3
+  mapSize: 15
+  chanceDecrease: 5
   mapSizeVertical: 6
   mapSizeHorizontal: 6
   mapCenterPosX: 0
@@ -2587,9 +2589,9 @@ MonoBehaviour:
   horizontalSym: 1
   verticalSym: 1
   cellTypes:
-  - {fileID: 6123376326835277822, guid: d94c4da3535ab03439575aa13aa010e2, type: 3}
-  - {fileID: 3565135676002520769, guid: 3bf6f55184b78294dbe245e59949e1ea, type: 3}
   - {fileID: 7270605105527588119, guid: 5bfe50bb8e3fc6842aff7fbb46484a1e, type: 3}
+  - {fileID: 3565135676002520769, guid: 3bf6f55184b78294dbe245e59949e1ea, type: 3}
+  - {fileID: 6123376326835277822, guid: d94c4da3535ab03439575aa13aa010e2, type: 3}
   - {fileID: 3565135676002520769, guid: e1acffec9218975479d8a44e956e876d, type: 3}
 --- !u!4 &1897343202
 Transform:

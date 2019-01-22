@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour
 
     //Map Storage
     List<List<GameObject>> cells = new List<List<GameObject>>();
+    List<GameObject> newCells = new List<GameObject>();
 
     //Connections Settings
     public float connectionPrevalence;
@@ -20,6 +21,10 @@ public class MapGenerator : MonoBehaviour
     public int maxCellSize;
     [Range(1, 10)]
     public float cellPadding;
+    public int mapSize;
+    private Vector2[] cellPositions = new Vector2[6];
+    public int chanceDecrease = 5;
+    public bool PrefabMap;
 
     //Map Settings
     [Range(1,99)]
@@ -38,8 +43,109 @@ public class MapGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (!GenerateWorld())
-            print("Failed to Create Map!");
+        if (playerManager == null)
+            playerManager = GameObject.FindGameObjectWithTag("playerManager").GetComponent<PlayerManager>();
+        if (turnController == null)
+            turnController = GameObject.FindGameObjectWithTag("turnController").GetComponent<TurnUIController>();
+        if (PrefabMap)
+            return;
+        // Using Sqrt(3) as 1.732
+        //Preset cell locations around a cell (Hexagon) (Starting veryleft, making it around clock wise)
+        cellPositions[0] = new Vector2(-cellPadding, 0);
+        cellPositions[1] = new Vector2(-cellPadding/2, (cellPadding / 2) * 1.732f);
+        cellPositions[2] = new Vector2(cellPadding / 2, (cellPadding / 2) * 1.732f);
+        cellPositions[3] = new Vector2(cellPadding, 0);
+        cellPositions[4] = new Vector2(cellPadding / 2, -(cellPadding / 2) * 1.732f);
+        cellPositions[5] = new Vector2(-cellPadding / 2, -(cellPadding / 2) * 1.732f);
+
+        GenerateUniformWorld(0, null ,new Vector2(0,0)); //Generates starting from cell 0
+        playerManager.Construct(cells, newCells);
+        playerManager.SpawnPlayers();
+
+        //if (!GenerateWorld())
+        //  print("Failed to Create Map!");
+    }
+
+    private void GenerateUniformWorld(int curRecursive, CellIdentity baseCell, Vector2 curPosition)
+    {
+        
+        //base case for center
+        if(curRecursive == 0)
+        {
+            int curCellIdx = 1;
+            //Instatiate Cell
+            GameObject curCell = Instantiate(cellTypes[curCellIdx], new Vector2(0,0), new Quaternion(), transform);
+            curCell.name = curCell.name + cellCounter;
+            //Generate Cell Properties
+            CellIdentity cellId = curCell.GetComponent<CellIdentity>();
+            cellId.Construct(cellCounter++, Random.Range(minCellSize, maxCellSize + 1));
+            baseCell = cellId;
+
+            //Store Cell
+            newCells.Add(curCell);
+        }
+        foreach(Vector2 pos in cellPositions)
+        {
+            //Sees if that position will have a cell
+            int curCellIdx = 0;
+            int r = Random.Range(1, 100);
+            int curPercent = Mathf.Min(chanceDecrease * curRecursive, 90);
+            if (r <= curPercent)
+            {
+                curCellIdx = 0;//no cell
+                newCells.Add(null);
+            }               
+            else
+            {
+                Collider2D cell = Physics2D.OverlapCircle(curPosition + pos, .5f);
+                if (cell != null) // If a cell already exists at this position, attemp to make a bridge to it 
+                {
+                    int r2 = Random.Range(1, 100);
+                    if(r2 <= 50) // 50/50 chance to mke a bridge
+                    {
+                        GameObject line = new GameObject();
+                        line.transform.parent = gameObject.transform;
+                        CellIdentity oldCellId = cell.gameObject.GetComponent<CellIdentity>();
+                        LineRenderer lr2 = line.AddComponent<LineRenderer>();
+                        lr2.SetPosition(0, curPosition);
+                        lr2.SetPosition(1, curPosition + pos);
+                        lr2.material = new Material(Shader.Find("Sprites/Default"));
+                        lr2.startColor = Color.yellow;
+                        lr2.endColor = Color.yellow;
+                        lr2.startWidth = .2f;
+                        lr2.endWidth = .2f;
+                        lr2.sortingOrder = -10;
+                        oldCellId.AddConnection(baseCell.GetId(), baseCell.gameObject, 0, lr2, false);
+                        baseCell.AddConnection(oldCellId.GetId(), oldCellId.gameObject, 1, lr2, true);
+                    }
+                    continue;
+                }
+
+
+                curCellIdx = Random.Range(1, cellTypes.Count);//is a cell
+                //Instatiate Cell
+                GameObject curCell = Instantiate(cellTypes[curCellIdx], curPosition + pos, new Quaternion(), transform);
+                curCell.name = curCell.name + cellCounter;
+                //Generate Cell Properties
+                CellIdentity cellId = curCell.GetComponent<CellIdentity>();
+                cellId.Construct(cellCounter++, Random.Range(minCellSize, maxCellSize + 1));
+                LineRenderer lr = curCell.AddComponent<LineRenderer>();
+                lr.SetPosition(0, curPosition);
+                lr.SetPosition(1, curPosition + pos);
+                lr.material = new Material(Shader.Find("Sprites/Default"));
+                lr.startColor = Color.yellow;
+                lr.endColor = Color.yellow;
+                lr.startWidth = .2f;
+                lr.endWidth = .2f;
+                lr.sortingOrder = -10;
+                cellId.AddConnection(baseCell.GetId(), baseCell.gameObject, 0, lr, false);
+                baseCell.AddConnection(cellId.GetId(), cellId.gameObject, 1, lr, true);
+                newCells.Add(curCell);
+                if (curRecursive < mapSize)
+                    GenerateUniformWorld(curRecursive + 1, cellId ,curPosition + pos);
+            }
+                          
+        }
     }
 
     //Creates the game world (handles symmetry)
@@ -165,7 +271,7 @@ public class MapGenerator : MonoBehaviour
         CreateConnections();
 
         //Add needed amounts of players to the map (both bots and real)
-        playerManager.Construct(cells);
+        playerManager.Construct(cells, newCells);
         playerManager.SpawnPlayers();
 
         return true;
