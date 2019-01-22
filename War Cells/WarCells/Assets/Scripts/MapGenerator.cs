@@ -24,6 +24,8 @@ public class MapGenerator : MonoBehaviour
     public int mapSize;
     private Vector2[] cellPositions = new Vector2[6];
     public int chanceDecrease = 5;
+    [Range(0, 100)]
+    public float bridgeChance;
     public bool PrefabMap;
 
     //Map Settings
@@ -84,8 +86,21 @@ public class MapGenerator : MonoBehaviour
             //Store Cell
             newCells.Add(curCell);
         }
-        foreach(Vector2 pos in cellPositions)
+
+        List<int> usedPos = new List<int>();
+        usedPos.Add(0);
+        usedPos.Add(1);
+        usedPos.Add(2);
+        usedPos.Add(3);
+        usedPos.Add(4);
+        usedPos.Add(5);
+
+        while(usedPos.Count != 0)
         {
+            int randPos = Random.Range(0, usedPos.Count-1);
+            Vector2 pos = cellPositions[usedPos[randPos]];
+            usedPos.RemoveAt(randPos);
+
             //Sees if that position will have a cell
             int curCellIdx = 0;
             int r = Random.Range(1, 100);
@@ -101,7 +116,7 @@ public class MapGenerator : MonoBehaviour
                 if (cell != null && !cell.gameObject.GetComponent<CellIdentity>().IsConnectedTo(baseCell.GetId())) // If a cell already exists at this position, and no bridge already. attempt to make a bridge to it 
                 {
                     int r2 = Random.Range(1, 100);
-                    if(r2 <= 50) // 50/50 chance to mke a bridge
+                    if(r2 >= bridgeChance * curRecursive) // bridgechance, chance to mke a bridge
                     {
                         GameObject line = new GameObject();
                         line.transform.parent = gameObject.transform;

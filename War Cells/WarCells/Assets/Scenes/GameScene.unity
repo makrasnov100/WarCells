@@ -779,7 +779,17 @@ PrefabInstance:
     - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
         type: 3}
       propertyPath: chanceDecrease
-      value: 20
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
+        type: 3}
+      propertyPath: cellPadding
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
+        type: 3}
+      propertyPath: bridgeChance
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa56598a081d36646b5838a675449fbb, type: 3}
@@ -812,7 +822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89b8c16135087264ca4c68b0d0f5f5f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  humanPlayers: 3
+  humanPlayers: 2
   botPlayers: 0
 --- !u!4 &761302365
 Transform:

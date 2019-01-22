@@ -22,7 +22,7 @@ public class CameraHandler : MonoBehaviour
     // - bounds
     float[] boundsX = new float[] { -100f, 100f };
     float[] boundsY = new float[] { -100f, 100f };
-    float[] zoomBounds = new float[] { 20f, 140f };
+    float[] zoomBounds = new float[] { 20f, 150f };
 
     ///[UNITY DEFAULT]
     void Awake()
