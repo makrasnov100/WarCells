@@ -98,7 +98,7 @@ public class MapGenerator : MonoBehaviour
             else
             {
                 Collider2D cell = Physics2D.OverlapCircle(curPosition + pos, .5f);
-                if (cell != null) // If a cell already exists at this position, attemp to make a bridge to it 
+                if (cell != null && !cell.gameObject.GetComponent<CellIdentity>().IsConnectedTo(baseCell.GetId())) // If a cell already exists at this position, and no bridge already. attempt to make a bridge to it 
                 {
                     int r2 = Random.Range(1, 100);
                     if(r2 <= 50) // 50/50 chance to mke a bridge
@@ -118,6 +118,10 @@ public class MapGenerator : MonoBehaviour
                         oldCellId.AddConnection(baseCell.GetId(), baseCell.gameObject, 0, lr2, false);
                         baseCell.AddConnection(oldCellId.GetId(), oldCellId.gameObject, 1, lr2, true);
                     }
+                    continue;
+                }
+                else if(cell != null)
+                {
                     continue;
                 }
 

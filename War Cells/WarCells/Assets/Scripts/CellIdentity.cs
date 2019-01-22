@@ -307,23 +307,28 @@ public class CellIdentity : MonoBehaviour
             if (outgoingAttacks[h][1] > 0) // If has units to send (SEND UNITS)
             {
                 //Test for size of unit
+                if (outgoingAttacks[h][1] / 50 > 0) // Size of 50
+                {
+                    int unitAmount = outgoingAttacks[h][1] / 50;
+                    SendUnit(h, 50);
+                }
                 if (outgoingAttacks[h][1] / 25 > 0) // Size of 25
                 {
                     int unitAmount = outgoingAttacks[h][1] / 25;
                     SendUnit(h, 25);
                 }
-                else if (outgoingAttacks[h][1] / 15 > 0)
+                else if (outgoingAttacks[h][1] / 15 > 0) // 15
                 {
                     int unitAmount = outgoingAttacks[h][1] / 15;
                     SendUnit(h, 15);
                 }
-                else if (outgoingAttacks[h][1] / 5 > 0)
+                else if (outgoingAttacks[h][1] / 5 > 0) // 5
                 {
                     int unitAmount = outgoingAttacks[h][1] / 5;
                     SendUnit(h, 5);
                 }
                 else
-                    SendUnit(h, 1);
+                    SendUnit(h, 1); // 1
 
                 isUnitSendingDone = false;
             }
