@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5151584091981001667}
   m_Layer: 0
   m_Name: GenerateMap
-  m_TagString: Untagged
+  m_TagString: mapGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,15 +50,10 @@ MonoBehaviour:
   minCellSize: 4
   maxCellSize: 12
   cellPadding: 3
-  mapSize: 10
-  chanceDecrease: 10
+  mapSize: 20
+  chanceDecrease: 0
+  bridgeChance: 9
   PrefabMap: 0
-  mapSizeVertical: 6
-  mapSizeHorizontal: 6
-  mapCenterPosX: 0
-  mapCenterPosY: 0
-  horizontalSym: 1
-  verticalSym: 1
   cellTypes:
   - {fileID: 7270605105527588119, guid: 5bfe50bb8e3fc6842aff7fbb46484a1e, type: 3}
   - {fileID: 3565135676002520769, guid: 3bf6f55184b78294dbe245e59949e1ea, type: 3}

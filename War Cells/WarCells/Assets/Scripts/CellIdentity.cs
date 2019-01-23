@@ -134,9 +134,9 @@ public class CellIdentity : MonoBehaviour
             else
             {
                 if (connectionStartsHere[i])
-                    connectionLines[i].startColor = Color.yellow;
+                    connectionLines[i].startColor = Color.white;
                 else
-                    connectionLines[i].endColor = Color.yellow;
+                    connectionLines[i].endColor = Color.white;
             }
         }
     }
@@ -154,14 +154,14 @@ public class CellIdentity : MonoBehaviour
                     if (isOriginActivated)
                         connectionLines[i].startColor = Color.green;
                     else
-                        connectionLines[i].startColor = Color.blue;
+                        connectionLines[i].startColor = mainSprite.color;
                 }
                 else
                 {
                     if (isOriginActivated)
                         connectionLines[i].startColor = Color.red;
                     else
-                        connectionLines[i].startColor = Color.yellow;
+                        connectionLines[i].startColor = Color.white;
                 }
             }
             else
@@ -171,14 +171,14 @@ public class CellIdentity : MonoBehaviour
                     if (isOriginActivated)
                         connectionLines[i].endColor = Color.green;
                     else
-                        connectionLines[i].endColor = Color.blue;
+                        connectionLines[i].endColor = mainSprite.color;
                 }
                 else
                 {
                     if (isOriginActivated)
                         connectionLines[i].endColor = Color.red;
                     else
-                        connectionLines[i].endColor = Color.yellow;
+                        connectionLines[i].endColor = Color.white;
                 }
             }
         }
@@ -205,9 +205,9 @@ public class CellIdentity : MonoBehaviour
             }
             else
             {
-                Color otherSideColor = Color.yellow;
+                Color otherSideColor = Color.white;
                 if (connectionCells[g].GetComponent<CellIdentity>().IsAttacking(id))
-                    otherSideColor = Color.blue;
+                    otherSideColor = connectionCells[g].GetComponent<CellIdentity>().mainSprite.color; 
 
                 if (connectionStartsHere[g])
                     connectionLines[g].endColor = otherSideColor;

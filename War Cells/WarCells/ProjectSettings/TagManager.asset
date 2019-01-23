@@ -9,6 +9,7 @@ TagManager:
   - Unit
   - playerManager
   - turnController
+  - mapGenerator
   layers:
   - Default
   - TransparentFX

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     public InputField inPlayers;
+    public Dropdown inMapSize;
 
     public void OnPlayBtn()
     {
@@ -20,7 +21,16 @@ public class MainMenu : MonoBehaviour
         if (scene.name == "GameScene")
         {
             GameObject pm = GameObject.FindGameObjectWithTag("playerManager");
-            pm.GetComponent<PlayerManager>().SetHumanPlayers(int.Parse(inPlayers.text));
+            GameObject mg = GameObject.FindGameObjectWithTag("mapGenerator");
+            if(pm != null)
+                pm.GetComponent<PlayerManager>().SetHumanPlayers(int.Parse(inPlayers.text));
+            if (mg != null)
+            {
+                int tempMapSizeVar = 4 * (1 +  inMapSize.value);
+                mg.GetComponent<MapGenerator>().SetMapSize(tempMapSizeVar);
+
+            }
+                
             Destroy(gameObject);
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }

@@ -43,15 +43,13 @@ public class PlayerManager : MonoBehaviour
     public int botPlayers;
     
     //Game Storage
-    List<List<GameObject>> cells;               // - cells
     List<GameObject> newCells;               // - cells
     List<Player> players = new List<Player>();  // - players
 
 
     ///[CONSTRUCTOR*]
-    public void Construct(List<List<GameObject>> cells, List<GameObject> newCells)
+    public void Construct(List<GameObject> newCells)
     {
-        this.cells = cells;
         this.newCells = newCells;
     }
 
