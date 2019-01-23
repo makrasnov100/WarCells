@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1149772368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1149772370}
+  - component: {fileID: 1149772369}
+  m_Layer: 0
+  m_Name: MapExperimental 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1149772370
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149772368}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1149772369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149772368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5453bb29f89698468650a37ce6e9465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerManager: {fileID: 0}
+  turnController: {fileID: 0}
+  connectionPrevalence: 1
+  conMat: {fileID: 2100000, guid: bdde8db17acc90345ae05609e9aafd55, type: 2}
+  maxConnectionDistance: 7
+  minCellSize: 24
+  maxCellSize: 4
+  cellPadding: 3.92
+  mapSizeVertical: 16
+  mapSizeHorizontal: 10
+  mapCenterPosX: 1
+  mapCenterPosY: 0
+  horizontalSym: 1
+  verticalSym: 1
+  diagonalLayout: 1
+  randomizerLayout: 0
+  cellTypes:
+  - {fileID: 6123376326835277822, guid: d94c4da3535ab03439575aa13aa010e2, type: 3}
+  - {fileID: 3565135676002520769, guid: 3bf6f55184b78294dbe245e59949e1ea, type: 3}
+  - {fileID: 3565135676002520769, guid: e1acffec9218975479d8a44e956e876d, type: 3}
+  - {fileID: 7270605105527588119, guid: 5bfe50bb8e3fc6842aff7fbb46484a1e, type: 3}
