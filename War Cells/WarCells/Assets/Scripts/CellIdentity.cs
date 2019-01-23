@@ -377,12 +377,21 @@ public class CellIdentity : MonoBehaviour
         }
         originalOwner = owner;
 
-        //(TODO: IMPLEMENT OVERPOPULATION SYSTEM and NOTIFICATION)
         if (curOccupancy > unitCapacity)
-            return;
+        {
+            //Overpopulation calculation
+            int unitsOverLimit = curOccupancy - unitCapacity;
+            float decreasePercent = Mathf.Min(1f, .125f * ((float)curOccupancy / (float)unitCapacity));
+            int deductionUnits = (int)Mathf.Ceil((float)decreasePercent * (float)unitsOverLimit);
+            curOccupancy = Mathf.Max(unitCapacity, curOccupancy - deductionUnits);
+            //print("Overpopulation calculation complete: percent removed - " + decreasePercent + " deduction Units " + deductionUnits + " | from:" + (unitCapacity + unitsOverLimit) + " to " + curOccupancy);
+        }
+        else
+        {
+            //Generate unit(s) if can
+            curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
+        }
 
-        //Generate unit(s) if can
-        curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
         UpdateCellLabel();
     }
 

@@ -731,7 +731,6 @@ D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEng
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ScreenCaptureModule.dll
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SharedInternalsModule.dll
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTracking.dll
-D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteMaskModule.dll
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteShapeModule.dll
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.StreamingModule.dll
@@ -811,7 +810,6 @@ D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEng
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ProfilerModule.xml
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ScreenCaptureModule.xml
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SharedInternalsModule.xml
-D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteMaskModule.xml
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteShapeModule.xml
 D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.StreamingModule.xml
