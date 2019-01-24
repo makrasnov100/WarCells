@@ -43,29 +43,36 @@ public class PlayerManager : MonoBehaviour
     public int botPlayers;
     
     //Game Storage
-    List<GameObject> newCells;               // - cells
-    List<Player> players = new List<Player>();  // - players
+    List<GameObject> cells = new List<GameObject>();    // - cells
+    List<Player> players = new List<Player>();          // - players
 
 
-    ///[CONSTRUCTOR*]
-    public void Construct(List<GameObject> newCells)
+    ///[CONSTRUCTORS*]
+    public void Construct(List<GameObject> cells)
     {
-        this.newCells = newCells;
+        this.cells = cells;
+    }
+    public void Construct(List<List<GameObject>> newCells)
+    {
+        for (int y = 0; y < newCells.Count; y++)
+            for(int x = 0; x < newCells[y].Count; x++)
+                if(newCells[y][x] != null)
+                    this.cells.Add(newCells[y][x]);
     }
 
 
     ///[PLAYER CONTROL]
-    //Adds a preset amount of player to the map
+    //Adds a preset amount of players to the map
     public void SpawnPlayers()
     {
         int totalPlayers = humanPlayers + botPlayers;
         for (int p = 0; p < totalPlayers; p++)
         {
             //Find an open cell for a player
-            GameObject curCell = newCells[Random.Range(0, newCells.Count)];
+            GameObject curCell = cells[Random.Range(0, cells.Count)];
             while (curCell == null || curCell.GetComponent<CellIdentity>().GetOwner() != -1)
             {
-                curCell = newCells[Random.Range(0, newCells.Count)];
+                curCell = cells[Random.Range(0, cells.Count)];
             }
 
             Color curColor = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);   //SET color for currently created player
