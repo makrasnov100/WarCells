@@ -22,9 +22,10 @@ public class MainMenu : MonoBehaviour
         {
             GameObject pm = GameObject.FindGameObjectWithTag("playerManager");
             GameObject mg = GameObject.FindGameObjectWithTag("mapGenerator");
-            if(pm != null)
+            if(pm != null) //If player manager exists - Setup settings
                 pm.GetComponent<PlayerManager>().SetHumanPlayers(int.Parse(inPlayers.text));
-            if (mg != null)
+
+            if (mg != null) //If mapGenerator exists - Setup map settings
             {
                 int tempMapSizeVar = 4 * (1 +  inMapSize.value);
                 mg.GetComponent<MapGenerator>().SetMapSize(tempMapSizeVar);
