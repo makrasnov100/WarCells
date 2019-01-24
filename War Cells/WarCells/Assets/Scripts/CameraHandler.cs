@@ -7,6 +7,7 @@ public class CameraHandler : MonoBehaviour
 {
     //Component References
     Camera cam;
+    public GameObject bg;
 
     //Instance Variables
     Vector3 lastPanPosition;
@@ -16,9 +17,10 @@ public class CameraHandler : MonoBehaviour
 
     //Camera Movement Parameters
     // - sensitivity
-    float panSpeed = 10f;
-    float zoomSpeedTouch = 0.1f;
-    float zoomSpeedMouse = 100f;
+    public float panSpeed = 10f;
+    public float bgPanSpeed = .1f;
+    public float zoomSpeedTouch = 0.1f;
+    public float zoomSpeedMouse = 100f;
     // - bounds
     float[] boundsX = new float[] { -100f, 100f };
     float[] boundsY = new float[] { -100f, 100f };
@@ -119,15 +121,18 @@ public class CameraHandler : MonoBehaviour
         //Determine how much to move the camera
         Vector3 offset = cam.ScreenToViewportPoint(lastPanPosition - newPanPosition);
         Vector3 move = new Vector3(offset.x * panSpeed, offset.y * panSpeed, 0);
+        Vector3 moveBG = new Vector3(offset.x * bgPanSpeed, offset.y * bgPanSpeed, 0);
 
         //Perform the camera movement
         transform.Translate(move, Space.World);
+        bg.transform.Translate(moveBG, Space.World);
 
         //Ensure the camera remains within bounds
         Vector3 pos = transform.position;
         pos.x = Mathf.Clamp(transform.position.x, boundsX[0], boundsX[1]);
         pos.y = Mathf.Clamp(transform.position.y, boundsY[0], boundsY[1]);
         transform.position = pos;
+
 
         //Cache last touch/mosue position (TODO: may be buggy if on bound - check)
         lastPanPosition = newPanPosition;

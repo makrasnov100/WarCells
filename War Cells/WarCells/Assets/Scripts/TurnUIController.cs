@@ -178,7 +178,14 @@ public class TurnUIController : MonoBehaviour
 
         //Check if all players already declared attacks
         if (nextPlayerId <= curPlayerId)
+        {
+            playerManager.ShowAllAttackDeclarations();
             isDoneSelectingAttacks = true;
+        }
+        if(!isDoneSelectingAttacks)
+        {
+            playerManager.ShowCurPlayerAttackDeclarations(nextPlayerId);
+        }
 
         ShowNextTurnUI();
     }
@@ -225,6 +232,7 @@ public class TurnUIController : MonoBehaviour
         //If preselcted cur player was already destroyed choose the next avaliable
         if (curPlayer.GetIsDead())
             curPlayer = playerManager.GetNextAlivePlayer(curPlayer.GetId());
+        playerManager.ShowCurPlayerAttackDeclarations(curPlayer.GetId());
 
         isAnimationPlaying = false; // > END animation playing flag
         isDoneSelectingAttacks = false;

@@ -142,7 +142,7 @@ public class CellIdentity : MonoBehaviour
     }
 
     //SetBulkConnectionColor: Sets the initial and final connection line colors (when an origin is selected and when deselected)
-    private void SetBulkConnectionColor(bool isOriginActivated)
+    public void SetBulkConnectionColor(bool isOriginActivated, bool isShowEnemyAttacks)
     {
         //Set start color (sides closest to origin)
         for (int i = 0; i < isAttackingConnection.Count; i++)
@@ -217,6 +217,18 @@ public class CellIdentity : MonoBehaviour
         }
     }
 
+    //ResetOutgoingColors: sets all outgoing connections to a certain color
+    public void ResetOutgoingColors(Color color)
+    {
+        for (int i = 0; i < connectionLines.Count; i++)
+        {
+            if (connectionStartsHere[i])
+                connectionLines[i].startColor = color;
+            else
+                connectionLines[i].endColor = color;
+        }
+    }
+
 
     ///[CELL UI UPDATORS]
     //UpdateCellLabel: Updates the main cell text
@@ -259,7 +271,7 @@ public class CellIdentity : MonoBehaviour
                     connectionCells[i].GetComponent<CellIdentity>().ChangeActivationState(isActivated, false, 2);
             }
 
-            SetBulkConnectionColor(isActivated);
+            SetBulkConnectionColor(isActivated, false);
         }
     }
 
@@ -364,16 +376,25 @@ public class CellIdentity : MonoBehaviour
             isAttacking = false;
             for (int i = 0; i < isAttackingConnection.Count; i++)
                 isAttackingConnection[i] = false;
-            ResetAllOutConnectionColor();
+            //ResetAllOutConnectionColor();
         }
         originalOwner = owner;
 
-        //(TODO: IMPLEMENT OVERPOPULATION SYSTEM and NOTIFICATION)
         if (curOccupancy > unitCapacity)
-            return;
+        {
+            //Overpopulation calculation
+            int unitsOverLimit = curOccupancy - unitCapacity;
+            float decreasePercent = Mathf.Min(1f, .125f * ((float)curOccupancy / (float)unitCapacity));
+            int deductionUnits = (int)Mathf.Ceil((float)decreasePercent * (float)unitsOverLimit);
+            curOccupancy = Mathf.Max(unitCapacity, curOccupancy - deductionUnits);
+            //print("Overpopulation calculation complete: percent removed - " + decreasePercent + " deduction Units " + deductionUnits + " | from:" + (unitCapacity + unitsOverLimit) + " to " + curOccupancy);
+        }
+        else
+        {
+            //Generate unit(s) if can
+            curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
+        }
 
-        //Generate unit(s) if can
-        curOccupancy = Mathf.Min(unitCapacity, curOccupancy + generationCapacity);
         UpdateCellLabel();
     }
 
