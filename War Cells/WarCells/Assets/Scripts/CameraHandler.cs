@@ -17,19 +17,21 @@ public class CameraHandler : MonoBehaviour
 
     //Camera Movement Parameters
     // - sensitivity
-    public float panSpeed = 10f;
-    public float bgPanSpeed = .1f;
-    public float zoomSpeedTouch = 0.1f;
-    public float zoomSpeedMouse = 100f;
+    public float panSpeed;
+    private float panSpeedMult = 1f;
+    public float bgPanSpeed;
+    public float zoomSpeedTouch;
+    public float zoomSpeedMouse;
     // - bounds
     float[] boundsX = new float[] { -100f, 100f };
     float[] boundsY = new float[] { -100f, 100f };
-    float[] zoomBounds = new float[] { 20f, 150f };
+    float[] zoomBounds = new float[] { 5f, 40f };
 
     ///[UNITY DEFAULT]
     void Awake()
     {
         cam = GetComponent<Camera>();
+        UpdatePanSpeedMultiplier();
     }
 
     void Update()
@@ -133,7 +135,6 @@ public class CameraHandler : MonoBehaviour
         pos.y = Mathf.Clamp(transform.position.y, boundsY[0], boundsY[1]);
         transform.position = pos;
 
-
         //Cache last touch/mosue position (TODO: may be buggy if on bound - check)
         lastPanPosition = newPanPosition;
     }
@@ -144,6 +145,15 @@ public class CameraHandler : MonoBehaviour
         if (offset == 0)
             return;
 
-        cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - (offset * speed), zoomBounds[0], zoomBounds[1]);
+        
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - (offset * speed), zoomBounds[0], zoomBounds[1]);
+        UpdatePanSpeedMultiplier();
     }
+
+    //UpdatePanSpeedMultiplier: creates uniquie pan speed multiplier based on current fov
+    private void UpdatePanSpeedMultiplier()
+    {
+        panSpeedMult = cam.orthographicSize / zoomBounds[0];
+    }
+
 }

@@ -30,9 +30,9 @@ public class MainMenu : MonoBehaviour
                 mg.GetComponent<MapGenerator>().SetMapSize(tempMapSizeVar);
 
             }
-                
-            Destroy(gameObject);
+
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            Destroy(gameObject);
         }
     }
 
