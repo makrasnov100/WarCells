@@ -667,7 +667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bg: {fileID: 221309509}
-  panSpeed: 36
+  panSpeed: 17
   bgPanSpeed: -2
   zoomSpeedTouch: 0.1
   zoomSpeedMouse: 15

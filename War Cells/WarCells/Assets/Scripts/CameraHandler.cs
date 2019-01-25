@@ -18,7 +18,7 @@ public class CameraHandler : MonoBehaviour
     //Camera Movement Parameters
     // - sensitivity
     public float panSpeed;
-    private float panSpeedMult = 1f;
+    private float panSpeedMult;
     public float bgPanSpeed;
     public float zoomSpeedTouch;
     public float zoomSpeedMouse;
@@ -122,7 +122,7 @@ public class CameraHandler : MonoBehaviour
     {
         //Determine how much to move the camera
         Vector3 offset = cam.ScreenToViewportPoint(lastPanPosition - newPanPosition);
-        Vector3 move = new Vector3(offset.x * panSpeed, offset.y * panSpeed, 0);
+        Vector3 move = new Vector3(offset.x * panSpeedMult, offset.y * panSpeedMult, 0);
         Vector3 moveBG = new Vector3(offset.x * bgPanSpeed, offset.y * bgPanSpeed, 0);
 
         //Perform the camera movement
@@ -144,16 +144,15 @@ public class CameraHandler : MonoBehaviour
     {
         if (offset == 0)
             return;
-
         
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - (offset * speed), zoomBounds[0], zoomBounds[1]);
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - (offset * speed) , zoomBounds[0], zoomBounds[1]);
         UpdatePanSpeedMultiplier();
     }
 
     //UpdatePanSpeedMultiplier: creates uniquie pan speed multiplier based on current fov
     private void UpdatePanSpeedMultiplier()
     {
-        panSpeedMult = cam.orthographicSize / zoomBounds[0];
+        panSpeedMult = panSpeed * (cam.orthographicSize / zoomBounds[0]);
     }
 
 }
