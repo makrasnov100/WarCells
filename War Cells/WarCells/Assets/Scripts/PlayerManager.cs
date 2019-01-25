@@ -120,7 +120,7 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 foreach (GameObject g in p.ownedCells)
-                    g.GetComponent<CellIdentity>().ResetOutgoingColors(Color.yellow);
+                    g.GetComponent<CellIdentity>().ResetOutgoingColors(Color.white);
             }
         }
     }

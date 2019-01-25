@@ -569,6 +569,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapExperimental
       objectReference: {fileID: 0}
+    - target: {fileID: 1149772368, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1149772370, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -621,18 +625,6 @@ PrefabInstance:
       propertyPath: turnController
       value: 
       objectReference: {fileID: 2057796709}
-    - target: {fileID: 1149772369, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
-      propertyPath: maxConnectionDistance
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149772369, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
-      propertyPath: cellPadding
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149772369, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
-      propertyPath: diagonalLayout
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67d5cb0458d3067438c716ce4e1528f0, type: 3}
 --- !u!1 &519420028
@@ -929,7 +921,7 @@ PrefabInstance:
     - target: {fileID: 5151584091981001666, guid: aa56598a081d36646b5838a675449fbb,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5151584091981001664, guid: aa56598a081d36646b5838a675449fbb,
         type: 3}

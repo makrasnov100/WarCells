@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 1149772370}
   - component: {fileID: 1149772369}
   m_Layer: 0
-  m_Name: MapExperimental 1
-  m_TagString: Untagged
+  m_Name: MapExperimental
+  m_TagString: mapGeneratorExp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1149772370
 Transform:
   m_ObjectHideFlags: 0
@@ -47,17 +47,17 @@ MonoBehaviour:
   turnController: {fileID: 0}
   connectionPrevalence: 1
   conMat: {fileID: 2100000, guid: bdde8db17acc90345ae05609e9aafd55, type: 2}
-  maxConnectionDistance: 7
+  maxConnectionDistance: 8
   minCellSize: 24
   maxCellSize: 4
-  cellPadding: 3.92
+  cellPadding: 5
   mapSizeVertical: 16
   mapSizeHorizontal: 10
   mapCenterPosX: 1
   mapCenterPosY: 0
   horizontalSym: 1
   verticalSym: 1
-  diagonalLayout: 1
+  diagonalLayout: 0
   randomizerLayout: 0
   cellTypes:
   - {fileID: 6123376326835277822, guid: d94c4da3535ab03439575aa13aa010e2, type: 3}
