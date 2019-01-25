@@ -14,8 +14,7 @@ public class SVGParser : MonoBehaviour
 
 
     //Loading properties
-    public string filePath;
-    public bool isInAssets = true;
+    public TextAsset resourcePreload;
 
     //Image Properties
     // - sizes
@@ -38,24 +37,21 @@ public class SVGParser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (isInAssets)
-            filePath = Application.dataPath + "/" + filePath;
-
-        if (IsSVGReadable(filePath))
+        if (IsSVGReadable())
             ParseSVGVectors();
     }
 
     //IsSVGReadable: Checks precconditions required for script to get needed info
-    bool IsSVGReadable(string filePath)
+    bool IsSVGReadable()
     {
         // Check if file exists
-        if (!File.Exists(filePath))
+        if (resourcePreload == null)
             return false;
 
-        //Check if file contains parceble info
-        StreamReader reader = new StreamReader(filePath);
-        svgContent = reader.ReadToEnd();
-        reader.Close();
+
+        var textFile = Resources.Load<TextAsset>("filePath");
+        svgContent = textFile.text;
+
         if (!svgContent.Contains("<path d="))
             return false;
 

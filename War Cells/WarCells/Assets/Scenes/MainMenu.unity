@@ -1529,7 +1529,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1118205946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1545,8 +1545,7 @@ MonoBehaviour:
   SVGFile: {fileID: 0}
   svgPoint: {fileID: 8595048315297312935, guid: 75a64162d1ad425418f154aea28b167e,
     type: 3}
-  filePath: SVG/Title.svg
-  isInAssets: 1
+  resourcePreload: {fileID: 4900000, guid: 709acb9d5a4fb7444ab562ffba0fa0d5, type: 3}
   scaleX: 0
   scaleY: 0
   newScaleX: 15
