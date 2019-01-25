@@ -21,14 +21,21 @@ public class MainMenu : MonoBehaviour
         if (scene.name == "GameScene")
         {
             GameObject pm = GameObject.FindGameObjectWithTag("playerManager");
-            GameObject mg = GameObject.FindGameObjectWithTag("mapGenerator");
-            if(pm != null)
+            GameObject mg = null;
+            GameObject mgNorm = GameObject.FindGameObjectWithTag("mapGenerator");
+            GameObject mgExp = GameObject.FindGameObjectWithTag("mapGeneratorExp");
+
+            if (mgNorm != null)
+                mg = mgNorm;
+            else if (mgExp != null)
+                mg = mgExp;
+
+            if (pm != null)
                 pm.GetComponent<PlayerManager>().SetHumanPlayers(int.Parse(inPlayers.text));
             if (mg != null)
             {
                 int tempMapSizeVar = 4 * (1 +  inMapSize.value);
                 mg.GetComponent<MapGenerator>().SetMapSize(tempMapSizeVar);
-
             }
                 
             Destroy(gameObject);
