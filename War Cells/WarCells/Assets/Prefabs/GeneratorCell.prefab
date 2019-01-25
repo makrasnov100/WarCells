@@ -1466,6 +1466,8 @@ MonoBehaviour:
   - {fileID: 906462420127070164}
   - {fileID: 2291950699866106981}
   - {fileID: 3511713320642762694}
+  cellCaptureParticle: {fileID: 3053563553488418854, guid: a3f87c4e4c6cf2746b80804f905aff9c,
+    type: 3}
 --- !u!60 &4054795240695476188
 PolygonCollider2D:
   m_ObjectHideFlags: 0

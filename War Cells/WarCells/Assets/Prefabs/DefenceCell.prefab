@@ -979,6 +979,8 @@ MonoBehaviour:
   - {fileID: 5701378779981426448}
   - {fileID: 2756098242978777084}
   - {fileID: 7515344466976514274}
+  cellCaptureParticle: {fileID: 3053563553488418854, guid: a3f87c4e4c6cf2746b80804f905aff9c,
+    type: 3}
 --- !u!61 &2924945597239604558
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -1050,6 +1050,8 @@ MonoBehaviour:
   - {fileID: 3676557474272381450}
   - {fileID: 8158643481369015648}
   - {fileID: 8348891676118434940}
+  cellCaptureParticle: {fileID: 3053563553488418854, guid: a3f87c4e4c6cf2746b80804f905aff9c,
+    type: 3}
 --- !u!58 &4292278888863003248
 CircleCollider2D:
   m_ObjectHideFlags: 0

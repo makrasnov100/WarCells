@@ -25,6 +25,9 @@ public class CellIdentity : MonoBehaviour
     [Header("GameObject References")]
     public List<GameObject> arrows = new List<GameObject>();
 
+    [Header("Cell Extras")]
+    public GameObject cellCaptureParticle;
+
     //Instance Variables
     // - general
     private int id;
@@ -517,6 +520,11 @@ public class CellIdentity : MonoBehaviour
 
         owner = playerId;
         mainSprite.color = color;
+        //Play capture particles
+        GameObject ccp = Instantiate(cellCaptureParticle,transform);
+        var psm = ccp.GetComponent<ParticleSystem>().main;
+        psm.startColor = color;
+
         foreach (SpriteRenderer sr in arrowSprites)
             sr.color = color;
     }

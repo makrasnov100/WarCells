@@ -3,7 +3,13 @@ guid: 3e49a631a4f5e2142897b45efd5444f2
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - attackUnit: {instanceID: 0}
+  - animator: {instanceID: 0}
+  - mainSprite: {instanceID: 0}
+  - reserveIndicator: {instanceID: 0}
+  - cellCaptureParticle: {fileID: 3053563553488418854, guid: a3f87c4e4c6cf2746b80804f905aff9c,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
