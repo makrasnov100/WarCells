@@ -448,12 +448,12 @@ public class CellIdentity : MonoBehaviour
             }
 
             //Debug
-            string output = "ATTACK UNITS FOR CELL - " + gameObject.name + System.Environment.NewLine;
-            for (int h = 0; h < outgoingAttacks.Count; h++)
-            {
-                output += "Attack to " + outgoingAttacks[h][0] + " with " + outgoingAttacks[h][1] + " units" + System.Environment.NewLine;
-            }
-            print(output);
+            //string output = "ATTACK UNITS FOR CELL - " + gameObject.name + System.Environment.NewLine;
+            //for (int h = 0; h < outgoingAttacks.Count; h++)
+            //{
+            //    output += "Attack to " + outgoingAttacks[h][0] + " with " + outgoingAttacks[h][1] + " units" + System.Environment.NewLine;
+            //}
+            //print(output);
         }
     }
 
@@ -497,10 +497,21 @@ public class CellIdentity : MonoBehaviour
         return false;
     }
 
+    public void ResetOutgoingAttacks()
+    {
+        for (int i = 0; i < isAttackingConnection.Count; i++)
+        {
+            isAttackingConnection[i] = false;
+            turnController.completeFighting -= CompleteCellFighting;
+        }
+        RecalculateAttackUnits();
+    }
+
 
     ///[ACCESSORS/MUTATORS]
     public int GetId() { return id; }
     public int GetOwner() { return owner; }
+    public List<GameObject> GetConnections() { return connectionCells;  }
     public int GetCurOccupancy() { return curOccupancy; }
     public int GetCapacity() { return unitCapacity; }
     public int GetReserveUnits() { return reserveUnits; }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player
 {
+    BotManager botManager;
     int id;
     bool isBot;
     bool isDead;
@@ -18,10 +19,15 @@ public class Player
         this.isBot = isBot;
         this.isDead = false;
         this.color = color;
+        botManager = GameObject.FindGameObjectWithTag("playerManager").GetComponent<BotManager>();
         unitAmount = 1;
         ownedCells.Add(spawnCell);
     }
     public Player() { }
+    public void BotMove()
+    {
+        botManager.ProcessTurn(ownedCells);
+    }
 
     ///[ACCESSOR(S)/MUTATOR(S)]
     public int GetId() { return id; }
@@ -150,7 +156,8 @@ public class PlayerManager : MonoBehaviour
             if (nextPlayer == players.Count)
                 nextPlayer = 0;
 
-        } while (nextPlayer != previousPlayer && (players[nextPlayer].GetIsBot() || players[nextPlayer].GetIsDead()));
+        } while (nextPlayer != previousPlayer && players[nextPlayer].GetIsDead());
+        //players[nextPlayer].GetIsBot()
 
         return players[nextPlayer];
     }

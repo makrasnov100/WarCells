@@ -68,10 +68,8 @@ public class UnitAttackIdentity : MonoBehaviour
     //UnitFight: completes the unit vs unit fighting procedure
     public void UnitFight(int incomingUnits)
     {
-        Debug.Log("Unit from owner: " + GetUnitOwner() + " Had " + GetUnitsRemaining() + "Remaining");
         if(incomingUnits > 0)
             unitsRemaining -= incomingUnits;
-        Debug.Log("Unit from owner: " + GetUnitOwner() + " now has " + GetUnitsRemaining() + "Remaining");
         //Destroy unit container if no remaining units after fight
         if (unitsRemaining <= 0)
         {

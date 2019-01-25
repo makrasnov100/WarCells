@@ -287,30 +287,6 @@ public class MapGenExperimental : MonoBehaviour
         //Sort all edjes based on their distances
         List<Edge> sortedDistances;
         sortedDistances = MergeSortEdges(distances);
-        //for (int i = 0; i < distances.Count; i++)
-        //{
-        //    int curLowIdx = i;
-        //    float curLowDistance = 100000;
-
-        //    for (int x = i; x < distances.Count; x++)
-        //    {
-        //        if (distances[x].distance < curLowDistance)
-        //        {
-        //            curLowDistance = distances[x].distance;
-        //            curLowIdx = x;
-        //        }
-        //    }
-        //    if (curLowIdx == i)
-        //    {
-        //        continue;
-        //    }
-        //    else
-        //    {
-        //        Edge curEdge = distances[i];
-        //        distances[i] = distances[curLowIdx];
-        //        distances[curLowIdx] = curEdge;
-        //    }
-        //}
 
         //Hash
         HashSet<int> cellsId = new HashSet<int>();

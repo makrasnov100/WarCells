@@ -1016,7 +1016,6 @@ C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Deb
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ScreenCaptureModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SharedInternalsModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTracking.dll
-C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteMaskModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteShapeModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.StreamingModule.dll
@@ -1096,7 +1095,6 @@ C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Deb
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ProfilerModule.xml
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.ScreenCaptureModule.xml
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SharedInternalsModule.xml
-C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteMaskModule.xml
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpriteShapeModule.xml
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.StreamingModule.xml

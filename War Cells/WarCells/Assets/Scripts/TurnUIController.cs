@@ -15,6 +15,7 @@ public class TurnUIController : MonoBehaviour
     //Script References
     public PlayerManager playerManager;
     public AttackController attackController;
+    public BotManager botManager;
 
     //UI References
     [Header("Mobile UI")]
@@ -115,26 +116,44 @@ public class TurnUIController : MonoBehaviour
         if (isAnimationPlaying)
             return;
 
+        //Enable/Disable correct general UI components
+        nextTurnBG.gameObject.SetActive(true);
+        unitAmountInput.gameObject.SetActive(false);
+        unitCurrent.gameObject.SetActive(false);
+        unitMax.gameObject.SetActive(false);
         //Enable/Disable correct pass and play components
         if (isDoneSelectingAttacks)
         {
             nextTurnBtn.SetActive(true);
             nextPlayerBtn.SetActive(false);
             nextTurnBG.color = Color.red;
+            //When every player done test for any humans
+            bool hasHumanPlayer = false;
+            foreach (Player p in playerManager.GetPlayers())
+                if (p.GetOwnedCells().Count > 0 && !p.GetIsBot())
+                    hasHumanPlayer = true;
+
+            //If no humans, auto roll next turn.
+            if (!hasHumanPlayer)
+                NextTurnClick();
         }
         else
         {
-            nextTurnBtn.SetActive(false);
-            nextPlayerBtn.SetActive(true);
             Color pCol = curPlayer.GetPlayerColor();
             nextTurnBG.color = new Color(pCol.r, pCol.g, pCol.b, .8f);
+            nextTurnBtn.SetActive(false);
+            //Checks if player is a bot
+            if (!curPlayer.GetIsBot())
+                nextPlayerBtn.SetActive(true);
+            else//if bot do bot stuff
+            {
+                curPlayer.BotMove();
+                nextPlayerBtn.SetActive(false);
+                NextPlayerClick();
+            }
+               
         }
 
-        //Enable/Disable correct general UI components
-        nextTurnBG.gameObject.SetActive(true);
-        unitAmountInput.gameObject.SetActive(false);
-        unitCurrent.gameObject.SetActive(false);
-        unitMax.gameObject.SetActive(false);
     }
 
 
@@ -161,13 +180,14 @@ public class TurnUIController : MonoBehaviour
 
         ignoreSliderEdits = false; // > END slider ignore flag
     }
+
     public void CreateInfluenceBar()
     {
         //Delete previous turns bar
         if(curBar != null && curBar.Count != 0)
             foreach (Image bar in curBar)
             {
-                Destroy(bar);
+                Destroy(bar.gameObject);
             }
 
         //Set vars
@@ -197,7 +217,7 @@ public class TurnUIController : MonoBehaviour
             //Get bar with new color for player
             Image playerColorBar = Instantiate(influenceBarImage);
             newBar.Add(playerColorBar);
-            playerColorBar.transform.parent = influenceBarCanvas.transform;
+            playerColorBar.transform.SetParent(influenceBarCanvas.transform);
             playerColorBar.color = p.GetPlayerColor();
             playerColorBar.gameObject.SetActive(true);
             //Resize bar and move it to location
@@ -282,7 +302,6 @@ public class TurnUIController : MonoBehaviour
         if(playerManager.GetTotalAlivePlayers() <= 1)
         {
             //TODO: WINNER MENU
-            Debug.Log("GAME OVER");
             SceneManager.LoadScene("MainMenu");
         }
 
