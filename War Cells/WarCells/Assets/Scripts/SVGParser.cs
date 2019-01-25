@@ -12,10 +12,6 @@ public class SVGParser : MonoBehaviour
     public GameObject svgPoint;
     string svgContent;
 
-
-    //Loading properties
-    public TextAsset resourcePreload;
-
     //Image Properties
     // - sizes
     public double scaleX;
@@ -45,12 +41,10 @@ public class SVGParser : MonoBehaviour
     bool IsSVGReadable()
     {
         // Check if file exists
-        if (resourcePreload == null)
+        if (SVGFile == null)
             return false;
 
-
-        var textFile = Resources.Load<TextAsset>("filePath");
-        svgContent = textFile.text;
+        svgContent = SVGFile.text;
 
         if (!svgContent.Contains("<path d="))
             return false;
@@ -80,7 +74,7 @@ public class SVGParser : MonoBehaviour
         string[] cordsSplit = cords.Split(' ');
 
 
-        stretchX =  (float)newScaleX / (float)scaleX;
+        stretchX = (float)newScaleX / (float)scaleX;
         stretchY = (float)newScaleY / (float)scaleY;
         double totalX = 0;
         double totalY = 0;
@@ -104,7 +98,7 @@ public class SVGParser : MonoBehaviour
             double curY = -(float)Convert.ToDouble(xyCords[1]) * stretchY;
             totalX += curX;
             totalY += curY;
-            svgPositions.Add(new Vector2((float) curX, (float) curY));
+            svgPositions.Add(new Vector2((float)curX, (float)curY));
         }
         //Find + apply initial offset before making connections
         initialOffset = new Vector2((float)totalX / (float)svgPositions.Count, (float)totalY / (float)svgPositions.Count);
@@ -150,7 +144,7 @@ public class SVGParser : MonoBehaviour
             lr.positionCount = svgPositions.Count - curOriginIdx;
             for (int p = curOriginIdx; p < svgPositions.Count; p++)
             {
-                lr.SetPosition(p-curOriginIdx, svgPositions[p]);
+                lr.SetPosition(p - curOriginIdx, svgPositions[p]);
             }
             lr.startWidth = lineScale;
             lr.endWidth = lineScale;

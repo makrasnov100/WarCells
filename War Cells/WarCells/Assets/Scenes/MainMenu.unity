@@ -1542,11 +1542,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272f98998d76d34459f3c1121acbc698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SVGFile: {fileID: 0}
+  SVGFile: {fileID: 4900000, guid: 709acb9d5a4fb7444ab562ffba0fa0d5, type: 3}
   svgPoint: {fileID: 8595048315297312935, guid: 75a64162d1ad425418f154aea28b167e,
     type: 3}
-  filePath: SVG/Title.svg
-  isInAssets: 1
   scaleX: 0
   scaleY: 0
   newScaleX: 15

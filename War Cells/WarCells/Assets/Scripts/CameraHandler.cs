@@ -127,7 +127,7 @@ public class CameraHandler : MonoBehaviour
 
         //Perform the camera movement
         transform.Translate(move, Space.World);
-        bg.transform.Translate(moveBG, Space.World);
+        //bg.transform.Translate(moveBG, Space.World);
 
         //Ensure the camera remains within bounds
         Vector3 pos = transform.position;

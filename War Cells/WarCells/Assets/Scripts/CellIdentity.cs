@@ -560,6 +560,7 @@ public class CellIdentity : MonoBehaviour
         curOccupancy = newOccupancy;
         UpdateCellLabel();
     }
+    public int GetOccupancy() { return curOccupancy;  }
     public void ChangeUnits(int delta, int owner, Color color)
     {
         curOccupancy += delta;
