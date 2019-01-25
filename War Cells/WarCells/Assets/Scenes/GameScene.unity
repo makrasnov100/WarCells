@@ -667,10 +667,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bg: {fileID: 221309509}
-  panSpeed: 10
+  panSpeed: 36
   bgPanSpeed: -2
   zoomSpeedTouch: 0.1
-  zoomSpeedMouse: 100
+  zoomSpeedMouse: 15
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -696,8 +696,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 85
-  orthographic: 0
-  orthographic size: 7
+  orthographic: 1
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -988,6 +988,11 @@ PrefabInstance:
       propertyPath: turnController
       value: 
       objectReference: {fileID: 2057796709}
+    - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
+        type: 3}
+      propertyPath: cellPadding
+      value: 3.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa56598a081d36646b5838a675449fbb, type: 3}
 --- !u!1 &761302363

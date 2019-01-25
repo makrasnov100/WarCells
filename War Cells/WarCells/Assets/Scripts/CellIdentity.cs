@@ -62,8 +62,9 @@ public class CellIdentity : MonoBehaviour
         this.unitCapacity = unitCapacity;                                           // SET capacity of cell
         curOccupancy = Random.Range(0, (int)(unitCapacity / 2));                    // SET occupancy of cell
 
-        Vector3 curScale = new Vector3(1 + (unitCapacity * .05f), 1 + (unitCapacity * .05f), 1);
-        transform.localScale = curScale;                             // SET size of sprite
+        Vector3 curScale = new Vector3((unitCapacity * .05f), (unitCapacity * .05f), 1);
+        transform.localScale += curScale;                             // SET size of sprite
+        textComp.fontSize -= transform.localScale.x - 2f;
 
         UpdateCellLabel();
     }
@@ -325,25 +326,25 @@ public class CellIdentity : MonoBehaviour
                 if (outgoingAttacks[h][1] / 50 > 0) // Size of 50
                 {
                     int unitAmount = outgoingAttacks[h][1] / 50;
-                    SendUnit(h, 50);
+                    SendUnit(h, 50, .45f);
                 }
                 if (outgoingAttacks[h][1] / 25 > 0) // Size of 25
                 {
                     int unitAmount = outgoingAttacks[h][1] / 25;
-                    SendUnit(h, 25);
+                    SendUnit(h, 25, .3f);
                 }
                 else if (outgoingAttacks[h][1] / 15 > 0) // 15
                 {
                     int unitAmount = outgoingAttacks[h][1] / 15;
-                    SendUnit(h, 15);
+                    SendUnit(h, 15, .125f);
                 }
                 else if (outgoingAttacks[h][1] / 5 > 0) // 5
                 {
                     int unitAmount = outgoingAttacks[h][1] / 5;
-                    SendUnit(h, 5);
+                    SendUnit(h, 5, .075f);
                 }
                 else
-                    SendUnit(h, 1); // 1
+                    SendUnit(h, 1, 0); // 1
 
                 isUnitSendingDone = false;
             }
@@ -357,10 +358,11 @@ public class CellIdentity : MonoBehaviour
     }
 
     //SendUnit: Creates and animates a unit of certain size
-    void SendUnit(int otherIdx, int unitSize)
+    void SendUnit(int otherIdx, int unitSize, float sizeIncrease)
     {
         curOccupancy -= unitSize;
         GameObject curAttackUnit = Instantiate(attackUnit, transform.position, transform.rotation, transform);
+        curAttackUnit.transform.localScale += Vector3.one * sizeIncrease;
         curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[otherIdx].transform.position, 2f);
         curAttackUnit.GetComponent<UnitAttackIdentity>().Construct(gameObject, unitSize, owner, mainSprite.color);
         curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
