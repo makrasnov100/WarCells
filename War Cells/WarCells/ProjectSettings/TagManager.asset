@@ -11,6 +11,8 @@ TagManager:
   - turnController
   - mapGenerator
   - mapGeneratorExp
+  - UIButton
+  - UIHeader
   layers:
   - Default
   - TransparentFX
