@@ -25,6 +25,9 @@ public class CellIdentity : MonoBehaviour
     [Header("GameObject References")]
     public List<GameObject> arrows = new List<GameObject>();
 
+    [Header("Cell Extras")]
+    public GameObject cellCaptureParticle;
+
     //Instance Variables
     // - general
     private int id;
@@ -59,8 +62,9 @@ public class CellIdentity : MonoBehaviour
         this.unitCapacity = unitCapacity;                                           // SET capacity of cell
         curOccupancy = Random.Range(0, (int)(unitCapacity / 2));                    // SET occupancy of cell
 
-        Vector3 curScale = new Vector3(1 + (unitCapacity * .05f), 1 + (unitCapacity * .05f), 1);
-        transform.localScale = curScale;                             // SET size of sprite
+        Vector3 curScale = new Vector3((unitCapacity * .05f), (unitCapacity * .05f), 1);
+        transform.localScale += curScale;                             // SET size of sprite
+        textComp.fontSize -= transform.localScale.x - 2f;
 
         UpdateCellLabel();
     }
@@ -322,25 +326,25 @@ public class CellIdentity : MonoBehaviour
                 if (outgoingAttacks[h][1] / 50 > 0) // Size of 50
                 {
                     int unitAmount = outgoingAttacks[h][1] / 50;
-                    SendUnit(h, 50);
+                    SendUnit(h, 50, .45f);
                 }
                 if (outgoingAttacks[h][1] / 25 > 0) // Size of 25
                 {
                     int unitAmount = outgoingAttacks[h][1] / 25;
-                    SendUnit(h, 25);
+                    SendUnit(h, 25, .3f);
                 }
                 else if (outgoingAttacks[h][1] / 15 > 0) // 15
                 {
                     int unitAmount = outgoingAttacks[h][1] / 15;
-                    SendUnit(h, 15);
+                    SendUnit(h, 15, .125f);
                 }
                 else if (outgoingAttacks[h][1] / 5 > 0) // 5
                 {
                     int unitAmount = outgoingAttacks[h][1] / 5;
-                    SendUnit(h, 5);
+                    SendUnit(h, 5, .075f);
                 }
                 else
-                    SendUnit(h, 1); // 1
+                    SendUnit(h, 1, 0); // 1
 
                 isUnitSendingDone = false;
             }
@@ -354,10 +358,11 @@ public class CellIdentity : MonoBehaviour
     }
 
     //SendUnit: Creates and animates a unit of certain size
-    void SendUnit(int otherIdx, int unitSize)
+    void SendUnit(int otherIdx, int unitSize, float sizeIncrease)
     {
         curOccupancy -= unitSize;
         GameObject curAttackUnit = Instantiate(attackUnit, transform.position, transform.rotation, transform);
+        curAttackUnit.transform.localScale += Vector3.one * sizeIncrease;
         curAttackUnit.GetComponent<LerpAtStart>().Construct(transform.position, connectionCells[otherIdx].transform.position, 2f);
         curAttackUnit.GetComponent<UnitAttackIdentity>().Construct(gameObject, unitSize, owner, mainSprite.color);
         curAttackUnit.GetComponent<SpriteRenderer>().color = mainSprite.color;
@@ -443,12 +448,12 @@ public class CellIdentity : MonoBehaviour
             }
 
             //Debug
-            string output = "ATTACK UNITS FOR CELL - " + gameObject.name + System.Environment.NewLine;
-            for (int h = 0; h < outgoingAttacks.Count; h++)
-            {
-                output += "Attack to " + outgoingAttacks[h][0] + " with " + outgoingAttacks[h][1] + " units" + System.Environment.NewLine;
-            }
-            print(output);
+            //string output = "ATTACK UNITS FOR CELL - " + gameObject.name + System.Environment.NewLine;
+            //for (int h = 0; h < outgoingAttacks.Count; h++)
+            //{
+            //    output += "Attack to " + outgoingAttacks[h][0] + " with " + outgoingAttacks[h][1] + " units" + System.Environment.NewLine;
+            //}
+            //print(output);
         }
     }
 
@@ -492,10 +497,21 @@ public class CellIdentity : MonoBehaviour
         return false;
     }
 
+    public void ResetOutgoingAttacks()
+    {
+        for (int i = 0; i < isAttackingConnection.Count; i++)
+        {
+            isAttackingConnection[i] = false;
+            turnController.completeFighting -= CompleteCellFighting;
+        }
+        RecalculateAttackUnits();
+    }
+
 
     ///[ACCESSORS/MUTATORS]
     public int GetId() { return id; }
     public int GetOwner() { return owner; }
+    public List<GameObject> GetConnections() { return connectionCells;  }
     public int GetCurOccupancy() { return curOccupancy; }
     public int GetCapacity() { return unitCapacity; }
     public int GetReserveUnits() { return reserveUnits; }
@@ -517,6 +533,11 @@ public class CellIdentity : MonoBehaviour
 
         owner = playerId;
         mainSprite.color = color;
+        //Play capture particles
+        GameObject ccp = Instantiate(cellCaptureParticle,transform);
+        var psm = ccp.GetComponent<ParticleSystem>().main;
+        psm.startColor = color;
+
         foreach (SpriteRenderer sr in arrowSprites)
             sr.color = color;
     }
@@ -550,6 +571,7 @@ public class CellIdentity : MonoBehaviour
         curOccupancy = newOccupancy;
         UpdateCellLabel();
     }
+    public int GetOccupancy() { return curOccupancy;  }
     public void ChangeUnits(int delta, int owner, Color color)
     {
         curOccupancy += delta;

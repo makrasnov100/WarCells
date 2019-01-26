@@ -15,6 +15,7 @@ public class TurnUIController : MonoBehaviour
     //Script References
     public PlayerManager playerManager;
     public AttackController attackController;
+    public BotManager botManager;
 
     //UI References
     [Header("Mobile UI")]
@@ -36,6 +37,11 @@ public class TurnUIController : MonoBehaviour
     public TMP_Text pcUnitMax;
     public GameObject pcNextTurnBtn;
     public GameObject pcNextPlayerBtn;
+
+    [Header("InfluenceBar")]
+    public GameObject influenceBarCanvas;
+    public Image influenceBarImage;
+    private List<Image> curBar = new List<Image>();
 
     private Canvas canvas;
     private Image nextTurnBG;
@@ -87,6 +93,7 @@ public class TurnUIController : MonoBehaviour
         canvas.gameObject.SetActive(true);
         curPlayer = playerManager.GetNextAlivePlayer(-1);
 
+        CreateInfluenceBar();
         ShowNextTurnUI();
     }
 
@@ -109,25 +116,44 @@ public class TurnUIController : MonoBehaviour
         if (isAnimationPlaying)
             return;
 
+        //Enable/Disable correct general UI components
+        nextTurnBG.gameObject.SetActive(true);
+        unitAmountInput.gameObject.SetActive(false);
+        unitCurrent.gameObject.SetActive(false);
+        unitMax.gameObject.SetActive(false);
         //Enable/Disable correct pass and play components
         if (isDoneSelectingAttacks)
         {
             nextTurnBtn.SetActive(true);
             nextPlayerBtn.SetActive(false);
             nextTurnBG.color = Color.red;
+            //When every player done test for any humans
+            bool hasHumanPlayer = false;
+            foreach (Player p in playerManager.GetPlayers())
+                if (p.GetOwnedCells().Count > 0 && !p.GetIsBot())
+                    hasHumanPlayer = true;
+
+            //If no humans, auto roll next turn.
+            if (!hasHumanPlayer)
+                NextTurnClick();
         }
         else
         {
+            Color pCol = curPlayer.GetPlayerColor();
+            nextTurnBG.color = new Color(pCol.r, pCol.g, pCol.b, .8f);
             nextTurnBtn.SetActive(false);
-            nextPlayerBtn.SetActive(true);
-            nextTurnBG.color = curPlayer.GetPlayerColor();
+            //Checks if player is a bot
+            if (!curPlayer.GetIsBot())
+                nextPlayerBtn.SetActive(true);
+            else//if bot do bot stuff
+            {
+                curPlayer.BotMove();
+                nextPlayerBtn.SetActive(false);
+                NextPlayerClick();
+            }
+               
         }
 
-        //Enable/Disable correct general UI components
-        nextTurnBG.gameObject.SetActive(true);
-        unitAmountInput.gameObject.SetActive(false);
-        unitCurrent.gameObject.SetActive(false);
-        unitMax.gameObject.SetActive(false);
     }
 
 
@@ -155,6 +181,57 @@ public class TurnUIController : MonoBehaviour
         ignoreSliderEdits = false; // > END slider ignore flag
     }
 
+    public void CreateInfluenceBar()
+    {
+        //Delete previous turns bar
+        if(curBar != null && curBar.Count != 0)
+            foreach (Image bar in curBar)
+            {
+                Destroy(bar.gameObject);
+            }
+
+        //Set vars
+        List<Image> newBar = new List<Image>();
+        float influenceBarCurrent = 0;
+        int totalUnits = 0;
+        //Calculate total units owned by players
+        foreach(Player p in playerManager.GetPlayers())//Start with each player
+        {
+            foreach(GameObject cell in p.ownedCells) // Find owned cells and count unit amounts
+            {
+                totalUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
+            }
+        }
+
+        //Generate bar
+        int screenWidth = Screen.width;
+        foreach(Player p in playerManager.GetPlayers())
+        {
+            int playerUnits = 0;
+            foreach (GameObject cell in p.ownedCells) // Find owned cells and count unit amounts
+            {
+                playerUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
+            }
+
+            float playerPercentage = (float)playerUnits / (float)totalUnits;
+            //Get bar with new color for player
+            Image playerColorBar = Instantiate(influenceBarImage);
+            newBar.Add(playerColorBar);
+            playerColorBar.transform.SetParent(influenceBarCanvas.transform);
+            playerColorBar.color = p.GetPlayerColor();
+            playerColorBar.gameObject.SetActive(true);
+            //Resize bar and move it to location
+            RectTransform playerColorBarTrans = playerColorBar.GetComponent<RectTransform>();
+            playerColorBarTrans.sizeDelta = new Vector2(playerPercentage*screenWidth, 20);
+            playerColorBarTrans.anchorMin = new Vector2(0,1);
+            playerColorBarTrans.anchorMax = new Vector2(0,1);
+            playerColorBarTrans.position = new Vector2(influenceBarCurrent + .5f * playerPercentage * screenWidth, Screen.height);
+            influenceBarCurrent += playerPercentage * screenWidth;
+
+        }
+        //After each bar is created, upload them curBar
+        curBar = newBar;
+    }
 
     ///[UI INPUTS]
     //Performs the next turn click functions
@@ -225,7 +302,6 @@ public class TurnUIController : MonoBehaviour
         if(playerManager.GetTotalAlivePlayers() <= 1)
         {
             //TODO: WINNER MENU
-            Debug.Log("GAME OVER");
             SceneManager.LoadScene("MainMenu");
         }
 
@@ -238,6 +314,7 @@ public class TurnUIController : MonoBehaviour
         isDoneSelectingAttacks = false;
 
         //Show the correct UI after turn is complete
+        CreateInfluenceBar();
         ShowNextTurnUI();
     }
 

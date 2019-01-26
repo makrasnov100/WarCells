@@ -49,10 +49,10 @@ MonoBehaviour:
   conMat: {fileID: 2100000, guid: bdde8db17acc90345ae05609e9aafd55, type: 2}
   minCellSize: 4
   maxCellSize: 12
-  cellPadding: 3
+  cellPadding: 3.5
   mapSize: 20
   chanceDecrease: 0
-  bridgeChance: 9
+  bridgeChance: 2.5
   PrefabMap: 0
   cellTypes:
   - {fileID: 7270605105527588119, guid: 5bfe50bb8e3fc6842aff7fbb46484a1e, type: 3}

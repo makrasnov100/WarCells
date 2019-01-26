@@ -82,7 +82,7 @@ public class SVGParser : MonoBehaviour
         string[] cordsSplit = cords.Split(' ');
 
 
-        stretchX =  (float)newScaleX / (float)scaleX;
+        stretchX = (float)newScaleX / (float)scaleX;
         stretchY = (float)newScaleY / (float)scaleY;
         double totalX = 0;
         double totalY = 0;
