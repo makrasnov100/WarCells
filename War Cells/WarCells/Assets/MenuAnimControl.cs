@@ -13,13 +13,13 @@ public class MenuAnimControl : MonoBehaviour
     public GameObject playMenu;
     public GameObject playLocalButton;
     public GameObject playWebButton;
-    public GameObject playCampaignButton;
-    public GameObject playPassNPlayButton;
-    public GameObject playProgramingButoon;
-    public GameObject playCreateGameButton;
-    public GameObject playJoinLobbyButton;
-    public GameObject playRandomMatchButton;
+    public GameObject playOptionOneButton;
+    public GameObject playOptionTwoButton;
+    public GameObject playOptionThreeButton;
     public GameObject optionsMenu;
+
+    public List<GameObject> LocalComponents;
+    public List<GameObject> WebComponents;
 
 
     //Support UI
@@ -31,7 +31,7 @@ public class MenuAnimControl : MonoBehaviour
 
     //Instance variables
     bool isLocationSelected = true;
-    bool isLocal = true;
+    public bool isLocal = true;
 
     // Start is called before the first frame update
     void Start()
@@ -118,19 +118,18 @@ public class MenuAnimControl : MonoBehaviour
 
         if (isEnabled)
         {
-            if (playLocalButton)
+            if (isLocal)
                 playLocalButton.GetComponent<MenuHeaderAnim>().ClickedOn();
             else
                 playWebButton.GetComponent<MenuHeaderAnim>().ClickedOn();
         }
         else
         {
-            if (playLocalButton)
+            if (isLocal)
                 playLocalButton.GetComponent<MenuHeaderAnim>().Unselect();
             else
                 playWebButton.GetComponent<MenuHeaderAnim>().Unselect();
         }
-
     }
     private void OptionsButtonSelect(bool isEnabled)
     {
@@ -149,7 +148,12 @@ public class MenuAnimControl : MonoBehaviour
         if (anim != null)
             anim.SetBool("isLocal", true);
 
-        playLocalButton.GetComponent<MenuHeaderAnim>().Unselect();
+        playWebButton.GetComponent<MenuHeaderAnim>().Unselect();
+        if(!isLocal)
+        {
+            isLocal = true;
+            LocalVsWebQuickDisable();
+        }
     }
     private void PlayWebSelect(bool isEnabled)
     {
@@ -158,6 +162,20 @@ public class MenuAnimControl : MonoBehaviour
             anim.SetBool("isLocal", false);
 
         playLocalButton.GetComponent<MenuHeaderAnim>().Unselect();
+        if (isLocal)
+        {
+            isLocal = false;
+            LocalVsWebQuickDisable();
+        }
+    }
+
+    //Disable UI Components
+    public void LocalVsWebQuickDisable()
+    {
+        foreach (GameObject g in WebComponents)
+            g.SetActive(!isLocal);
+        foreach (GameObject g in LocalComponents)
+            g.SetActive(isLocal);
     }
 
     //Cleanup
