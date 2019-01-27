@@ -7,16 +7,18 @@ public class Player
     BotManager botManager;
     int id;
     bool isBot;
+    string botDifficulty;
     bool isDead;
     int unitAmount;
     public HashSet<GameObject> ownedCells = new HashSet<GameObject>();
     Color color;
 
     ///[CONSTRUCTOR]
-    public Player(int id, bool isBot, GameObject spawnCell, Color color)
+    public Player(int id, bool isBot, string difficulty, GameObject spawnCell, Color color)
     {
         this.id = id;
         this.isBot = isBot;
+        this.botDifficulty = difficulty;
         this.isDead = false;
         this.color = color;
         botManager = GameObject.FindGameObjectWithTag("playerManager").GetComponent<BotManager>();
@@ -26,12 +28,13 @@ public class Player
     public Player() { }
     public void BotMove()
     {
-        botManager.ProcessTurn(ownedCells);
+        botManager.ProcessTurn(ownedCells, botDifficulty);
     }
 
     ///[ACCESSOR(S)/MUTATOR(S)]
     public int GetId() { return id; }
     public bool GetIsBot() { return isBot; }
+    public string GetBotDifficulty() { return botDifficulty; }
     public bool GetIsDead() { return isDead; }
     public void SetIsDead(bool newDead) { isDead = newDead; }
     public Color GetPlayerColor() { return color; }
@@ -46,8 +49,10 @@ public class PlayerManager : MonoBehaviour
 
     //Player Type Settings
     public int humanPlayers;
-    public int botPlayers;
-    
+    public int easyBots;
+    public int mediumBots;
+    public int hardBots;
+
     //Game Storage
     List<GameObject> cells = new List<GameObject>();    // - cells
     List<Player> players = new List<Player>();          // - players
@@ -71,7 +76,11 @@ public class PlayerManager : MonoBehaviour
     //Adds a preset amount of players to the map
     public void SpawnPlayers()
     {
-        int totalPlayers = humanPlayers + botPlayers;
+        int easyBotsLeft = easyBots;
+        int mediumBotsLeft = mediumBots;
+        int hardBotsLeft = hardBots;
+
+        int totalPlayers = humanPlayers + easyBots + mediumBots + hardBots;
         for (int p = 0; p < totalPlayers; p++)
         {
             //Find an open cell for a player
@@ -86,12 +95,33 @@ public class PlayerManager : MonoBehaviour
             curCell.GetComponent<CellIdentity>().SetOwner(p, curColor);         //SET player as owner of found starting cell
             curCell.GetComponent<CellIdentity>().SetOriginalOwner(p);
 
-            bool isBot = true;                                                  //SET player bot status
+            bool isBot = true;                                                  //SET player bot status (after all human players are in)
             if (p < humanPlayers)
                 isBot = false;
 
-            //Add created player to storage
-            players.Add(new Player(p, isBot, curCell, curColor));
+
+            //Add current player to player storage
+            if(!isBot) // if player, add then continue
+            {
+                players.Add(new Player(p, isBot, "Player", curCell, curColor));
+            }
+
+            //Assign difficulty to bots - (if it is bot)
+            if(isBot && easyBotsLeft > 0)
+            {
+                easyBotsLeft--;
+                players.Add(new Player(p, isBot, "Easy" , curCell, curColor));
+            }
+            else if (isBot && mediumBotsLeft > 0)
+            {
+                mediumBotsLeft--;
+                players.Add(new Player(p, isBot, "Medium", curCell, curColor));
+            }
+            else if (isBot && hardBotsLeft > 0)
+            {
+                hardBotsLeft--;
+                players.Add(new Player(p, isBot, "Hard", curCell, curColor));
+            }
         }
     }
 

@@ -335,7 +335,7 @@ public class MapGenExperimental : MonoBehaviour
         }
 
         //Additional connections (random)
-        int additionalConnections = maxConnections + cellCount;
+        int additionalConnections = maxConnections + (cellCount * 4);
 
         if (sortedDistances.Count > maxConnections)
         {
