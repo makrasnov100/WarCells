@@ -35,4 +35,5 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.log
-*.log
+*.info
+*.exe

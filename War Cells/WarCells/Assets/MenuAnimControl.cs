@@ -20,6 +20,7 @@ public class MenuAnimControl : MonoBehaviour
 
     public List<GameObject> LocalComponents;
     public List<GameObject> WebComponents;
+    public GameObject oldMenu;
 
 
     //Support UI
@@ -58,6 +59,9 @@ public class MenuAnimControl : MonoBehaviour
         quit.GetComponent<MenuButtonAnim>().buttonClick += QuitButtonSelect;
         playLocalButton.GetComponent<MenuHeaderAnim>().buttonClick += PlayLocalSelect;
         playWebButton.GetComponent<MenuHeaderAnim>().buttonClick += PlayWebSelect;
+        playOptionOneButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionOneSelect;
+        playOptionTwoButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionTwoSelect;
+        playOptionThreeButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionThreeSelect;
     }
 
     // Update is called once per frame
@@ -166,6 +170,30 @@ public class MenuAnimControl : MonoBehaviour
         {
             isLocal = false;
             LocalVsWebQuickDisable();
+        }
+    }
+
+    private void PlayOptionOneSelect(bool isEnabled)
+    {
+        if (isLocal)
+        {
+            oldMenu.SetActive(isEnabled);
+        }
+    }
+
+    private void PlayOptionTwoSelect(bool isEnabled)
+    {
+        if (isLocal)
+        {
+            oldMenu.SetActive(isEnabled);
+        }
+    }
+
+    private void PlayOptionThreeSelect(bool isEnabled)
+    {
+        if (isLocal)
+        {
+            oldMenu.SetActive(isEnabled);
         }
     }
 
