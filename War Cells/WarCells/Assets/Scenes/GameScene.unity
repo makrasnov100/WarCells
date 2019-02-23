@@ -1292,7 +1292,7 @@ PrefabInstance:
     - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
         type: 3}
       propertyPath: mapSize
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5151584091981001667, guid: aa56598a081d36646b5838a675449fbb,
         type: 3}
@@ -1332,9 +1332,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   humanPlayers: 0
-  easyBots: 1
+  easyBots: 0
   mediumBots: 0
-  hardBots: 1
+  hardBots: 6
 --- !u!4 &761302365
 Transform:
   m_ObjectHideFlags: 0
