@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuAnimControl : MonoBehaviour
 {
@@ -198,6 +199,10 @@ public class MenuAnimControl : MonoBehaviour
         if (isLocal)
         {
             oldMenu.SetActive(isEnabled);
+        }
+        else
+        {
+            SceneManager.LoadScene("LobbyScene");
         }
     }
 
