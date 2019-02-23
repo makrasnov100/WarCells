@@ -206,7 +206,7 @@ public class MenuAnimControl : MonoBehaviour
     {
         if (isLocal)
         {
-            oldMenu.SetActive(isEnabled);
+            SceneManager.LoadScene("LocalPlaySettings");
         }
         else
         {
