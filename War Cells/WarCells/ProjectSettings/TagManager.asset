@@ -13,6 +13,7 @@ TagManager:
   - mapGeneratorExp
   - UIButton
   - UIHeader
+  - UIInputField
   layers:
   - Default
   - TransparentFX

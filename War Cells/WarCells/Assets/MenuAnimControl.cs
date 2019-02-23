@@ -21,6 +21,7 @@ public class MenuAnimControl : MonoBehaviour
     public List<GameObject> LocalComponents;
     public List<GameObject> WebComponents;
     public GameObject oldMenu;
+    public GameObject curInputField;
 
 
     //Support UI
@@ -104,11 +105,22 @@ public class MenuAnimControl : MonoBehaviour
 
         if (hit)
         {
-
             if (hit.collider.gameObject.tag == "UIButton")
                 hit.collider.gameObject.GetComponent<MenuButtonAnim>().ClickedOn();
             else if (hit.collider.gameObject.tag == "UIHeader")
                 hit.collider.gameObject.GetComponent<MenuHeaderAnim>().ClickedOn();
+            else if (hit.collider.gameObject.tag == "UIInputField")
+            {
+                if (hit.collider.gameObject != curInputField)
+                {
+                    if (curInputField != null)
+                    {
+                        curInputField.GetComponent<EditText>().SwitchEdit();
+                    }
+                    curInputField = hit.collider.gameObject;
+                    hit.collider.gameObject.GetComponent<EditText>().SwitchEdit();
+                }
+            }
         }
     }
 
