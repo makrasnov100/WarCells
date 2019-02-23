@@ -1424,3 +1424,5 @@ C:\Users\makra\Documents\Unity\WarCells\War Cells\WarCells\obj\Debug\Assembly-CS
 C:\Users\makra\Documents\Unity\WarCells\War Cells\WarCells\obj\Debug\Assembly-CSharp.pdb
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
 C:\Users\Gri10\OneDrive\Documents\Unity\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml
+D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
+D:\Current Projects\WarCells\WarCells\War Cells\WarCells\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml
