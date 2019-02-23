@@ -81,6 +81,8 @@ public class PlayerManager : MonoBehaviour
         int hardBotsLeft = hardBots;
 
         int totalPlayers = humanPlayers + easyBots + mediumBots + hardBots;
+        // last player color starting with random color
+        Color lpc = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);
         for (int p = 0; p < totalPlayers; p++)
         {
             //Find an open cell for a player
@@ -89,12 +91,23 @@ public class PlayerManager : MonoBehaviour
             {
                 curCell = cells[Random.Range(0, cells.Count)];
             }
+            //convert to HueSaturationV to add to the hue (allows going down the rainbow)
+            Color.RGBToHSV(lpc, out float h, out float s, out float v);
+            float newH = h;
+            if(newH + .41f > 1f)
+            {
+                newH = (newH  + .41f) -1f;
+            }
+            else
+            {
+                newH += .41f;
+            }
+            Color curColor =  Color.HSVToRGB(newH, s,v);   //SET color for currently created player
 
-            Color curColor = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f);   //SET color for currently created player
             curCell.GetComponent<CellIdentity>().SetOccupancy(5);               //SET initial player unit amount
             curCell.GetComponent<CellIdentity>().SetOwner(p, curColor);         //SET player as owner of found starting cell
             curCell.GetComponent<CellIdentity>().SetOriginalOwner(p);
-
+            lpc = curColor;
             bool isBot = true;                                                  //SET player bot status (after all human players are in)
             if (p < humanPlayers)
                 isBot = false;

@@ -38,6 +38,11 @@ public class TurnUIController : MonoBehaviour
     public GameObject pcNextTurnBtn;
     public GameObject pcNextPlayerBtn;
 
+    [Header("Winner UI")]
+    public GameObject winnerMenuUI;
+    public GameObject winnerUnitText;
+    public GameObject winnerColor;
+
     [Header("InfluenceBar")]
     public GameObject influenceBarCanvas;
     public Image influenceBarImage;
@@ -64,6 +69,7 @@ public class TurnUIController : MonoBehaviour
     ///[UNITY DEFAULT]
     public void Start()
     {
+        winnerMenuUI.SetActive(false);
         //Sets correct UI refernces based of current platform
         if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
         {
@@ -298,11 +304,27 @@ public class TurnUIController : MonoBehaviour
             if (p.GetOwnedCells().Count <= 0)
                 p.SetIsDead(true);
 
-        //Notify user about win if the only one left
+        //Notify user about win if the only one left (GAMEOVER)
         if(playerManager.GetTotalAlivePlayers() <= 1)
         {
-            //TODO: WINNER MENU
-            SceneManager.LoadScene("MainMenu");
+            winnerMenuUI.SetActive(true);
+            //find that winning player
+            Player winningPlayer = null;
+            foreach (Player p in playerManager.GetPlayers())
+            {
+                if (p.GetOwnedCells().Count >= 1)
+                {
+                    winningPlayer = p;
+                    break; // once found last player (winner) break out of loop
+                }
+            }
+            int playerUnits = 0;
+            foreach (GameObject cell in winningPlayer.ownedCells) // Find owned cells and count unit amounts
+            {
+                playerUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
+            }
+            winnerUnitText.GetComponent<TextMeshProUGUI>().text = "Army Count: " + playerUnits;
+            winnerColor.GetComponent<Image>().color = winningPlayer.GetPlayerColor();
         }
 
         //If preselcted cur player was already destroyed choose the next avaliable
@@ -318,6 +340,10 @@ public class TurnUIController : MonoBehaviour
         ShowNextTurnUI();
     }
 
+    public void ToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     ///[ACCESORS/MUTATORS]
     public Slider GetUnitAmountInput() { return unitAmountInput; }
