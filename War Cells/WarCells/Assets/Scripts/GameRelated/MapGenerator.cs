@@ -105,7 +105,7 @@ public class MapGenerator : MonoBehaviour
                 if (cell != null && !cell.gameObject.GetComponent<CellIdentity>().IsConnectedTo(baseCell.GetId())) // If a cell already exists at this position, and no bridge already. attempt to make a bridge to it 
                 {
                     int r2 = Random.Range(1, 100);
-                    if(r2 >= bridgeChance * curRecursive) // bridgechance, chance to mke a bridge
+                    if(r2 >= bridgeChance) // bridgechance, chance to mke a bridge
                     {
                         GameObject line = new GameObject();
                         line.transform.parent = gameObject.transform;
