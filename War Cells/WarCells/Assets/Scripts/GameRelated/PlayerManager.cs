@@ -173,8 +173,6 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
-
-
     ///[ACCESSOR(S)/MUTATOR(S)]
     public List<Player> GetPlayers() { return players; }
     public Player GetPlayer(int searchId)
@@ -187,6 +185,7 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
     public void SetHumanPlayers(int newPlayers) { humanPlayers = newPlayers;  }
+    public void SetBotPlayers(int easyBotsIn, int mediumBotsIn, int hardBotsIn) { easyBots = easyBotsIn; mediumBots = mediumBotsIn; hardBots = hardBotsIn; }
     public Player GetNextAlivePlayer(int previousPlayer)
     {
         if (previousPlayer == -1)

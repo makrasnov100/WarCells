@@ -263,4 +263,6 @@ public class MapGenerator : MonoBehaviour
 
     //[ACCESSORS/MUTATORS]
     public void SetMapSize(int newSize) { mapSize = newSize; }
+    public void SetMinCellSize(int newMin) { minCellSize = newMin; }
+    public void SetMaxCellSize(int newMax) { maxCellSize = newMax; }
 }
