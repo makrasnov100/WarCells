@@ -1703,7 +1703,7 @@ GameObject:
   - component: {fileID: 1120626093}
   - component: {fileID: 1120626092}
   m_Layer: 0
-  m_Name: 4K UHD 25fps FREE Video Background Stars Space Trip
+  m_Name: BackgroundVid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
