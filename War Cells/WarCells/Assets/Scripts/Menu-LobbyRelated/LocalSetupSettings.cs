@@ -4,10 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+using TMPro;
+
+public class LocalSetupSettings : MonoBehaviour
 {
-    public InputField inPlayers;
-    public Dropdown inMapSize;
+    //Player Setup
+    public int humanPlayers;
+    public int easyBots;
+    public int mediumBots;
+    public int hardBots;
+    //Map Setup  
+    public TMP_Dropdown inMapSize;
 
     public void OnPlayBtn()
     {
@@ -20,7 +27,11 @@ public class MainMenu : MonoBehaviour
     {
         if (scene.name == "GameScene")
         {
+            //Build references
+            // - player manager
             GameObject pm = GameObject.FindGameObjectWithTag("playerManager");
+            // - correct map manager
+
             GameObject mg = null;
             GameObject mgNorm = GameObject.FindGameObjectWithTag("mapGenerator");
             GameObject mgExp = GameObject.FindGameObjectWithTag("mapGeneratorExp");
@@ -43,7 +54,13 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    //Accessors/Mutators
+    void humanPlayers()
+    {
 
+    }
+
+    void 
 
 }
 
