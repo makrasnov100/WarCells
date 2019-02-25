@@ -21,7 +21,6 @@ public class MenuAnimControl : MonoBehaviour
 
     //Tutorial Related
     public GameObject tutorialObject;
-    public GameObject disableTutorialBtn;
 
     public List<GameObject> LocalComponents;
     public List<GameObject> WebComponents;
@@ -68,10 +67,6 @@ public class MenuAnimControl : MonoBehaviour
         playOptionOneButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionOneSelect;
         playOptionTwoButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionTwoSelect;
         playOptionThreeButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionThreeSelect;
-
-
-        //Tutorial
-        disableTutorialBtn.GetComponent<MenuButtonAnim>().buttonClick += DisableTutorial;
     }
 
     // Update is called once per frame
@@ -198,7 +193,7 @@ public class MenuAnimControl : MonoBehaviour
     {
         if (isLocal)
         {
-            oldMenu.SetActive(isEnabled);
+            SceneManager.LoadScene("LocalPlaySettings");
         }
     }
 
@@ -207,10 +202,6 @@ public class MenuAnimControl : MonoBehaviour
         if (isLocal)
         {
             SceneManager.LoadScene("LocalPlaySettings");
-        }
-        else
-        {
-            SceneManager.LoadScene("LobbyScene");
         }
     }
 
