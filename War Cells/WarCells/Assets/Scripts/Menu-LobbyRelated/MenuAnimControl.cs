@@ -17,10 +17,15 @@ public class MenuAnimControl : MonoBehaviour
     public GameObject playOptionOneButton;
     public GameObject playOptionTwoButton;
     public GameObject playOptionThreeButton;
-    public GameObject optionsMenu;
+
+    //Options Menu
+    public GameObject optionsMenuCanvas;
 
     //Tutorial Related
     public GameObject tutorialObject;
+
+    //Music Related
+    public GameObject musicPlayer;
 
     public List<GameObject> LocalComponents;
     public List<GameObject> WebComponents;
@@ -67,6 +72,9 @@ public class MenuAnimControl : MonoBehaviour
         playOptionOneButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionOneSelect;
         playOptionTwoButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionTwoSelect;
         playOptionThreeButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionThreeSelect;
+
+        //Music keep it playing on all scenes
+        DontDestroyOnLoad(musicPlayer);
     }
 
     // Update is called once per frame
@@ -153,9 +161,12 @@ public class MenuAnimControl : MonoBehaviour
     }
     private void OptionsButtonSelect(bool isEnabled)
     {
-        Animator anim = optionsMenu.GetComponent<Animator>();
-        if (anim != null)
-            anim.SetBool("isActivated", isEnabled);
+        //TODO: AddComponentMenu animations
+        //Animator anim = optionsMenu.GetComponent<Animator>();
+        //if (anim != null)
+        //    anim.SetBool("isActivated", isEnabled);
+
+        optionsMenuCanvas.SetActive(isEnabled);
     }
     private void QuitButtonSelect(bool isEnabled)
     {
@@ -222,9 +233,13 @@ public class MenuAnimControl : MonoBehaviour
             g.SetActive(isLocal);
     }
 
-    public void DisableTutorial(bool isEnabled)
+    public void DisableTutorial()
     {
         tutorialObject.SetActive(false);
+    }
+    public void DisableOptionsMenu()
+    {
+        optionsMenuCanvas.SetActive(false);
     }
 
     //Cleanup

@@ -87,9 +87,15 @@ public class PlayerManager : MonoBehaviour
         {
             //Find an open cell for a player
             GameObject curCell = cells[Random.Range(0, cells.Count)];
-            while (curCell == null || curCell.GetComponent<CellIdentity>().GetOwner() != -1)
+            int count = 0;
+            while ((curCell == null || curCell.GetComponent<CellIdentity>().GetOwner() != -1) && !(count > 1000))
             {
+                count++;
                 curCell = cells[Random.Range(0, cells.Count)];
+            }
+            if (count > 1000)
+            {
+                break;
             }
             //convert to HueSaturationV to add to the hue (allows going down the rainbow)
             Color.RGBToHSV(lpc, out float h, out float s, out float v);

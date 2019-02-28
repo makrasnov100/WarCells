@@ -71,20 +71,20 @@ public class TurnUIController : MonoBehaviour
     {
         winnerMenuUI.SetActive(false);
         //Sets correct UI refernces based of current platform
-        if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
-        {
-            //Mobile - Touch Input
-            canvas = mobileCanvas;
-            nextTurnBG = mobileNextTurnBG;
-            unitAmountInput = mobileUnitAmountInput;
-            unitInputBG = mobileUnitInputBG;
-            unitCurrent = mobileUnitCurrent;
-            unitMax = mobileUnitMax;
-            nextTurnBtn = mobileNextTurnBtn;
-            nextPlayerBtn = mobileNextPlayerBtn;
-        }
-        else
-        {
+        //if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
+        //{
+        //    //Mobile - Touch Input
+        //    canvas = mobileCanvas;
+        //    nextTurnBG = mobileNextTurnBG;
+        //    unitAmountInput = mobileUnitAmountInput;
+        //    unitInputBG = mobileUnitInputBG;
+        //    unitCurrent = mobileUnitCurrent;
+        //    unitMax = mobileUnitMax;
+        //    nextTurnBtn = mobileNextTurnBtn;
+        //    nextPlayerBtn = mobileNextPlayerBtn;
+        //}
+        //else
+        //{
             //PC - Mouse Input
             canvas = pcCanvas;
             nextTurnBG = pcNextTurnBG;
@@ -94,7 +94,7 @@ public class TurnUIController : MonoBehaviour
             unitMax = pcUnitMax;
             nextTurnBtn = pcNextTurnBtn;
             nextPlayerBtn = pcNextPlayerBtn;
-        }
+        //}
 
         canvas.gameObject.SetActive(true);
         curPlayer = playerManager.GetNextAlivePlayer(-1);
