@@ -5,22 +5,17 @@ using UnityEngine;
 public class ParticleSystemController : MonoBehaviour
 {
     private ParticleSystem thisPs;
-    private float stopEmitTime;
+    private float destroyTime;
     void Start()
     {
         thisPs = gameObject.GetComponent<ParticleSystem>();
+        destroyTime = Time.time + 5;
     }
 
     void Update()
     {
         //When the particle system is done emitting-Destory it
-        if(!thisPs.isEmitting)
-        {
-            stopEmitTime = Time.time;
-        }
-        else if(stopEmitTime - 5 > Time.time)
-        {
+        if (Time.time > destroyTime)
             Destroy(gameObject);
-        }
     }
 }

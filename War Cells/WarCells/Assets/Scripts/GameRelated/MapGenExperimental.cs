@@ -310,8 +310,8 @@ public class MapGenExperimental : MonoBehaviour
             lr.SetPosition(0, sortedDistances[i].origin.transform.position);
             lr.SetPosition(1, sortedDistances[i].destination.transform.position);
             lr.material = new Material(Shader.Find("Sprites/Default"));
-            lr.startColor = Color.white;
-            lr.endColor = Color.white;
+            lr.startColor = Color.black;
+            lr.endColor = Color.black;
             lr.startWidth = .2f;
             lr.endWidth = .2f;
             lr.sortingOrder = -10;
@@ -358,8 +358,8 @@ public class MapGenExperimental : MonoBehaviour
                 lr.SetPosition(0, sortedDistances[curEdgeIdx].origin.transform.position);
                 lr.SetPosition(1, sortedDistances[curEdgeIdx].destination.transform.position);
                 lr.material = new Material(Shader.Find("Sprites/Default"));
-                lr.startColor = Color.white;
-                lr.endColor = Color.white;
+                lr.startColor = Color.black;
+                lr.endColor = Color.black;
                 lr.startWidth = .2f;
                 lr.endWidth = .2f;
                 lr.sortingOrder = -10;

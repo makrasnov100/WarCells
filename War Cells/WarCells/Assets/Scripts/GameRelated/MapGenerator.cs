@@ -114,8 +114,8 @@ public class MapGenerator : MonoBehaviour
                         lr2.SetPosition(0, curPosition);
                         lr2.SetPosition(1, curPosition + pos);
                         lr2.material = new Material(Shader.Find("Sprites/Default"));
-                        lr2.startColor = Color.white;
-                        lr2.endColor = Color.white;
+                        lr2.startColor = Color.black;
+                        lr2.endColor = Color.black;
                         lr2.startWidth = .2f;
                         lr2.endWidth = .2f;
                         lr2.sortingOrder = -10;
@@ -141,8 +141,8 @@ public class MapGenerator : MonoBehaviour
                 lr.SetPosition(0, curPosition);
                 lr.SetPosition(1, curPosition + pos);
                 lr.material = new Material(Shader.Find("Sprites/Default"));
-                lr.startColor = Color.white;
-                lr.endColor = Color.white;
+                lr.startColor = Color.black;
+                lr.endColor = Color.black;
                 lr.startWidth = .2f;
                 lr.endWidth = .2f;
                 lr.sortingOrder = -10;
@@ -218,8 +218,8 @@ public class MapGenerator : MonoBehaviour
                             lr2.SetPosition(0, half * curPosition);
                             lr2.SetPosition(1, half * (curPosition + pos));
                             lr2.material = new Material(Shader.Find("Sprites/Default"));
-                            lr2.startColor = Color.white;
-                            lr2.endColor = Color.white;
+                            lr2.startColor = Color.black;
+                            lr2.endColor = Color.black;
                             lr2.startWidth = .2f;
                             lr2.endWidth = .2f;
                             lr2.sortingOrder = -10;
@@ -245,8 +245,8 @@ public class MapGenerator : MonoBehaviour
                     lr.SetPosition(0, half * curPosition);
                     lr.SetPosition(1, half * (curPosition + pos));
                     lr.material = new Material(Shader.Find("Sprites/Default"));
-                    lr.startColor = Color.white;
-                    lr.endColor = Color.white;
+                    lr.startColor = Color.black;
+                    lr.endColor = Color.black;
                     lr.startWidth = .2f;
                     lr.endWidth = .2f;
                     lr.sortingOrder = -10;

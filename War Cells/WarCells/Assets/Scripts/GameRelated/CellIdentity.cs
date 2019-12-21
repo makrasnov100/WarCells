@@ -20,7 +20,7 @@ public class CellIdentity : MonoBehaviour
     public SpriteRenderer mainSprite;
     public List<SpriteRenderer> arrowSprites = new List<SpriteRenderer>(); //0 - up, 1 - down, 2 - left, 3 - right
     public TMP_Text reserveIndicator;
-    private TMP_Text textComp;
+    public TMP_Text curUnitText;
 
     [Header("GameObject References")]
     public List<GameObject> arrows = new List<GameObject>();
@@ -54,7 +54,6 @@ public class CellIdentity : MonoBehaviour
     {
         playerManager = GameObject.FindGameObjectWithTag("playerManager").GetComponent<PlayerManager>();
         turnController = GameObject.FindGameObjectWithTag("turnController").GetComponent<TurnUIController>();
-        textComp = gameObject.GetComponent<TMP_Text>();
     }
     public void Construct(int id, int unitCapacity)
     {
@@ -64,7 +63,7 @@ public class CellIdentity : MonoBehaviour
 
         Vector3 curScale = new Vector3((unitCapacity * .05f), (unitCapacity * .05f), 1);
         transform.localScale += curScale;                             // SET size of sprite
-        textComp.fontSize -= transform.localScale.x - 2f;
+        curUnitText.fontSize -= transform.localScale.x - 2f;
 
         UpdateCellLabel();
     }
@@ -138,9 +137,9 @@ public class CellIdentity : MonoBehaviour
             else
             {
                 if (connectionStartsHere[i])
-                    connectionLines[i].startColor = Color.white;
+                    connectionLines[i].startColor = Color.black;
                 else
-                    connectionLines[i].endColor = Color.white;
+                    connectionLines[i].endColor = Color.black;
             }
         }
     }
@@ -165,7 +164,7 @@ public class CellIdentity : MonoBehaviour
                     if (isOriginActivated)
                         connectionLines[i].startColor = Color.red;
                     else
-                        connectionLines[i].startColor = Color.white;
+                        connectionLines[i].startColor = Color.black;
                 }
             }
             else
@@ -182,7 +181,7 @@ public class CellIdentity : MonoBehaviour
                     if (isOriginActivated)
                         connectionLines[i].endColor = Color.red;
                     else
-                        connectionLines[i].endColor = Color.white;
+                        connectionLines[i].endColor = Color.black;
                 }
             }
         }
@@ -209,9 +208,11 @@ public class CellIdentity : MonoBehaviour
             }
             else
             {
-                Color otherSideColor = Color.white;
+                Color otherSideColor = Color.black;
                 if (connectionCells[g].GetComponent<CellIdentity>().IsAttacking(id))
-                    otherSideColor = connectionCells[g].GetComponent<CellIdentity>().mainSprite.color; 
+                    otherSideColor = connectionCells[g].GetComponent<CellIdentity>().mainSprite.color;
+                if (otherSideColor == Color.white)
+                    otherSideColor = Color.black;
 
                 if (connectionStartsHere[g])
                     connectionLines[g].endColor = otherSideColor;
@@ -238,7 +239,7 @@ public class CellIdentity : MonoBehaviour
     //UpdateCellLabel: Updates the main cell text
     void UpdateCellLabel()
     {
-        textComp.text = curOccupancy + "/" + unitCapacity;
+        curUnitText.text = curOccupancy + "/" + unitCapacity;
     }
 
     //UpdateReserveIndicator: Updates the reserve cell text

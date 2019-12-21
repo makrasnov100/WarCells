@@ -29,13 +29,15 @@ public class AttackController : MonoBehaviour
         //Attack stage determined when a single finger touches the screen
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            //Find the object that is being touche
+            //Find the object that is being touched
             Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
 
             //Ignore touch if over UI
             if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
                 return;
+
+            HandleInput(hit);
         }
     }
 
