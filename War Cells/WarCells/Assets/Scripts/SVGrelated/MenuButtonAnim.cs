@@ -11,6 +11,8 @@ public class MenuButtonAnim : MonoBehaviour
     Animator anim;
     bool isHover;
     public bool isClicked;
+    public string btnName;
+    public bool isRootBtn;
 
     // Start is called before the first frame update
     void Start()
@@ -31,8 +33,25 @@ public class MenuButtonAnim : MonoBehaviour
 
     public void ClickedOn()
     {
+        if (isRootBtn)
+        {
+            GameObject mainUICont = GameObject.FindGameObjectWithTag("menuUiCont");
+            if (mainUICont)
+            {
+                MenuAnimControl uiControlComp = mainUICont.GetComponent<MenuAnimControl>();
+                if (uiControlComp)
+                {
+                    if (uiControlComp.menuLast != "NA" && uiControlComp.menuLast != btnName)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
         isClicked = !isClicked;
         anim.SetBool("isClicked", isClicked);
+        anim.SetBool("isHowered", isClicked);
         if (buttonClick != null)
             buttonClick(isClicked);
     }

@@ -23,7 +23,7 @@ public class MapGenExperimental : MonoBehaviour
     public TurnUIController turnController;
 
     //Map Storage
-    List<List<GameObject>> cells = new List<List<GameObject>>();
+    public List<List<GameObject>> cells = new List<List<GameObject>>();
 
     //Connections Settings
     public float connectionPrevalence;

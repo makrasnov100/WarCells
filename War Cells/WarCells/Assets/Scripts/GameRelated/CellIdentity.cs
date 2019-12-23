@@ -237,9 +237,22 @@ public class CellIdentity : MonoBehaviour
 
     ///[CELL UI UPDATORS]
     //UpdateCellLabel: Updates the main cell text
-    void UpdateCellLabel()
+    public void UpdateCellLabel()
     {
-        curUnitText.text = curOccupancy + "/" + unitCapacity;
+        if (OptionsManager.Instance.isShowCellText)
+        {
+            curUnitText.enabled = true;
+            curUnitText.text = curOccupancy + "/" + unitCapacity;
+            mainSprite.transform.localScale = Vector3.one;
+        }
+        else
+        {
+            curUnitText.enabled = false;
+            float scaleProportion = Mathf.Min(curOccupancy / (float)unitCapacity, 1f);
+            if (scaleProportion != 0f)
+                scaleProportion = Mathf.Max(.1f, scaleProportion);
+            mainSprite.transform.localScale = new Vector3(scaleProportion, scaleProportion, scaleProportion);
+        }
     }
 
     //UpdateReserveIndicator: Updates the reserve cell text
@@ -538,6 +551,7 @@ public class CellIdentity : MonoBehaviour
         GameObject ccp = Instantiate(cellCaptureParticle,transform);
         var psm = ccp.GetComponent<ParticleSystem>().main;
         psm.startColor = color;
+        reserveUnits = 0;
 
         foreach (SpriteRenderer sr in arrowSprites)
             sr.color = color;

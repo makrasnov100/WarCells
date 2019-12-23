@@ -9,7 +9,7 @@ public class MapGenerator : MonoBehaviour
     public TurnUIController turnController;
 
     //Map Storage
-    List<GameObject> newCells = new List<GameObject>();
+    public List<GameObject> newCells = new List<GameObject>();
 
     //Connections Settings
     public float connectionPrevalence;
@@ -260,6 +260,8 @@ public class MapGenerator : MonoBehaviour
 
         }
     }
+
+    
 
     //[ACCESSORS/MUTATORS]
     public void SetMapSize(int newSize) { mapSize = newSize; }

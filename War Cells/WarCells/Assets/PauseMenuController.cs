@@ -14,16 +14,20 @@ public class PauseMenuController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pauseMenuOn = !pauseMenuOn;
-            PauseMenuComponents.SetActive(pauseMenuOn);
-            OptionsMobileButton.SetActive(pauseMenuOn);
+            if (pauseMenuOn)
+                OptionsManager.Instance.ShowMenu();
+            else
+                OptionsManager.Instance.HideMenu();
+            //PauseMenuComponents.SetActive(pauseMenuOn);
+            //OptionsMobileButton.SetActive(pauseMenuOn);
         }
     }
 
+    //NO LONGER USED
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
-
     public void ClosePauseMenu()
     {
         pauseMenuOn = false;
@@ -33,7 +37,8 @@ public class PauseMenuController : MonoBehaviour
     public void OpenPauseMenu()
     {
         pauseMenuOn = true;
-        PauseMenuComponents.SetActive(pauseMenuOn);
-        OptionsMobileButton.SetActive(!pauseMenuOn);
+        OptionsManager.Instance.ShowMenu();
+        //PauseMenuComponents.SetActive(pauseMenuOn);
+        //OptionsMobileButton.SetActive(!pauseMenuOn);
     }
 }

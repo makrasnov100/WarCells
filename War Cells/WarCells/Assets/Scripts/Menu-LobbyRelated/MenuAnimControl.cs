@@ -44,6 +44,8 @@ public class MenuAnimControl : MonoBehaviour
     bool isLocationSelected = true;
     public bool isLocal = true;
 
+    public string menuLast = "NA";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,9 +74,6 @@ public class MenuAnimControl : MonoBehaviour
         playOptionOneButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionOneSelect;
         playOptionTwoButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionTwoSelect;
         playOptionThreeButton.GetComponent<MenuButtonAnim>().buttonClick += PlayOptionThreeSelect;
-
-        //Music keep it playing on all scenes
-        DontDestroyOnLoad(musicPlayer);
     }
 
     // Update is called once per frame
@@ -140,6 +139,13 @@ public class MenuAnimControl : MonoBehaviour
     //Button Events
     private void PlayButtonSelect(bool isEnabled)
     {
+        if (menuLast == "Play")
+            menuLast = "NA";
+        else if (menuLast == "NA")
+            menuLast = "Play";
+        else
+            return;
+
         Animator anim = playMenu.GetComponent<Animator>();
         if (anim != null)
             anim.SetBool("isActivated", isEnabled);
@@ -161,15 +167,23 @@ public class MenuAnimControl : MonoBehaviour
     }
     private void OptionsButtonSelect(bool isEnabled)
     {
-        //TODO: AddComponentMenu animations
-        //Animator anim = optionsMenu.GetComponent<Animator>();
-        //if (anim != null)
-        //    anim.SetBool("isActivated", isEnabled);
+        if (menuLast == "Options")
+            menuLast = "NA";
+        else if (menuLast == "NA")
+            menuLast = "Options";
+        else
+            return;
 
-        optionsMenuCanvas.SetActive(isEnabled);
+        OptionsManager.Instance.ShowMenu();
+
     }
     private void QuitButtonSelect(bool isEnabled)
     {
+        if (menuLast != "NA")
+        {
+            return;
+        }
+
         Application.Quit();
     }
 

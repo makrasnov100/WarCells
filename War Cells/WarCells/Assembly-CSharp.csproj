@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\ChangeVolume.cs" />
     <Compile Include="Assets\HideExtraSettings.cs" />
+    <Compile Include="Assets\OptionsManager.cs" />
     <Compile Include="Assets\PauseMenuController.cs" />
     <Compile Include="Assets\Scripts\AspectFix.cs" />
     <Compile Include="Assets\Scripts\EditText.cs" />
