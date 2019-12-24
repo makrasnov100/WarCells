@@ -142,6 +142,26 @@ public class PlayerManager : MonoBehaviour
                 players.Add(new Player(p, isBot, "Hard", curCell, curColor));
             }
         }
+
+        //Show UI and start game
+        Debug.Log("Starting Game by showing UI and first turn");
+        GameObject tc = GameObject.FindGameObjectWithTag("turnController");
+        if (tc)
+        {
+            TurnUIController tUIc = tc.GetComponent<TurnUIController>();
+            if (tUIc)
+            {
+                tUIc.SetupFullUI();
+            }
+            else
+            {
+                Debug.LogError("CAN'T START GAME - cannot find turnUIController component");
+            }
+        }
+        else
+        {
+            Debug.LogError("CAN'T START GAME - cannot find turnController gameobject");
+        }
     }
 
 

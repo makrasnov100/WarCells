@@ -33,6 +33,7 @@ public class LocalSetupSettings : MonoBehaviour
     private RewardBasedVideoAd rewardBasedVideo;
     private bool isEditor;
     private bool isLoaded = false;
+    private bool isReadyToPlay = false;
 
     public void Start()
     {
@@ -58,10 +59,12 @@ public class LocalSetupSettings : MonoBehaviour
         OptionsManager.Instance.gameMusic.Pause();
 
         //play the add if loaded
+        Debug.Log("Play button states: isEditor - " + isEditor + ", isLoaded - " + isLoaded + ", rewardBasedVideo.IsLoaded()" + rewardBasedVideo.IsLoaded());
         if (!isEditor && isLoaded && rewardBasedVideo.IsLoaded())
         {
             mapLoading.SetActive(true);
             rewardBasedVideo.Show();
+            StartCoroutine(CheckAdCompletion());
         }
         else
         {
@@ -251,6 +254,15 @@ public class LocalSetupSettings : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    IEnumerator CheckAdCompletion()
+    {
+        while (!isReadyToPlay)
+        {
+            yield return new WaitForSeconds(2.5f);
+        }
+
+        PlayGame();
+    }
     //    private void RequestInterstitial()
     //    {
     //#if UNITY_ANDROID && !UNITY_EDITOR
@@ -306,13 +318,13 @@ public class LocalSetupSettings : MonoBehaviour
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
         isLoaded = false;
-        PlayGame();
+        isReadyToPlay = true;
     }
 
     public void HandleRewardBasedVideoRewarded(object sender, Reward args)
     {
         isLoaded = false;
-        PlayGame();
+        isReadyToPlay = true;
     }
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {

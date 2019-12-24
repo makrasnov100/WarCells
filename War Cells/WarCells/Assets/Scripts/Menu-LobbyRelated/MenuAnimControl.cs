@@ -218,6 +218,7 @@ public class MenuAnimControl : MonoBehaviour
     {
         if (isLocal)
         {
+            OptionsManager.Instance.
             SceneManager.LoadScene("LocalPlaySettings");
         }
     }

@@ -121,7 +121,7 @@ public class SVGParser : MonoBehaviour
             totalY += curY;
             svgPositions.Add(new Vector2((float)curX, (float)curY));
         }
-        print(output);
+        //print(output);
 
         //Find + apply initial offset before making connections
         initialOffset = new Vector2((float)totalX / (float)svgPositions.Count, (float)totalY / (float)svgPositions.Count);

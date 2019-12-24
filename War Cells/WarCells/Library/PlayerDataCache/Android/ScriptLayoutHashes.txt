@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/makra/Desktop/WarCellz/Builds/WarCellzRewardAd.apk
+C:/Users/makra/Desktop/WarCellz/Builds/8.apk
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/GameScene.unity

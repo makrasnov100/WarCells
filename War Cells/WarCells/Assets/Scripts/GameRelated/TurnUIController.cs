@@ -67,10 +67,10 @@ public class TurnUIController : MonoBehaviour
 
 
     ///[UNITY DEFAULT]
-    public void Start()
+    public void SetupFullUI()
     {
         winnerMenuUI.SetActive(false);
-        //Sets correct UI refernces based of current platform
+        //Sets correct UI references based of current platform
         if (Input.touchSupported && Application.platform != RuntimePlatform.WebGLPlayer)
         {
             //Mobile - Touch Input
@@ -119,6 +119,7 @@ public class TurnUIController : MonoBehaviour
     //Shows only the UI components that are needed to initiate the next turn / hand over to new user
     public void ShowNextTurnUI()
     {
+        Debug.Log("Entering Next Turrn!");
         if (isAnimationPlaying)
             return;
 
@@ -127,9 +128,11 @@ public class TurnUIController : MonoBehaviour
         unitAmountInput.gameObject.SetActive(false);
         unitCurrent.gameObject.SetActive(false);
         unitMax.gameObject.SetActive(false);
+
         //Enable/Disable correct pass and play components
         if (isDoneSelectingAttacks)
         {
+            Debug.Log("Done selecting attacks is TRUE");
             nextTurnBtn.SetActive(true);
             nextPlayerBtn.SetActive(false);
             nextTurnBG.color = Color.red;
@@ -145,14 +148,20 @@ public class TurnUIController : MonoBehaviour
         }
         else
         {
+            Debug.Log("Done selecting attacks is FALSE");
             Color pCol = curPlayer.GetPlayerColor();
             nextTurnBG.color = new Color(pCol.r, pCol.g, pCol.b, .8f);
+            Debug.Log("Set player/bot background color");
             nextTurnBtn.SetActive(false);
             //Checks if player is a bot
             if (!curPlayer.GetIsBot())
+            {
                 nextPlayerBtn.SetActive(true);
+                Debug.Log("Setup for player next turn");
+            }
             else//if bot do bot stuff
             {
+                Debug.Log("Completed bot operation.");
                 curPlayer.BotMove();
                 nextPlayerBtn.SetActive(false);
                 NextPlayerClick();
@@ -169,22 +178,22 @@ public class TurnUIController : MonoBehaviour
         if (isAnimationPlaying)
             return;
 
-        ignoreSliderEdits = true;  // > START slider ignore flag
+        //ignoreSliderEdits = true;  // > START slider ignore flag
 
-        unitCurrent.text = "" + origin.GetReserveUnits();           //SET Current Units in Reserve Text
-        unitMax.text = "/" + origin.GetCapacity();                  //SET Max avaliable reserve units
-        unitAmountInput.maxValue = origin.GetCapacity();            //SET Max slider value
-        unitAmountInput.value = (float)origin.GetReserveUnits();    //SET Slider position to current value
+        //unitCurrent.text = "" + origin.GetReserveUnits();           //SET Current Units in Reserve Text
+        //unitMax.text = "/" + origin.GetCapacity();                  //SET Max avaliable reserve units
+        //unitAmountInput.maxValue = origin.GetCapacity();            //SET Max slider value
+        //unitAmountInput.value = (float)origin.GetReserveUnits();    //SET Slider position to current value
 
         //Enable/Disable correct UI components
         nextTurnBG.gameObject.SetActive(false);
         nextTurnBtn.SetActive(false);
         nextPlayerBtn.SetActive(false);
-        unitAmountInput.gameObject.SetActive(true);
-        unitCurrent.gameObject.SetActive(true);
-        unitMax.gameObject.SetActive(true);
+        //unitAmountInput.gameObject.SetActive(true);
+        //unitCurrent.gameObject.SetActive(true);
+        //unitMax.gameObject.SetActive(true);
 
-        ignoreSliderEdits = false; // > END slider ignore flag
+        //ignoreSliderEdits = false; // > END slider ignore flag
     }
 
     public void CreateInfluenceBar()
@@ -264,6 +273,7 @@ public class TurnUIController : MonoBehaviour
         {
             playerManager.ShowAllAttackDeclarations();
             isDoneSelectingAttacks = true;
+            Debug.Log("Completed selecting all attacks");
         }
         if(!isDoneSelectingAttacks)
         {

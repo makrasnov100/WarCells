@@ -1,0 +1,60 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\makra\\Desktop\\WarCellz\\WarCells\\War Cells\\WarCells\\Temp\\gradleOut\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-iw\\values-iw.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\makra\\.gradle\\caches\\transforms-2\\files-2.1\\e8391294355b19f431b0faa2eb4d784c\\res\\values-iw\\values-iw.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "10",
+                        "startColumns": "4",
+                        "startOffsets": "841",
+                        "endColumns": "100",
+                        "endOffsets": "937"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\makra\\.gradle\\caches\\transforms-2\\files-2.1\\4426742535860cf1bb1ed919d9e4d440\\res\\values-iw\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "247",
+                        "endColumns": "176",
+                        "endOffsets": "423"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "105",
+                        "endColumns": "176",
+                        "endOffsets": "277"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\makra\\.gradle\\caches\\transforms-2\\files-2.1\\e839fb984123c76e4b0470946b77e728\\res\\values-iw\\values.xml",
+                    "from": {
+                        "startLines": "4,5,6,7,8,9,10",
+                        "startColumns": "0,0,0,0,0,0,0",
+                        "startOffsets": "197,268,371,432,493,566,659",
+                        "endColumns": "70,102,60,60,72,92,68",
+                        "endOffsets": "267,370,431,492,565,658,727"
+                    },
+                    "to": {
+                        "startLines": "3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "282,357,464,529,594,671,768",
+                        "endColumns": "74,106,64,64,76,96,72",
+                        "endOffsets": "352,459,524,589,666,763,836"
+                    }
+                }
+            ]
+        }
+    ]
+}
