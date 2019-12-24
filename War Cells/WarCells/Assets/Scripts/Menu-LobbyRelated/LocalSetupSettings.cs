@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using GoogleMobileAds.Api;
 
 using TMPro;
+using System;
 
 public class LocalSetupSettings : MonoBehaviour
 {
@@ -22,12 +24,49 @@ public class LocalSetupSettings : MonoBehaviour
     public GameObject symmetry;
     public GameObject maxConnectDist;
 
+    //UI transition
+    public GameObject mapLoading;
+    public Canvas fullUI;
+
+    //Create Game Ad
+    //private InterstitialAd interstitial;
+    private RewardBasedVideoAd rewardBasedVideo;
+    private bool isEditor;
+    private bool isLoaded = false;
+
+    public void Start()
+    {
+        //RequestInterstitial();
+        // Get singleton reward based video ad reference.
+        this.rewardBasedVideo = RewardBasedVideoAd.Instance;
+
+        // Called when the user should be rewarded for watching a video.
+        rewardBasedVideo.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        // Called when the ad is closed.
+        rewardBasedVideo.OnAdClosed += HandleRewardBasedVideoClosed;
+        // Called when an ad request has successfully loaded.
+        rewardBasedVideo.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        // Called when an ad request failed to load.
+        rewardBasedVideo.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+
+        this.RequestRewardBasedVideo();
+    }
 
     public void OnPlayBtn()
     {
-        Object.DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene("GameScene");
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //Pause the game music
+        OptionsManager.Instance.gameMusic.Pause();
+
+        //play the add if loaded
+        if (!isEditor && isLoaded && rewardBasedVideo.IsLoaded())
+        {
+            mapLoading.SetActive(true);
+            rewardBasedVideo.Show();
+        }
+        else
+        {
+            PlayGame();
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -200,6 +239,9 @@ public class LocalSetupSettings : MonoBehaviour
             }
 
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            //#if !UNITY_EDITOR
+            //    interstitial.Destroy();
+            //#endif
             Destroy(gameObject);
         }
     }
@@ -207,6 +249,87 @@ public class LocalSetupSettings : MonoBehaviour
     public void ToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    //    private void RequestInterstitial()
+    //    {
+    //#if UNITY_ANDROID && !UNITY_EDITOR
+    //        string adUnitId = OptionsManager.Instance.newGameAd;
+    //#elif UNITY_EDITOR
+    //        isEditor = true;
+    //        string adUnitId = "";
+    //        return;
+    //#else
+    //        string adUnitId = "unexpected_platform";
+    //#endif
+
+    //        // Initialize an InterstitialAd.
+    //        this.interstitial = new InterstitialAd(adUnitId);
+
+    //        // Link add close funtion
+    //        this.interstitial.OnAdClosed += PlayGame;
+
+    //        // Create an empty ad request.
+    //        AdRequest request = new AdRequest.Builder().Build();
+    //        // Load the interstitial with the request.
+    //        this.interstitial.LoadAd(request);
+    //    }
+
+    private void RequestRewardBasedVideo()
+    {
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            string adUnitId = OptionsManager.Instance.newGameAd;
+        #elif UNITY_EDITOR
+            string adUnitId = "unexpected_platform";
+            isEditor = true;
+            return;
+        #else
+            string adUnitId = "unexpected_platform";
+        #endif
+        isEditor = false;
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the rewarded video ad with the request.
+        this.rewardBasedVideo.LoadAd(request, adUnitId);
+    }
+
+    //Called when user finishied watching ad
+    public void PlayGame()
+    {
+        //Resume music
+        OptionsManager.Instance.gameMusic.UnPause();
+
+        //Go to game Scene
+        ContinueToGame();
+    }
+
+    public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
+    {
+        isLoaded = false;
+        PlayGame();
+    }
+
+    public void HandleRewardBasedVideoRewarded(object sender, Reward args)
+    {
+        isLoaded = false;
+        PlayGame();
+    }
+    public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
+    {
+        isLoaded = true;
+    }
+
+    public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    {
+        isLoaded = false;
+    }
+
+    public void ContinueToGame()
+    {
+        fullUI.enabled = false;
+        GameObject.DontDestroyOnLoad(gameObject);
+        SceneManager.LoadScene("GameScene");
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 }
 

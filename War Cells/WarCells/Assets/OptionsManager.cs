@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using GoogleMobileAds.Api;
 
 public class OptionsManager : MonoBehaviour
 {
@@ -22,7 +23,10 @@ public class OptionsManager : MonoBehaviour
     //Control Variables
     public bool isShowCellText = true;
     public AudioSource gameMusic;
-    
+
+    //Ad Variables
+    // test intermidiate ad = "ca-app-pub-3940256099942544/5224354917";
+    public string newGameAd = "ca-app-pub-3940256099942544/5224354917";
 
 
     // Start is called before the first frame update
@@ -34,11 +38,12 @@ public class OptionsManager : MonoBehaviour
             DontDestroyOnLoad(this);
         }
         else
-            Destroy(this);
+            Destroy(this.gameObject);
     }
 
     private void Start()
     {
+        MobileAds.Initialize(initStatus => { });
         UpdateCellTextValue(isShowCellText);
     }
 

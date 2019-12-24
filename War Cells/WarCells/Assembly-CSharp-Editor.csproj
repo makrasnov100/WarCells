@@ -60,9 +60,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GoogleMobileAds\Editor\AndroidBuildPostProcessor.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSettings.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsSettingsEditor.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Editor\ManifestProcessor.cs" />
+    <Compile Include="Assets\GoogleMobileAds\Editor\PListProcessor.cs" />
     <Compile Include="Assets\Shapes2D\Editor\CustomHandles.cs" />
     <Compile Include="Assets\Shapes2D\Editor\MenuItems.cs" />
     <Compile Include="Assets\Shapes2D\Editor\ShapeEditor.cs" />
+    <None Include="Assets\PlayServicesResolver\Editor\play-services-resolver_v1.2.130.0.txt" />
+    <None Include="Assets\GoogleMobileAds\Editor\GoogleMobileAdsDependencies.xml" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -311,6 +318,18 @@
     </Reference>
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.14f1/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.IOSResolver_v1.2.130.0">
+      <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Assets/PlayServicesResolver/Editor/Google.IOSResolver_v1.2.130.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.JarResolver_v1.2.130.0">
+      <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Assets/PlayServicesResolver/Editor/Google.JarResolver_v1.2.130.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.VersionHandler">
+      <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Assets/PlayServicesResolver/Editor/Google.VersionHandler.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.VersionHandlerImpl_v1.2.130.0">
+      <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Assets/PlayServicesResolver/Editor/Google.VersionHandlerImpl_v1.2.130.0.dll</HintPath>
     </Reference>
     <Reference Include="SyntaxTree.Mono.Cecil">
       <HintPath>C:/Users/makra/Desktop/WarCellz/WarCells/War Cells/WarCells/Assets/UnityVS/Editor/SyntaxTree.Mono.Cecil.dll</HintPath>
