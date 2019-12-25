@@ -294,13 +294,8 @@ public class MapGenExperimental : MonoBehaviour
         //Sort all edjes based on their distances
         List<Edge> sortedDistances;
         sortedDistances = MergeSortEdges(distances);
-        for (int i = 0; i < sortedDistances.Count; i++)
-        {
-            print(sortedDistances[i].origin.name + " | " + sortedDistances[i].destination.name);
-        }
 
-        //Hash
-        HashSet<int> cellsId = new HashSet<int>();
+        List<int> usedSpanningTreeEdges = new List<int>();
         Dictionary<int, List<int>> curNetwork = new Dictionary<int, List<int>>();
         int maxConnections = cellCount - 1;
         for (int i = 0; i < maxConnections; i++)
@@ -332,6 +327,7 @@ public class MapGenExperimental : MonoBehaviour
             int destinationId = sortedDistances[i].destination.GetComponent<CellIdentity>().GetId();
             sortedDistances[i].origin.GetComponent<CellIdentity>().AddConnection(destinationId, sortedDistances[i].destination, 0, lr, true);
             sortedDistances[i].destination.GetComponent<CellIdentity>().AddConnection(originId, sortedDistances[i].origin, 1, lr, false);
+            usedSpanningTreeEdges.Add(i);
 
             //Enlargen current network
             if (curNetwork.ContainsKey(originId))
@@ -345,13 +341,21 @@ public class MapGenExperimental : MonoBehaviour
                 curNetwork.Add(destinationId, new List<int>() { originId });
         }
 
+
+        //Remove only used edges (captured in the spanningTreeEdgesList)
+        int offsetIdx = 0;
+        for (int i = 0; i < usedSpanningTreeEdges.Count; i++)
+        {
+            sortedDistances.RemoveAt(usedSpanningTreeEdges[i] - offsetIdx);
+            offsetIdx++;
+        }
+
         //Additional connections (random)
-        int additionalConnections = maxConnections + (cellCount * 4);
-        sortedDistances.RemoveRange(0, maxConnections);
+        int additionalConnections = (cellCount * 4);
 
         if (sortedDistances.Count > 0)
         {
-            for (int i = maxConnections; i < additionalConnections; i++)
+            for (int i = 0; i < additionalConnections; i++)
             {
                 if (sortedDistances.Count <= 0)
                     return;
