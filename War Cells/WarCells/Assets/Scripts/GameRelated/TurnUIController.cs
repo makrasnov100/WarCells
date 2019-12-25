@@ -214,7 +214,7 @@ public class TurnUIController : MonoBehaviour
         {
             foreach(GameObject cell in p.ownedCells) // Find owned cells and count unit amounts
             {
-                totalUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
+                totalUnits += (int) cell.GetComponent<CellIdentity>().GetOccupancy();
             }
         }
 
@@ -222,13 +222,13 @@ public class TurnUIController : MonoBehaviour
         int screenWidth = Screen.width;
         foreach(Player p in playerManager.GetPlayers())
         {
-            int playerUnits = 0;
+            float playerUnits = 0;
             foreach (GameObject cell in p.ownedCells) // Find owned cells and count unit amounts
             {
                 playerUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
             }
 
-            float playerPercentage = (float)playerUnits / (float)totalUnits;
+            float playerPercentage = playerUnits / (float)totalUnits;
             //Get bar with new color for player
             Image playerColorBar = Instantiate(influenceBarImage);
             newBar.Add(playerColorBar);
@@ -331,13 +331,13 @@ public class TurnUIController : MonoBehaviour
             int playerUnits = 0;
             foreach (GameObject cell in winningPlayer.ownedCells) // Find owned cells and count unit amounts
             {
-                playerUnits += cell.GetComponent<CellIdentity>().GetOccupancy();
+                playerUnits += (int) cell.GetComponent<CellIdentity>().GetOccupancy();
             }
             winnerUnitText.GetComponent<TextMeshProUGUI>().text = "Army Count: " + playerUnits;
             winnerColor.GetComponent<Image>().color = winningPlayer.GetPlayerColor();
         }
 
-        //If preselcted cur player was already destroyed choose the next avaliable
+        //If preselected cur player was already destroyed choose the next avaliable
         if (curPlayer.GetIsDead())
             curPlayer = playerManager.GetNextAlivePlayer(curPlayer.GetId());
         playerManager.ShowCurPlayerAttackDeclarations(curPlayer.GetId());

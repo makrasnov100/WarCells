@@ -267,7 +267,8 @@ public class MapGenExperimental : MonoBehaviour
         List<Edge> distances = new List<Edge>();
         int cellCount = 0;
 
-        //Find all possible edges subject to predifined length
+        //Find all possible edges subject to predifined length (without repetitions)
+        HashSet<string> existingConnections = new HashSet<string>();
         for (int y = 0; y < cells.Count; y++)
         {
             for (int x = 0; x < cells[y].Count; x++)
@@ -276,9 +277,15 @@ public class MapGenExperimental : MonoBehaviour
                 {
                     Collider2D[] allCells = Physics2D.OverlapCircleAll(cells[y][x].transform.position, maxConnectionDistance);
                     foreach (Collider2D c in allCells)
-                        if (c.gameObject.GetComponent<CellIdentity>().GetId() != cells[y][x].GetComponent<CellIdentity>().GetId())
+                    {
+                        if (c.gameObject.GetComponent<CellIdentity>().GetId() != cells[y][x].GetComponent<CellIdentity>().GetId() &&
+                            !existingConnections.Contains(cells[y][x].name + c.gameObject.name))
+                        {
                             distances.Add(new Edge(Vector3.Distance(cells[y][x].transform.position, c.gameObject.transform.position), cells[y][x], c.gameObject));
-
+                            existingConnections.Add(cells[y][x].name + c.gameObject.name);
+                            existingConnections.Add(c.gameObject.name + cells[y][x].name);
+                        }
+                    }
                     cellCount++;
                 }
             }
@@ -287,6 +294,10 @@ public class MapGenExperimental : MonoBehaviour
         //Sort all edjes based on their distances
         List<Edge> sortedDistances;
         sortedDistances = MergeSortEdges(distances);
+        for (int i = 0; i < sortedDistances.Count; i++)
+        {
+            print(sortedDistances[i].origin.name + " | " + sortedDistances[i].destination.name);
+        }
 
         //Hash
         HashSet<int> cellsId = new HashSet<int>();
@@ -336,17 +347,21 @@ public class MapGenExperimental : MonoBehaviour
 
         //Additional connections (random)
         int additionalConnections = maxConnections + (cellCount * 4);
+        sortedDistances.RemoveRange(0, maxConnections);
 
-        if (sortedDistances.Count > maxConnections)
+        if (sortedDistances.Count > 0)
         {
             for (int i = maxConnections; i < additionalConnections; i++)
             {
-                int curEdgeIdx = Random.Range(maxConnections, sortedDistances.Count);
+                if (sortedDistances.Count <= 0)
+                    return;
+
+                int curEdgeIdx = Random.Range(0, sortedDistances.Count-1);
                 while (EdgeIntersectsAnotherCell(sortedDistances[curEdgeIdx]))
                 {
                     sortedDistances[curEdgeIdx] = sortedDistances[sortedDistances.Count - 1];
                     sortedDistances.RemoveAt(sortedDistances.Count - 1);
-                    curEdgeIdx = Random.Range(maxConnections, sortedDistances.Count);
+                    curEdgeIdx = Random.Range(0, sortedDistances.Count-1);
                     if (sortedDistances.Count - maxConnections <= 0)
                         return;
                 }
@@ -380,6 +395,10 @@ public class MapGenExperimental : MonoBehaviour
                     curNetwork[destinationId].Add(originId);
                 else
                     curNetwork.Add(destinationId, new List<int>() { originId });
+
+                //Remove edje from avalible list (so its not readded)
+                sortedDistances[curEdgeIdx] = sortedDistances[sortedDistances.Count - 1];
+                sortedDistances.RemoveAt(sortedDistances.Count - 1);
             }
         }
     }

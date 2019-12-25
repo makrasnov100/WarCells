@@ -7,7 +7,7 @@ public class CellIdentity : MonoBehaviour
 {
     [Header("Cell Modifiers")]
     public int attackCapacity;
-    public int defenceCapacity;
+    public float defenceCapacity;
     public int generationCapacity;
     public GameObject attackUnit;
 
@@ -34,7 +34,7 @@ public class CellIdentity : MonoBehaviour
     private int owner = -1;
     private int originalOwner = -1;
     // - unit info
-    private int curOccupancy = -1;
+    private float curOccupancy = -1;
     private int unitCapacity = 0;
     private int reserveUnits;
     // - connection info
@@ -242,7 +242,7 @@ public class CellIdentity : MonoBehaviour
         if (OptionsManager.Instance.isShowCellText)
         {
             curUnitText.enabled = true;
-            curUnitText.text = curOccupancy + "/" + unitCapacity;
+            curUnitText.text = (int) curOccupancy + "/" + unitCapacity;
             mainSprite.transform.localScale = Vector3.one;
         }
         else
@@ -402,7 +402,7 @@ public class CellIdentity : MonoBehaviour
         if (curOccupancy > unitCapacity)
         {
             //Overpopulation calculation
-            int unitsOverLimit = curOccupancy - unitCapacity;
+            int unitsOverLimit = (int)curOccupancy - unitCapacity;
             float decreasePercent = Mathf.Min(1f, .125f * ((float)curOccupancy / (float)unitCapacity));
             int deductionUnits = (int)Mathf.Ceil((float)decreasePercent * (float)unitsOverLimit);
             curOccupancy = Mathf.Max(unitCapacity, curOccupancy - deductionUnits);
@@ -420,6 +420,9 @@ public class CellIdentity : MonoBehaviour
     //PostTurnRecalculation: performs unit recalculation for those cells that had attacks in the last turn
     public void PostTurnRecalculation()
     {
+        //Round up any half value to an integer amount
+        curOccupancy = Mathf.Ceil(curOccupancy);
+
         RecalculateAttackUnits();
 
         turnController.completeFighting += CompleteCellFighting;
@@ -431,7 +434,7 @@ public class CellIdentity : MonoBehaviour
     public void RecalculateAttackUnits()
     {
         //Find avaliable attack units
-        int attackUnitsAvaliable = curOccupancy - reserveUnits;
+        int attackUnitsAvaliable = (int)curOccupancy - reserveUnits;
 
         //Find how much attack directions there are
         int directions = 0;
@@ -526,7 +529,7 @@ public class CellIdentity : MonoBehaviour
     public int GetId() { return id; }
     public int GetOwner() { return owner; }
     public List<GameObject> GetConnections() { return connectionCells;  }
-    public int GetCurOccupancy() { return curOccupancy; }
+    public float GetCurOccupancy() { return curOccupancy; }
     public int GetCapacity() { return unitCapacity; }
     public int GetReserveUnits() { return reserveUnits; }
 
@@ -581,17 +584,30 @@ public class CellIdentity : MonoBehaviour
             isAttacking = false;
         }
     }
-    public void SetOccupancy(int newOccupancy)
+    public void SetOccupancy(float newOccupancy)
     {
         curOccupancy = newOccupancy;
         UpdateCellLabel();
     }
-    public int GetOccupancy() { return curOccupancy;  }
-    public void ChangeUnits(int delta, int owner, Color color)
+    public float GetOccupancy() { return curOccupancy;  }
+    public void ChangeUnits(float delta, float power, int owner, Color color)
     {
-        curOccupancy += delta;
+        float curDefenceCapacity;
+        if (owner == this.owner) 
+        {
+            curDefenceCapacity = 1;
+        }
+        else
+        {
+            curDefenceCapacity = defenceCapacity;
+        }
+
+        curOccupancy += delta * (power / curDefenceCapacity);
         if (curOccupancy < 0)
         {
+            //Attacking units do not multiply in destination cell
+            //therefore normalize by power of unit the victorious enemy units
+            curOccupancy /= power;
             SetOwner(owner, color);
             curOccupancy = -curOccupancy;
         }

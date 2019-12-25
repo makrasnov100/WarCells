@@ -25,7 +25,7 @@ public class BotManager : MonoBehaviour
                 List<GameObject> connectedCells = cell.GetComponent<CellIdentity>().GetConnections();
                 //Testfor the best cell to attack
                 int smallestCellId = -1;
-                int smallestCellOcc = int.MaxValue;
+                float smallestCellOcc = float.MaxValue;
                 foreach (GameObject conCell in connectedCells) //Try and find cells not already owned by itself
                 {
                     CellIdentity cci = conCell.GetComponent<CellIdentity>();
@@ -70,7 +70,7 @@ public class BotManager : MonoBehaviour
                 List<GameObject> connectedCells = cell.GetComponent<CellIdentity>().GetConnections();
                 //Testfor the best cell to attack
                 int smallestCellId = -1;
-                int smallestCellOcc = int.MaxValue;
+                float smallestCellOcc = float.MaxValue;
 
                 foreach (GameObject conCell in connectedCells) //Try and find cells not already owned by itself
                 {
@@ -134,7 +134,7 @@ public class BotManager : MonoBehaviour
                 List<GameObject> connectedCells = cell.GetComponent<CellIdentity>().GetConnections();
                 //Testfor the best cell to attack
                 int smallestCellId = -1;
-                int smallestCellOcc = int.MaxValue;
+                float smallestCellOcc = float.MaxValue;
 
                 foreach (GameObject conCell in connectedCells) //Try and find cells not already owned by itself
                 {

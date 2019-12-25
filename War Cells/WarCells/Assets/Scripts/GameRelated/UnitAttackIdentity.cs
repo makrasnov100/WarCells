@@ -7,11 +7,11 @@ public class UnitAttackIdentity : MonoBehaviour
 {
     //Instance Variables
     private GameObject baseCell;
-    private int unitsRemaining;
+    private float unitsRemaining;
     private int unitOwner;
     private Color unitColor;
     public TMP_Text unitSizeText;
-    private int unitType; //(TODO: Defender/Invaders)
+    public float unitPower;
 
     ///[CONSTRUCTOR]
     public void Construct(GameObject baseCell, int unitRemaining, int unitOwner, Color unitColor)
@@ -39,12 +39,12 @@ public class UnitAttackIdentity : MonoBehaviour
 
             if (cellOwner == unitOwner)         // - Cell owner thesame
             {
-                ci.ChangeUnits(unitsRemaining , unitOwner, unitColor);
+                ci.ChangeUnits(unitsRemaining, 1, unitOwner, unitColor);
                 Destroy(gameObject);
             }
             else                                // - Cell owner different
             {
-                ci.ChangeUnits(-unitsRemaining, unitOwner, unitColor);
+                ci.ChangeUnits(-unitsRemaining, unitPower, unitOwner, unitColor);
                 Destroy(gameObject);
             }
         }
@@ -58,29 +58,32 @@ public class UnitAttackIdentity : MonoBehaviour
             }
             else                                    // - Fight the other if differnt owner
             {
-                int thisUnitR = GetUnitsRemaining();
-                int thatUnitR = uai.GetUnitsRemaining();
-                uai.UnitFight(thisUnitR); // Run UnitFight on other unit (OurUnits remaining)
-                UnitFight(thatUnitR); // Run UnitFight on this Unit (Their units remaining)
+                float thisUnitR = GetUnitsRemaining();
+                float thisUnitP = GetUnitsPower();
+                float thatUnitR = uai.GetUnitsRemaining();
+                float thatUnitP = uai.GetUnitsPower();
+                uai.UnitFight(thisUnitR, thisUnitP); // Run UnitFight on other unit (OurUnits remaining)
+                UnitFight(thatUnitR, thatUnitP); // Run UnitFight on this Unit (Their units remaining)
             }
         }
     }
     //UnitFight: completes the unit vs unit fighting procedure
-    public void UnitFight(int incomingUnits)
+    public void UnitFight(float incomingUnits, float incomingPower)
     {
-        if(incomingUnits > 0)
-            unitsRemaining -= incomingUnits;
+        if (incomingUnits > 0)
+            unitsRemaining -= incomingUnits * incomingPower;
         //Destroy unit container if no remaining units after fight
         if (unitsRemaining <= 0)
         {
             Destroy(gameObject);
         }
-        //Update unit amount remaingn if container survived
+        //Update unit amount remaining if container survived
         unitSizeText.text = unitsRemaining.ToString();
     }
 
     ///[ACCESSOR(S)/MODIFIER(S)]
     public int GetUnitOwner() { return unitOwner; }
-    public int GetUnitsRemaining() { return unitsRemaining;}
+    public float GetUnitsRemaining() { return unitsRemaining;}
+    public float GetUnitsPower() { return unitPower; }
 }
 

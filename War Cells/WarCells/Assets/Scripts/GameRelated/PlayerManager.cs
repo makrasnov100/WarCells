@@ -110,7 +110,7 @@ public class PlayerManager : MonoBehaviour
             }
             Color curColor =  Color.HSVToRGB(newH, s,v);   //SET color for currently created player
 
-            curCell.GetComponent<CellIdentity>().SetOccupancy(5);               //SET initial player unit amount
+            curCell.GetComponent<CellIdentity>().SetOccupancy(5f);               //SET initial player unit amount
             curCell.GetComponent<CellIdentity>().SetOwner(p, curColor);         //SET player as owner of found starting cell
             curCell.GetComponent<CellIdentity>().SetOriginalOwner(p);
             lpc = curColor;
