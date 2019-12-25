@@ -37,6 +37,12 @@ public class LocalSetupSettings : MonoBehaviour
 
     public void Start()
     {
+        //Set Intial Settings
+        easyBots.GetComponent<TMP_InputField>().text = "" + OptionsManager.Instance.initBotSetup[0];
+        mediumBots.GetComponent<TMP_InputField>().text = "" + OptionsManager.Instance.initBotSetup[1];
+        hardBots.GetComponent<TMP_InputField>().text = "" + OptionsManager.Instance.initBotSetup[2];
+        humanPlayers.GetComponent<TMP_InputField>().text = "" + OptionsManager.Instance.initPlayersSetup;
+
         //RequestInterstitial();
         // Get singleton reward based video ad reference.
         this.rewardBasedVideo = RewardBasedVideoAd.Instance;

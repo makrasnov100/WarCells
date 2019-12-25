@@ -218,7 +218,8 @@ public class MenuAnimControl : MonoBehaviour
     {
         if (isLocal)
         {
-            OptionsManager.Instance.
+            OptionsManager.Instance.initPlayersSetup = 1;
+            OptionsManager.Instance.initBotSetup[0] = 2;
             SceneManager.LoadScene("LocalPlaySettings");
         }
     }
@@ -227,6 +228,8 @@ public class MenuAnimControl : MonoBehaviour
     {
         if (isLocal)
         {
+            OptionsManager.Instance.initPlayersSetup = 2;
+            OptionsManager.Instance.initBotSetup[0] = 1;
             SceneManager.LoadScene("LocalPlaySettings");
         }
     }

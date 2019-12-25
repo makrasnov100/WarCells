@@ -22,6 +22,8 @@ public class OptionsManager : MonoBehaviour
     public Button closeOptionsMenuBtn;
     //Control Variables
     public bool isShowCellText = true;
+    public int initPlayersSetup = 1;
+    public int[] initBotSetup = {1, 0, 0};
     public AudioSource gameMusic;
 
     //Ad Variables
