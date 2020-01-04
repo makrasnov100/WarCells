@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/makra/Desktop/WarCellz/Builds/appbundle_v1_64bit.aab
+C:/Users/makra/Desktop/WarCellz/Builds/appbundle_v1.2_64bit.aab
 SceneListBegin?
 Assets/Scenes/MainMenu.unity
 Assets/Scenes/GameScene.unity

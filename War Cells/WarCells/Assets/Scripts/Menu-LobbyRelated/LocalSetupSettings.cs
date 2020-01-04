@@ -295,20 +295,21 @@ public class LocalSetupSettings : MonoBehaviour
 
     private void RequestRewardBasedVideo()
     {
-        #if UNITY_ANDROID && !UNITY_EDITOR
-            string adUnitId = OptionsManager.Instance.newGameAd;
-        #elif UNITY_EDITOR
-            string adUnitId = "unexpected_platform";
-            isEditor = true;
-            return;
-        #else
-            string adUnitId = "unexpected_platform";
-        #endif
+        //#if UNITY_ANDROID && !UNITY_EDITOR
+        //    string adUnitId = OptionsManager.Instance.newGameAd;
+        //#elif UNITY_EDITOR
+        //    string adUnitId = "unexpected_platform";
+        //    isEditor = true;
+        //    return;
+        //#else
+        //    string adUnitId = "unexpected_platform";
+        //#endif
+
         isEditor = false;
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
         // Load the rewarded video ad with the request.
-        this.rewardBasedVideo.LoadAd(request, adUnitId);
+        this.rewardBasedVideo.LoadAd(request, OptionsManager.Instance.newGameAd);
     }
 
     //Called when user finishied watching ad

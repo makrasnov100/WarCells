@@ -28,7 +28,7 @@ public class OptionsManager : MonoBehaviour
 
     //Ad Variables
     // test intermidiate ad = "ca-app-pub-3940256099942544/5224354917";
-    public string newGameAd = "ca-app-pub-1856631914714172/5140791016";
+    public string newGameAd = "ca-app-pub-9748937733359729/6548493026";
 
 
     // Start is called before the first frame update
